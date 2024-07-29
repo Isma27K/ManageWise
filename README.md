@@ -1,70 +1,79 @@
-# Getting Started with Create React App
+# ManageWise
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Project Logo](git-image/ManageWise.jpg)
 
-## Available Scripts
+ManageWise is an FYP project of [...] group, this project was aim to enhance user productivity and by applying automation to repeated task that the user always do repeatedly. 
 
-In the project directory, you can run:
+---
 
-### `npm start`
+# Introductions
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Yokoso Mina-sama. sitok la kita akan share, submit and pull project, mainly semua kt sitok.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+aku yakin takrang xbiasa dengan github and stuff, memandangkan mood saya adalah menulis, aku akan karang usage of it.
 
-### `npm test`
+![Nice Face](git-image/nice.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Lets start
 
-### `npm run build`
+1. first kau kenak download Node.js since kita akan guna **react.js**
+```sh
+# pergi dolok kau ke link tok untuk download node.js
+https://nodejs.org/en/download/prebuilt-installer
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. selepas kau download node.js, kau boleh install macam bisa, kita perlukanya sebab
+```sh
+npm
+npx
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. pasya disebabkan kau perlu menggunakan github and stuff, kau kenak juak download git
+```sh
+https://git-scm.com/downloads
+```
+![kat sitok](git-image/dgit.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. nice, kinik kau dah boleh access command git clone, kinik aku maok kau create folder untuk kau **simpan semua kerja-kerja kau**, masok dalam ya pasya **pergi ke location** and taip **cmd**
+![bukak command line](git-image/cmd.png)
 
-### `npm run eject`
+5. sekarang barulah kau boleh download benda tokk.... clone kan repository tok ke file kau guna command tok:
+```sh
+git clone 
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## first time initialize 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+well, kau xkan semudah ya jak run project tok, kau kenaak initializee dolok
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. gedak kt installation **step 4** ya, bukak cmd kt folder kerja pasya run:
+```sh
+npm init -y
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## run project
 
-## Learn More
+yahhh, dapat polah kawan, jom run gik
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. ada beberapa command untuk project tok, antaranya:
+```sh
+start
+build
+test
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. well, ya kerja back-end developer. but its okey, **Untuk start project, sama juak buat step 4 installation pasya run command tok**
+```sh
+npm run start
+```
 
-### Code Splitting
+dah siapp, xsusah kan hahhha
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### mun ada apa-apa boleh roger aku
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Well, benda tok x siap agik, klak aku sombung tulis gik untuk cara pull and commit req
 
-### Making a Progressive Web App
+# THIS PROJECT IS UNFINISH AND STILL UNDER RAPID DEVELOPMENT. WE DONOT RECOMMEND ANYONE TO RUN IT SINCE THIS IS OUR FYP PROJECT AND NEED TO BE CREATE AND FIX BY OUR OWN TEAMS
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Huge shout-out to out team that was involve in this project**
