@@ -46,7 +46,7 @@ https://git-scm.com/downloads
 
 5. sekarang barulah kau boleh download benda tokk.... clone kan repository tok ke file kau guna command tok:
 ```sh
-git clone 
+git clone https://github.com/ismasalalu/ManageWise.git
 ```
 
 ## first time initialize 
