@@ -77,6 +77,17 @@ npm run start
 
 dah siapp, xsusah kan hahhha
 
+---
+
+## How to connect Github With your local machine
+
+1. **Configure Git**: Set your global username and email
+```sh
+git config --global user.name "Your github name"
+git config --global user.email "your-github-email@example.com"
+
+```
+
 ### mun ada apa-apa boleh roger aku
 
 
