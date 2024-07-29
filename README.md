@@ -29,11 +29,7 @@ aku yakin takrang xbiasa dengan github and stuff, memandangkan mood saya adalah 
 https://nodejs.org/en/download/prebuilt-installer
 ```
 
-2. selepas kau download node.js, kau boleh install macam bisa, kita perlukanya sebab
-```sh
-npm
-npx
-```
+2. selepas kau download node.js, kau boleh install macam bisa, kita perlukanya sebab `npm` n `npx`
 
 3. pasya disebabkan kau perlu menggunakan github and stuff, kau kenak juak download git
 ```sh
