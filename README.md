@@ -1,13 +1,8 @@
-<div style="text-align: center;">
-  <img src="git-image/ManageWise.jpg" width="350" />
-  <img src="git-image/nice.png" width="350" />
-</div>
-
-
-
 # ManageWise
 
-![Project Logo](git-image/ManageWise.jpg)
+<div style="text-align: center;">
+  <img src="git-image/ManageWise.jpg" width="350" />
+</div>
 
 ManageWise is an FYP project of [...] group, this project was aim to enhance user productivity and by applying automation to repeated task that the user always do repeatedly. 
 
@@ -19,7 +14,9 @@ Yokoso Mina-sama. sitok la kita akan share, submit and pull project, mainly semu
 
 aku yakin takrang xbiasa dengan github and stuff, memandangkan mood saya adalah menulis, aku akan karang usage of it.
 
-![Nice Face](git-image/nice.png)
+<div style="text-align: center;">
+  <img src="git-image/nice.png" width="350" />
+</div>
 
 ## Lets start
 
