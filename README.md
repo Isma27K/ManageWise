@@ -1,3 +1,10 @@
+<div style="text-align: center;">
+  <img src="git-image/ManageWise.jpg" width="350" />
+  <img src="git-image/nice.png" width="350" />
+</div>
+
+
+
 # ManageWise
 
 ![Project Logo](git-image/ManageWise.jpg)
