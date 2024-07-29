@@ -61,11 +61,9 @@ yahhh, dapat polah kawan, jom run gik
 
 1. ada beberapa command untuk project tok, antaranya:
 
-```sh
-`start`: used to start the project
-`build`: used to build the project to optimize version (100% not recomended)
-`test` : used to test the project (for now there are nothing to be test) 
-```
+- `start`: used to start the project
+- `build`: used to build the project to optimize version (100% not recomended)
+- `test` : used to test the project (for now there are nothing to be test) 
 
 2. well, ya kerja back-end developer. but its okey, **Untuk start project, sama juak buat step 4 installation pasya run command tok**
 ```sh
