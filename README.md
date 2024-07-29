@@ -1,15 +1,13 @@
 # ManageWise
 
-<div align="center">
-    <br>
-    <p align="center">
-        <img src="git-image/ManageWise.jpg" width="350" />
-    </p>
+<p align="center">
+  <img src="git-image/ManageWise.jpg" width="350" />
+</p>
 
-    <p align="center">
-        ManageWise is an FYP project of [...] group, this project was aim to enhance user productivity and by applying automation to repeated task that the user always do repeatedly. 
-    </p>
-</div>
+<p align="center">
+  ManageWise is an FYP project of [...] group. This project aims to enhance user productivity by applying automation to repetitive tasks that users perform regularly.
+</p>
+
 
 ---
 
