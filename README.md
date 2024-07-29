@@ -5,83 +5,62 @@
 </p>
 
 <p align="center">
-  ManageWise is an FYP project of [...] group. This project aims to enhance user productivity by applying automation to repetitive tasks that users perform regularly.
+  ManageWise is a final year project developed by the [...] group. The goal of this project is to enhance user productivity by applying automation to repetitive tasks commonly performed by users.
 </p>
-
 
 ---
 
-# Introductions
+# Introduction
 
-Yokoso Mina-sama. sitok la kita akan share, submit and pull project, mainly semua kt sitok.
+Welcome to the ManageWise project repository. This guide will help you set up, use, and manage the project. If you are unfamiliar with GitHub, please follow the instructions below to get started.
 
-aku yakin takrang xbiasa dengan github and stuff, memandangkan mood saya adalah menulis, aku akan karang usage of it.
+## Setup Instructions
 
-<div align="center">
-  <img src="git-image/nice.png" width="350" />
-</div>
+1. **Install Node.js**: We use React.js for this project, so you need Node.js installed. Download the installer from [Node.js official website](https://nodejs.org/en/download/prebuilt-installer).
 
-## Lets start
+2. **Install Node.js**: After downloading, install Node.js as usual. This installation will provide you with `npm` and `npx`, which are essential for managing packages and running scripts.
 
-1. first kau kenak download Node.js since kita akan guna **react.js**
-```sh
-# pergi dolok kau ke link tok untuk download node.js
-https://nodejs.org/en/download/prebuilt-installer
-```
+3. **Install Git**: To manage the project with Git, download and install Git from [Git SCM](https://git-scm.com/downloads). This will allow you to clone the repository and manage version control.
+   
+   ![Git Installation](git-image/dgit.png)
 
-2. selepas kau download node.js, kau boleh install macam bisa, kita perlukanya sebab
-```sh
-npm
-npx
-```
+4. **Clone the Repository**: Create a directory where you want to store your work. Open your command line interface, navigate to the directory, and run:
+   ```sh
+   git clone https://github.com/ismasalalu/ManageWise.git
+   ```
 
-3. pasya disebabkan kau perlu menggunakan github and stuff, kau kenak juak download git
-```sh
-https://git-scm.com/downloads
-```
-![kat sitok](git-image/dgit.png)
+## First Time Initialization
 
-4. nice, kinik kau dah boleh access command git clone, kinik aku maok kau create folder untuk kau **simpan semua kerja-kerja kau**, masok dalam ya pasya **pergi ke location** and taip **cmd**
-![bukak command line](git-image/cmd.png)
+Before running the project, you need to initialize it:
 
-5. sekarang barulah kau boleh download benda tokk.... clone kan repository tok ke file kau guna command tok:
-```sh
-git clone https://github.com/ismasalalu/ManageWise.git
-```
+1. Open your command line interface in the project directory and run:
+   ```sh
+   npm install
+   ```
+   This command will install all the necessary dependencies.
 
-## first time initialize 
+## Running the Project
 
-well, kau xkan semudah ya jak run project tok, kau kenaak initializee dolok
+To run the project, use the following commands:
 
-1. gedak kt installation **step 4** ya, bukak cmd kt folder kerja pasya run:
-```sh
-# npm ya merujuk kepada (Node Package Manager), i = install -y = yes
-npm i -y
-```
+1. **Available Commands**:
+   - `start`: Starts the development server.
+   - `build`: Compiles the project for production.
+   - `test`: Runs tests.
 
-## run project
+2. **Start the Project**: To start the development server, run:
+   ```sh
+   npm run start
+   ```
 
-yahhh, dapat polah kawan, jom run gik
+Congratulations! Your project should now be running.
 
-1. ada beberapa command untuk project tok, antaranya:
-```sh
-start
-build
-test
-```
+### Additional Information
 
-2. well, ya kerja back-end developer. but its okey, **Untuk start project, sama juak buat step 4 installation pasya run command tok**
-```sh
-npm run start
-```
+If you have any questions or need further assistance, feel free to contact me.
 
-dah siapp, xsusah kan hahhha
+**Note**: This project is still under development and may not be fully functional. We do not recommend running it in a production environment as it is an ongoing final year project and will be further developed and refined by our team.
 
-### mun ada apa-apa boleh roger aku
+**Acknowledgements**: A huge shout-out to the team members who contributed to this project.
 
-
-# Well, benda tok x siap agik, klak aku sombung tulis gik untuk cara pull and commit req
-
-# THIS PROJECT IS UNFINISH AND STILL UNDER RAPID DEVELOPMENT. WE DONOT RECOMMEND ANYONE TO RUN IT SINCE THIS IS OUR FYP PROJECT AND NEED TO BE CREATE AND FIX BY OUR OWN TEAMS
-
-**Huge shout-out to out team that was involve in this project**
+---
