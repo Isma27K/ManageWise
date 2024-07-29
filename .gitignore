@@ -18,8 +18,6 @@
 .env.test.local
 .env.production.local
 
-#image folder for github
-git-image
 
 npm-debug.log*
 yarn-debug.log*
