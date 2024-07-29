@@ -55,7 +55,8 @@ well, kau xkan semudah ya jak run project tok, kau kenaak initializee dolok
 
 1. gedak kt installation **step 4** ya, bukak cmd kt folder kerja pasya run:
 ```sh
-npm init -y
+# npm ya merujuk kepada (Node Package Manager), i = install -y = yes
+npm i -y
 ```
 
 ## run project
