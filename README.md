@@ -165,7 +165,7 @@ git merge {your working brench}
 
 ### THIS PROJECT IS UNFINISH AND STILL UNDER RAPID DEVELOPMENT. WE DONOT RECOMMEND ANYONE TO RUN IT SINCE THIS IS OUR FYP PROJECT AND NEED TO BE CREATE AND FIX BY OUR OWN TEAMS
 
-**Huge shout-out to out team that was involve in this project**
+**Huge shout-out to our team that was involve in this project**
 
 <p align="center">
   <img src="git-image/gp.png" width="350" />
