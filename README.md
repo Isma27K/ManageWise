@@ -108,7 +108,7 @@ yes
 ### Update your local database
 first you need to make sure your github and your local database is up-to-date, run this command on your project folder `cmd`:
 ```sh
-git pull --all
+git pull 
 ```
 
 ### Get into your working brench
@@ -160,13 +160,11 @@ git merge {your working brench}
 4. Chat or wait for admin to approve the merge, do not self aprove the merge since it need percousions and deeper look into it
    
 
-### mun ada apa-apa boleh roger aku
+### If There any issue about this git repo, can directly contact me for more info
 
 
-# Well, benda tok x siap agik, klak aku sombung tulis gik untuk cara pull and commit req
-
-# THIS PROJECT IS UNFINISH AND STILL UNDER RAPID DEVELOPMENT. WE DONOT RECOMMEND ANYONE TO RUN IT SINCE THIS IS OUR FYP PROJECT AND NEED TO BE CREATE AND FIX BY OUR OWN TEAMS
+### THIS PROJECT IS UNFINISH AND STILL UNDER RAPID DEVELOPMENT. WE DONOT RECOMMEND ANYONE TO RUN IT SINCE THIS IS OUR FYP PROJECT AND NEED TO BE CREATE AND FIX BY OUR OWN TEAMS
 
 **Huge shout-out to out team that was involve in this project**
 
-**yey**
+![Group Picture](git-image/gp.png)
