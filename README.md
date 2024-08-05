@@ -167,4 +167,6 @@ git merge {your working brench}
 
 **Huge shout-out to out team that was involve in this project**
 
-![Group Picture](git-image/gp.png)
+<p align="center">
+  <img src="git-image/gp.png" width="350" />
+</p>
