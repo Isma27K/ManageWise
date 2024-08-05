@@ -108,7 +108,7 @@ yes
 ### Update your local database
 first you need to make sure your github and your local database is up-to-date, run this command on your project folder `cmd`:
 ```sh
-git pull
+git pull --all
 ```
 
 ### Get into your working brench
