@@ -92,4 +92,4 @@ git config --global user.email "your-github-email@example.com"
 
 **Huge shout-out to out team that was involve in this project**
 
-**yey**
+**k**
