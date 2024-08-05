@@ -91,5 +91,3 @@ git config --global user.email "your-github-email@example.com"
 # THIS PROJECT IS UNFINISH AND STILL UNDER RAPID DEVELOPMENT. WE DONOT RECOMMEND ANYONE TO RUN IT SINCE THIS IS OUR FYP PROJECT AND NEED TO BE CREATE AND FIX BY OUR OWN TEAMS
 
 **Huge shout-out to out team that was involve in this project**
-
-**yey**
