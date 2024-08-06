@@ -11,7 +11,7 @@
 
 ---
 
-# Introductions (kat lp1)
+# Introductions
 
 Yokoso Mina-sama. sitok la kita akan share, submit and pull project, mainly semua kt sitok.
 
