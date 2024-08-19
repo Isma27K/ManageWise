@@ -37,7 +37,9 @@
   },
   "description": "<p align=\"center\">\r   <img src=\"git-image/ManageWise.jpg\" width=\"350\" />\r </p>",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "sass": "^1.77.8"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"
