@@ -1,12 +1,12 @@
 import React from "react";
 
-const IBox = (props) => {
-    return(
-        <div>
-            <input type={props.a} required />
-            <label>{props.l}</label>
+const IBox = ({ label, ...otherProps }) => {
+    return (
+        <div className="input-field">
+            <input {...otherProps} />
+            <label>{label}</label>
         </div>
     );
-}
+};
 
 export default IBox;
