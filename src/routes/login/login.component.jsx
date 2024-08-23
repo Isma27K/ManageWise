@@ -41,7 +41,7 @@ const Login = () => {
         <div className="wrapper">
             <form onSubmit={handleSubmit}>
                 <h2>Login</h2>
-                <div className="input-field">
+                <div>
                     <IBox 
                         type="email" 
                         name="email"
