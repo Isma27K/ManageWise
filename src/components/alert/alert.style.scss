@@ -1,0 +1,24 @@
+.alert {
+    background-color: #f44336; /* Red background color */
+    color: white;
+    padding: 15px 20px;
+    border-radius: 4px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    text-align: center;
+    margin-top: 10px; /* Space between the h2 and alert */
+    width: 100%; /* Full width of the container */
+    max-width: 400px; /* Maximum width of the alert */
+}
+
+
+
+/* Optional: Fade-in effect */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.alert {
+    animation: fadeIn 0.5s ease-in-out;
+}

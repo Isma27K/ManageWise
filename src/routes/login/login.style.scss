@@ -68,15 +68,20 @@ body {
     .input-field input {
         width: 100%;
         height: 40px;
-        background: transparent;
+        background-color: transparent; /* Ensure transparency */
         border: none;
         outline: none;
         font-size: 16px;
         color: #fff;
+        padding-top: 20px; /* Add padding to avoid overlap with the label */
     }
     
-    .input-field input:focus~label,
-    .input-field input:valid~label {
+    
+    
+    /* When the input is focused or has content */
+    .input-field input:focus ~ label,
+    .input-field input:not(:placeholder-shown) ~ label,
+    .input-field input:valid ~ label {
         font-size: 0.8rem;
         top: 10px;
         transform: translateY(-120%);

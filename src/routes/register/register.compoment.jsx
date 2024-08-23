@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { createUserWithEmailAndPasswordCustom, createUserDocumentFromAuth } from '../../utils/firebase/firebase';
 import "./register.style.scss";
 import IBox from "../../components/input-box/input.component";
+import Alert from "../../components/alert/alert.component.jsx";
 
 
 // ========================================== Function Part =================================================
@@ -19,6 +20,7 @@ const defaultFormFields = {
 const Register = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
+    const [alertMessage, setAlertMessage] = useState(''); // Use state to handle alert messages
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -44,7 +46,10 @@ const Register = () => {
             console.log(user);
         } catch (error) {
             if (error.code === "auth/email-already-in-use") {
-                alert("Email already in use");
+                setAlertMessage("Email Already Exist");
+                setTimeout(function() {
+                    setAlertMessage(''); // Hide the alert after 5 seconds
+                }, 20000);
             } else {
                 console.error("Error creating user:", error);
             }
@@ -57,6 +62,7 @@ const Register = () => {
         <div className="wrapper">
             <form onSubmit={handleSubmit}>
                 <h2>Register</h2>
+                {alertMessage && <Alert label={alertMessage} />} {/* Place the Alert directly after the h2 */}
                 <div>
                     <IBox
                         type="text"
