@@ -1,9 +1,14 @@
+
+// ========================================== Import part ================================================== 
+
 import React, { useState, useContext } from "react";
 import "./login.style.scss";
 import { UserContext } from "../../context/context.compoment.jsx"; // Ensure this path is correct
 import IBox from "../../components/input-box/input.component.jsx";
 import { signInAuthWithEmailAndPassword } from '../../utils/firebase/firebase.js';
 
+
+// ========================================== Function Part =================================================
 const defaultFormFields = {
     email: '',
     password: '',
@@ -36,6 +41,9 @@ const Login = () => {
             }
         }
     };
+
+
+    // ============================================= Design Part =============================================================
 
     return (
         <div className="wrapper">

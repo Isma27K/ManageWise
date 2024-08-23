@@ -1,8 +1,13 @@
+
+// ========================================== Import part ================================================== 
+
 import React, { useState } from "react";
 import { createUserWithEmailAndPasswordCustom, createUserDocumentFromAuth } from '../../utils/firebase/firebase';
 import "./register.style.scss";
-
 import IBox from "../../components/input-box/input.component";
+
+
+// ========================================== Function Part =================================================
 
 const defaultFormFields = {
     displayName: '',
@@ -45,6 +50,8 @@ const Register = () => {
             }
         }
     };
+
+    // ============================================= Design Part =============================================================
 
     return (
         <div className="wrapper">
