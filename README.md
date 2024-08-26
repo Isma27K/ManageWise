@@ -111,7 +111,7 @@ git checkout master
 git pull
 ```
 
-## Worwing with temporary branch (the one with issue id):
+## Working with temporary branch (the one with issue id):
 ```sh
 # to create unexisting branch
 git checkout -b {branch ID}
