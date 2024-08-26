@@ -59,7 +59,8 @@ const Register = () => {
     // ============================================= Design Part =============================================================
 
     return (
-        <div className="wrapper">
+        <div className="register">
+            <div className="register-wrapper">
             <form onSubmit={handleSubmit}>
                 <h2>Register</h2>
                 {alertMessage && <Alert label={alertMessage} />} {/* Place the Alert directly after the h2 */}
@@ -102,6 +103,7 @@ const Register = () => {
                 </div>
                 <button type="submit">Register</button>
             </form>
+        </div>
         </div>
     );
 };

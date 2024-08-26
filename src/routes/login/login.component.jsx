@@ -51,7 +51,8 @@ const Login = () => {
 
     // Inside Login component's return statement
     return (
-        <div className="wrapper">
+        <div className="login">
+            <div className="login-wrapper">
             <form onSubmit={handleSubmit}>
                 <h2>Login</h2>
                 {alertMessage && <Alert label={alertMessage} />} {/* Place the Alert directly after the h2 */}
@@ -79,6 +80,7 @@ const Login = () => {
                 <button type="submit">Log In</button>
             </form>
         </div>
+        </div>        
     );
 };
 

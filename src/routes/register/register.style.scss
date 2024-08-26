@@ -1,13 +1,6 @@
 @import url("https://t4.ftcdn.net/jpg/04/89/68/23/360_F_489682374_ckc0OVyT6Av0NGcuYbwBSCxy62blF4CQ.jpg");
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Open Sans", sans-serif;
-}
-
-body {
+.register {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -29,7 +22,7 @@ body {
     }
 }
 
-.wrapper {
+.register-wrapper {
     width: 400px;
     border-radius: 8px;
     padding: 30px;
