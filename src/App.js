@@ -1,10 +1,14 @@
+// =============================== Dependancy Import ================================
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
+
+// ========================  Pages import =========================================
 import Login from "./routes/login/login.component.jsx";
 import Register from "./routes/register/register.compoment.jsx";
-import NotFound from "./routes/404/404.component.jsx"; // Optional: For 404 page
+import NotFound from "./routes/404/404.component.jsx";
 import ForgotPassword from "./routes/reset-password/reset.component.jsx";
+import Dashboard from './routes/dashboard/dashboard.component.jsx';
 
 function App() {
   
@@ -12,9 +16,11 @@ function App() {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      {/* Optional: Route for 404 Not Found */}
-      <Route path="*" element={<NotFound />} />
       <Route path="/reset" element={<ForgotPassword />}/>
+      <Route path='/Dashboard' element={<Dashboard />}/>
+
+      {/*untu page error 404*/}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

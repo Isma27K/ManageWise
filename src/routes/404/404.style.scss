@@ -1,11 +1,15 @@
 .not-found {
-    color: whitesmoke;
+    color: black;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
 }
 
 a {
     text-decoration: none;
-    color: white;
+    color: black;
     
     &:hover {
         color: gray;

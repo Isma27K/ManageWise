@@ -105,38 +105,36 @@ yes
 
 ## How to manage your github
 
-### Update your local database
-first you need to make sure your github and your local database is up-to-date, run this command on your project folder `cmd`:
+## To update your local code:
 ```sh
-git pull 
+git checkout master
+git pull
 ```
 
-### Get into your working brench
-Each one of you have your own branch (take note), look on top:
- brench name   |   owner
-* `master`     : The main and releast project file
-* `am`         : Fadli
-* `faiz`       : Faiz
-* `izz`        : Ismail
-
-### switch to your 
-to switch to your working brench, you need to run this command
+## Working with temporary branch (the one with issue id):
 ```sh
-git checkout {your brench name}
+# to create unexisting branch
+git checkout -b {branch ID}
 ```
 
-### How to submit your work (use your working brench only)
-to sublit your work, run this command:
+## Update your local code-base BEFORE UPLOAD:
 ```sh
-# Save your work to your local database to see if there any changes
-git add .
+# update your code-base
+git add . 
 
-# Comment something, for example what did you do or changes
-git commit -m "{your message}"
-
-# After all of that, you can push the changes to your brench (MAKE YURE YOU ARE IN YOUR BRENCHE)
-git push origin {your brenche}
+# Add comment of what have you done
+git commit -m "{Message of what have you done}"
 ```
+
+## To upload to temporary branch
+```sh
+# First time upload to the temporary branch
+git push --set-upstream origin {branch ID}
+
+# Not First time
+git push
+```
+
 
 ## !!!!! How to merge your changes to MASTER !!!!!
 
