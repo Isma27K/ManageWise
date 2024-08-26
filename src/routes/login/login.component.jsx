@@ -6,7 +6,7 @@ import { UserContext } from "../../context/context.compoment.jsx";
 import IBox from "../../components/input-box/input.component.jsx";
 import { signInAuthWithEmailAndPassword } from '../../utils/firebase/firebase.js';
 import Alert from "../../components/alert/alert.component.jsx";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // ========================================== Function Part =================================================
 const defaultFormFields = {
@@ -18,6 +18,8 @@ const Login = () => {
     const [formFields, setFormFields] = useState(defaultFormFields); 
     const [alertMessage, setAlertMessage] = useState(''); // Use state to handle alert messages
     const { email, password } = formFields;
+
+    const navigate = useNavigate();
 
     const { setCurrentUser } = useContext(UserContext);
 
@@ -35,6 +37,10 @@ const Login = () => {
             console.log(user);
             setFormFields(defaultFormFields); // Optionally reset fields after login
             setAlertMessage(''); // Clear any previous alert message on successful login
+            
+            // Redirect to the dashboard or any other route after successful login
+            navigate('/Dashboard');
+        
         } catch (error) {
             if (error.code === "auth/wrong-password" || error.code === "auth/user-not-found" || error.code === "auth/invalid-credential") {
                 setAlertMessage("Incorrect Email Or Password");
