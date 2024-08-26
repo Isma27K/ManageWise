@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword as createUserWithEmailAndPasswordFirebase, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, sendPasswordResetEmail, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword as createUserWithEmailAndPasswordFirebase, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
@@ -19,7 +19,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(firebaseApp);
+export const auth = getAuth(firebaseApp);
 
 // Set up Google authentication provider
 const provider = new GoogleAuthProvider();
@@ -31,6 +31,16 @@ provider.setCustomParameters({
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 
 export const db = getFirestore(firebaseApp);
+
+// Reset password function
+export const handlePasswordReset = async (email, setMessage) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    setMessage('Check your email for the password reset link.');
+  } catch (error) {
+    setMessage(`Error: ${error.message}`);
+  }
+};
 
 export const createUserDocumentFromAuth = async (userAuth, additionalData) => {
   if (!userAuth) return;

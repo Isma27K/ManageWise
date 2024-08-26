@@ -1,3 +1,13 @@
-.not-found{
-    background-color: antiquewhite;
+.not-found {
+    color: whitesmoke;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    
+    &:hover {
+        color: gray;
+    }
 }

@@ -2,10 +2,11 @@
 
 import React, { useState, useContext } from "react";
 import "./login.style.scss";
-import { UserContext } from "../../context/context.compoment.jsx"; // Ensure this path is correct
+import { UserContext } from "../../context/context.compoment.jsx"; 
 import IBox from "../../components/input-box/input.component.jsx";
 import { signInAuthWithEmailAndPassword } from '../../utils/firebase/firebase.js';
 import Alert from "../../components/alert/alert.component.jsx";
+import { Link } from 'react-router-dom';
 
 // ========================================== Function Part =================================================
 const defaultFormFields = {
@@ -73,7 +74,7 @@ const Login = () => {
                     />
                 </div>
                 <div className="forget">
-                    <a href="#">Forgot password?</a>
+                    <Link to="/reset">Forgot password?</Link> {/* Link to Forgot Password page */}
                 </div>
                 <button type="submit">Log In</button>
             </form>
