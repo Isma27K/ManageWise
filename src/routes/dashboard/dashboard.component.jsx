@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../context/context.compoment";
 import { auth } from "../../utils/firebase/firebase";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
     const { currentUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const logout = async () => {
         try {
@@ -14,7 +16,8 @@ const Dashboard = () => {
             localStorage.removeItem('currentUser');
     
             // Optionally, you can redirect the user to a login page or home page
-            window.location.href = '/'; // Adjust the redirect path as necessary
+            //window.location.href = '/'; // Adjust the redirect path as necessary
+            navigate("/");
         } catch (error) {
             console.error('Logout error:', error);
         }

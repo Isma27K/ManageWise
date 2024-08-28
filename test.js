@@ -1,3 +1,5 @@
-require('dotenv').config();
+const crypto = require('crypto');
+const token = crypto.randomBytes(32).toString('hex');
 
-console.log(process.env.F_API_KEY)
+
+console.log(token)
