@@ -51,8 +51,8 @@ const Register = () => {
             if (error.code === "auth/email-already-in-use") {
                 setAlertMessage("Email Already Exist");
                 setTimeout(function() {
-                    setAlertMessage(''); // Hide the alert after 5 seconds
-                }, 20000);
+                    setAlertMessage(''); // Hide the alert after 7 seconds
+                }, 7000);
             } else {
                 console.error("Error creating user:", error);
             }
