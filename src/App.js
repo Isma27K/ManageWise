@@ -19,7 +19,8 @@ localStorage.removeItem('currentUser');
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<CheckLogin element={Login} redirectTo="/dashboard" />} />
+      {/*<Route path="/" element={<CheckLogin element={Login} redirectTo="/dashboard" />} />*/}
+      <Route path='/' element={<Login />} />
       <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<ForgotPassword />} />
