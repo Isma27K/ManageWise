@@ -14,7 +14,6 @@ import Dashboard from './routes/dashboard/dashboard.component.jsx';
 import ProtectedRoute from './functions/protectedRoute.js';
 import CheckLogin from './functions/checkIfLoginOrNot.js';
 
-localStorage.removeItem('currentUser');
 
 function App() {
   return (
