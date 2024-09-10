@@ -12,7 +12,6 @@ import Dashboard from './routes/dashboard/dashboard.component.jsx';
 
 // ======================== Functions =============================================
 import ProtectedRoute from './functions/protectedRoute.js';
-import CheckLogin from './functions/checkIfLoginOrNot.js';
 
 
 function App() {

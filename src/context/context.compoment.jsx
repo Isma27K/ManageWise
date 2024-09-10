@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { auth } from '../utils/firebase/firebase'; // Adjust this import according to your file structure
+import { auth } from '../utils/firebase/firebase'; 
 
 // Create UserContext
 export const UserContext = createContext({
@@ -13,6 +13,7 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
         // Retrieve user data from localStorage if it exists
         const storedUser = localStorage.getItem('currentUser');
+
         if (storedUser) {
             setCurrentUser(JSON.parse(storedUser));
         }
@@ -37,4 +38,4 @@ export const UserProvider = ({ children }) => {
 };
 
 
-// dont touch... its work
+// dont touch... it work
