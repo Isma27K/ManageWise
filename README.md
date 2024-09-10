@@ -61,9 +61,9 @@ Now we can start the project:
 1. There are a few command available, a few of it is:
 
 - `start` : used to start the project
-- `build` : used to build the project to optimize version (100% not recomended)
+- `build` : used to build the project to optimize version 
 - `test`  : used to test the project (for now there are nothing to be test) 
-- `eject` : Remove the abstractions provides by CRA
+- `eject` : Remove the abstractions provides by CRA (100% not recomended)
 
 2. well, thats the back-end developer jobs. but its okey, **to start the project, do the same at `step 4` installations then run this command**
 ```sh
