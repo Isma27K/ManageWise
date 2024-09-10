@@ -1,47 +1,39 @@
-import React, { useContext } from "react";
-import { UserContext } from "../../context/context.compoment";
-import { auth } from "../../utils/firebase/firebase";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import {DashboardFilled, UserOutlined, TeamOutlined} from '@ant-design/icons';
+import {Breadcrumb, Layout, Menu, theme, Input, Avatar} from 'antd';
+import "./dashboard.style.scss";
+
+const {Header, Content, Footer, Sider} = Layout;
+function getItem(label, key, icon, children) {
+    return {
+        key, icon, children, label
+    };
+}
+
+const items = [
+    getItem('Option 1', '1', <DashboardFilled/>),
+    getItem('Option 2', '2', <UserOutlined/>),
+    getItem('User', 'sub1', <TeamOutlined/>, [
+        getItem('Faiz', '3'),
+        getItem('Ismail','4'),
+        getItem('Fadhli','5')
+    ]),
+];
 
 const Dashboard = () => {
-    const { currentUser } = useContext(UserContext);
-    const navigate = useNavigate();
-
-    const logout = async () => {
-        try {
-            // Sign out the user from Firebase
-            await auth.signOut();
-    
-            // Clear user data from local storage
-            localStorage.removeItem('currentUser');
-    
-            // Optionally, you can redirect the user to a login page or home page
-            //window.location.href = '/'; // Adjust the redirect path as necessary
-            navigate("/");
-        } catch (error) {
-            console.error('Logout error:', error);
-        }
-    };
+    const [collapsed, setCollapsed] = useState(false);
+    const {
+        token: {colorBgContainer, borderRadiusLG},
+    } = theme.useToken();
 
     return(
-        <div className="dashboard">
-            <h1>Dashboard</h1>
-            {currentUser ? (
-                <div>
-                    <p>UID: {currentUser.uid}</p>
-                    <p>Name: {currentUser.displayName || "No display name available"}</p>
-                    <p>Email: {currentUser.email}</p>
-                    <p>Verified: {currentUser.emailVerified ? "Yes" : "No"}</p>
-                    {/* Add more fields as needed */}
+        <Layout style={{minHeight: '100vh',}}>
+            <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
 
-                    <input type="button" value="Logout" onClick={logout} />
-
-                </div>
-            ) : (
-                <p>Please log in to view your dashboard.</p>
-            )}
-        </div>
-    );
-};
+            </Sider>
+        </Layout>
+        
+    )
+    }
 
 export default Dashboard;

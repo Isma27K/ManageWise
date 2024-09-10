@@ -2,113 +2,58 @@
 // ========================================== Import part ================================================== 
 
 import React, { useState } from "react";
-import { createUserWithEmailAndPasswordCustom, createUserDocumentFromAuth } from '../../utils/firebase/firebase';
+import {LockOutlined, UserOutlined, MailOutlined} from '@ant-design/icons';
+import {Button, Checkbox,Form,Input} from 'antd';
 import "./register.style.scss";
-import IBox from "../../components/input-box/input.component";
-import Alert from "../../components/alert/alert.component.jsx";
-import { useNavigate } from 'react-router-dom';
-
-
-// ========================================== Function Part =================================================
-
-const defaultFormFields = {
-    displayName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-};
 
 const Register = () => {
-    const [formFields, setFormFields] = useState(defaultFormFields);
-    const { displayName, email, password, confirmPassword } = formFields;
-    const [alertMessage, setAlertMessage] = useState(''); // Use state to handle alert messages
-    const navigate = useNavigate();
-
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setFormFields({ ...formFields, [name]: value });
+    const onFinish = (values) => {
+        console.log('Received values of form: ', values);
     };
-
-    const resetFields = () => {
-        setFormFields(defaultFormFields);
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        if (password !== confirmPassword) {
-            alert("Passwords do not match");
-            return;
-        }
-
-        try {
-            const { user } = await createUserWithEmailAndPasswordCustom(email, password);
-            await createUserDocumentFromAuth(user, { displayName });
-            resetFields();
-            console.log(user);
-            navigate("/")
-        } catch (error) {
-            if (error.code === "auth/email-already-in-use") {
-                setAlertMessage("Email Already Exist");
-                setTimeout(function() {
-                    setAlertMessage(''); // Hide the alert after 7 seconds
-                }, 7000);
-            } else {
-                console.error("Error creating user:", error);
-            }
-        }
-    };
-
-    // ============================================= Design Part =============================================================
 
     return (
-        <div className="register">
+        <Form className="register" name="register" onFinish={onFinish}>
             <div className="register-wrapper">
-            <form onSubmit={handleSubmit}>
-                <h2>Register</h2>
-                {alertMessage && <Alert label={alertMessage} />} {/* Place the Alert directly after the h2 */}
-                <div>
-                    <IBox
-                        type="text"
-                        required
-                        label="Name"
-                        onChange={handleChange}
-                        name="displayName"
-                        value={displayName}
-                    />
+            <h2>Register</h2>
+            <Form.Item name="username" rules={[{required: true, message: 'Field is required!',},]}>
+                <Input prefix={<UserOutlined/>} placeholder="Username"/>
+            </Form.Item>
 
-                    <IBox
-                        type="email"
-                        name="email"
-                        label="Enter your email"
-                        required
-                        onChange={handleChange}
-                        value={email}
-                    />
+            <Form.Item name="email" rules={[{required: true, type: 'email', message: 'Field is required!',},]}>
+                <Input prefix={<MailOutlined/>} placeholder="Email"/>
+            </Form.Item>
 
-                    <IBox
-                        type="password"
-                        name="password"
-                        label="Enter your password"
-                        required
-                        onChange={handleChange}
-                        value={password}
-                    />
+            <Form.Item name="password" rules={[{required: true, message: 'Field is required!',},]}>
+                <Input prefix={<LockOutlined/>} type="password" placeholder="Password"/>
+            </Form.Item>
 
-                    <IBox
-                        type="password"
-                        name="confirmPassword"
-                        label="Confirm Password"
-                        required
-                        onChange={handleChange}
-                        value={confirmPassword}
-                    />
-                </div>
-                <button type="submit">Register</button>
-            </form>
-        </div>
-        </div>
+            <Form.Item name="confirm" dependencies={['password']} rules={[{required: true, message: 'Field is required!',},
+                ({getFieldValue}) => ({
+                    validator(_, value){
+                        if(!value || getFieldValue('password') === value) {
+                            return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Password do not match.')); 
+                },
+            }),
+            
+            ]}>
+                <Input prefix={<LockOutlined/>} type="password" placeholder="Confirm Password"/>
+            </Form.Item>
+
+            <Form.Item>
+                <Button block type="primary" htmlType="submit">
+                    Register
+                </Button>
+            </Form.Item>
+            </div>
+
+        </Form>
     );
-};
+}
 
 export default Register;
+
+
+
+

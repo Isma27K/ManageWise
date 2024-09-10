@@ -1,93 +1,41 @@
 // ========================================== Import part ================================================== 
 
-import React, { useState, useContext } from "react";
+import React,{useEffect, useState} from 'react';
+import {Form, Input, Checkbox, Button} from 'antd';
+import { LockOutlined, MailOutlined} from '@ant-design/icons';
 import "./login.style.scss";
-import { UserContext } from "../../context/context.compoment.jsx"; 
-import IBox from "../../components/input-box/input.component.jsx";
-import { signInAuthWithEmailAndPassword } from '../../utils/firebase/firebase.js';
-import Alert from "../../components/alert/alert.component.jsx";
-import { Link, useNavigate } from 'react-router-dom';
-
-// ========================================== Function Part =================================================
-const defaultFormFields = {
-    email: '',
-    password: '',
-};
 
 const Login = () => {
-    const [formFields, setFormFields] = useState(defaultFormFields); 
-    const [alertMessage, setAlertMessage] = useState(''); // Use state to handle alert messages
-    const { email, password } = formFields;
 
-    const navigate = useNavigate();
-
-    const { setCurrentUser } = useContext(UserContext);
-
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setFormFields({ ...formFields, [name]: value });
+    const onFinish = (values) => {
+        console.log('Received values of form:', values);
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        try {
-            const { user } = await signInAuthWithEmailAndPassword(email, password);
-            setCurrentUser(user);
-            console.log(user);
-            setFormFields(defaultFormFields); // Optionally reset fields after login
-            setAlertMessage(''); // Clear any previous alert message on successful login
-            
-            // Redirect to the dashboard or any other route after successful login
-            navigate('/Dashboard');
-        
-        } catch (error) {
-            if (error.code === "auth/wrong-password" || error.code === "auth/user-not-found" || error.code === "auth/invalid-credential") {
-                setAlertMessage("Incorrect Email Or Password");
-                setTimeout(function() {
-                    setAlertMessage(''); // Hide the alert after 7 seconds
-                }, 7000);
-            } else {
-                console.error(error);
-            }
-        }
-    };
-
-    // ============================================= Design Part =============================================================
-
-    // Inside Login component's return statement
     return (
-        <div className="login">
+        <Form className="login" name="login" onFinish={onFinish}>
             <div className="login-wrapper">
-            <form onSubmit={handleSubmit}>
-                <h2>Login</h2>
-                {alertMessage && <Alert label={alertMessage} />} {/* Place the Alert directly after the h2 */}
-                <div>
-                    <IBox 
-                        type="email" 
-                        name="email"
-                        label="Enter your email"
-                        required
-                        onChange={handleChange} 
-                        value={email}
-                    />
-                    <IBox 
-                        type="password" 
-                        name="password"
-                        label="Enter your password"
-                        required
-                        onChange={handleChange} 
-                        value={password}
-                    />
-                </div>
-                <div className="forget">
-                    <Link to="/reset">Forgot password?</Link> {/* Link to Forgot Password page */}
-                </div>
-                <button type="submit">Log In</button>
-            </form>
-        </div>
-        </div>        
+            <h2>Login</h2>
+            <Form.Item name="email" rules={[{required: true, type: 'email', message: 'Field is required!',},]}>
+                <Input prefix={<MailOutlined/>} placeholder="Email"/>
+            </Form.Item>
+
+            <Form.Item name="password" rules={[{required: true, message: 'Field is required!',},]}>
+                <Input prefix={<LockOutlined/>} type="password" placeholder="Password"/>
+            </Form.Item>
+
+            <Form.Item className="forget">
+                <a href="">Forgot password?</a>
+            </Form.Item>
+
+            <Form.Item>
+                <Button block type="primary" htmlType="submit">
+                    Log In
+                </Button>
+            </Form.Item>
+            </div>
+
+        </Form>
     );
 };
-
 export default Login;
+
