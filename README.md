@@ -21,6 +21,11 @@ aku yakin takrang xbiasa dengan github and stuff, memandangkan mood saya adalah 
   <img src="git-image/nice.png" width="350" />
 </div>
 
+## Just a quick reminder, you can get the back-end server here:
+```sh
+https://github.com/ismasalalu/ManageWise-Backend
+```
+
 ## How To get start and run the program
 
 1. First, we need to download node.js since we gonna be using **react.js**
