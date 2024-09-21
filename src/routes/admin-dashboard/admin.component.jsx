@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined, DashboardOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, DashboardOutlined, UserOutlined, LogoutOutlined,} from '@ant-design/icons';
 import { Button, Layout, Menu, Avatar, Divider, theme } from 'antd';
-import DashboardContent from "./DashboardContent";
-import ProfileContent from "./ProfileContent";
+import DashboardContent from "../dashboard/DashboardContent";
+import AdminProfile from "./AdminProfile";
 
 const avatarUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUAENAWPWoGzohhOCuj6Q6WwOm6hbVffCZyw&s";
 const { Header, Sider, Content } = Layout;
 const name = "FAIZ KAMIRIN";
 
-const Dashboard = () => {
+const AdminDashboard = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [selectedKey, setSelectedKey] = useState('1');
     const {
@@ -34,7 +34,7 @@ const Dashboard = () => {
             icon: <UserOutlined style={{ fontSize: '30px' }} />, 
             label: (
                 <span style={{ fontSize: '20px', paddingLeft: collapsed ? '0' : '12px' }}> 
-                    Profile
+                    Profile(Admin)
                 </span>
             ),
             style: {
@@ -49,7 +49,7 @@ const Dashboard = () => {
             case '1':
                 return <DashboardContent />;
             case '2':
-                return <ProfileContent />;
+                return <AdminProfile />;
             default:
                 return <DashboardContent />;
         }
@@ -112,4 +112,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default AdminDashboard;

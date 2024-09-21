@@ -9,7 +9,7 @@ import Register from "./routes/register/register.compoment.jsx";
 import NotFound from "./routes/404/404.component.jsx";
 import ForgotPassword from "./routes/reset-password/reset.component.jsx";
 import Dashboard from './routes/dashboard/dashboard.component.jsx';
-
+import AdminDashboard from './routes/admin-dashboard/admin.component.jsx';
 // ======================== Functions =============================================
 import ProtectedRoute from './functions/protectedRoute.js';
 
@@ -19,10 +19,11 @@ function App() {
     <Routes>
       {/*<Route path="/" element={<CheckLogin element={Login} redirectTo="/dashboard" />} />*/}
       <Route path='/' element={<Login />} />
-      <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+      {/*<Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />*/}
+      <Route path="dashboard" element={<Dashboard/>}/>
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<ForgotPassword />} />
-
+      <Route path="admin" element={<AdminDashboard/>}/>
       {/* For the 404 error page */}
       <Route path="*" element={<NotFound />} />
     </Routes>
