@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Select, Upload, message, Avatar } from 'antd';
-import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Select, Avatar, notification } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -9,57 +9,79 @@ const PoolManagementTab = ({ users }) => {
   const [poolName, setPoolName] = useState('');
   const [poolDescription, setPoolDescription] = useState('');
   const [selectedPoolUsers, setSelectedPoolUsers] = useState([]);
-  const [poolImage, setPoolImage] = useState(null);
 
-  const onFinish = (values) => {
-    const newPool = {
-      name: values.poolName,
-      description: values.poolDescription,
-      users: selectedPoolUsers,
-      image: poolImage
-    };
+  const openNotification = (type, message, description) => {
+    notification[type]({
+      message,
+      description,
+      placement: 'topRight',
+    });
+  };
 
-    console.log('Creating new pool:', newPool);
-    message.success(`Pool "${newPool.name}" created successfully with ${newPool.users.length} users assigned.`);
+  const onFinish = async (values) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/admin/CreatePool', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          poolName,
+          poolDescription,
+          userId: selectedPoolUsers, // Ensure this is an array of user IDs
+        }),
+      });
 
+      if (response.ok) {
+        openNotification('success', 'Success', 'Pool created successfully');
+      } else if (response.status === 400) {
+        openNotification('error', 'Error', 'Pool already exists');
+      } else {
+        openNotification('error', 'Error', 'Failed to create pool');
+      }
+    } catch (error) {
+      openNotification('error', 'Error', 'Failed to create pool');
+    }
+
+    // Reset form fields
     form.resetFields();
     setPoolName('');
     setPoolDescription('');
     setSelectedPoolUsers([]);
-    setPoolImage(null);
   };
 
   const handlePoolUserSelect = (values) => {
-    setSelectedPoolUsers(values);
+    setSelectedPoolUsers(values); // Set selected user IDs
   };
 
   const filterUsers = (input, option) => {
-    const name = option.label.toLowerCase();
-    const email = option.children.props.children[1].props.children[1].props.children.toLowerCase();
+    const name = (option.label || '').toLowerCase();
+    const email = (option.children?.props?.children[1]?.props?.children[1]?.props?.children || '').toLowerCase();
     return name.indexOf(input.toLowerCase()) >= 0 || email.indexOf(input.toLowerCase()) >= 0;
   };
 
   return (
     <Form layout="vertical" onFinish={onFinish} form={form} className="admin-form">
       <h3>Create Pool</h3>
-      <Form.Item 
-        name="poolName" 
+      <Form.Item
+        name="poolName"
         label="Pool Name"
         rules={[{ required: true, message: 'Please enter a pool name' }]}
       >
-        <Input 
-          placeholder="Enter pool name" 
+        <Input
+          placeholder="Enter pool name"
           onChange={(e) => setPoolName(e.target.value)}
         />
       </Form.Item>
       <Form.Item name="poolDescription" label="Pool Description">
-        <Input.TextArea 
-          placeholder="Enter pool description" 
+        <Input.TextArea
+          placeholder="Enter pool description"
           onChange={(e) => setPoolDescription(e.target.value)}
         />
       </Form.Item>
-      <Form.Item 
-        name="assignUserPool" 
+      <Form.Item
+        name="assignUserPool"
         label="Assign Users for Pool"
         rules={[{ required: true, message: 'Please assign at least one user' }]}
       >
@@ -76,31 +98,21 @@ const PoolManagementTab = ({ users }) => {
           optionLabelProp="label"
         >
           {users.map(user => (
-            <Option 
-              key={user.id} 
-              value={user.id} 
-              label={user.name}
+            <Option
+              key={user.uid} // Use uid as the key
+              value={user.uid} // Ensure value is the user ID
+              label={user.name ? user.name.toUpperCase() : 'NO NAME'}
             >
               <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
                 <Avatar icon={<UserOutlined />} src={user.avatar} />
                 <div style={{ marginLeft: 8 }}>
-                  <div>{user.name}</div>
-                  <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email}</div>
+                  <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
+                  <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>
                 </div>
               </div>
             </Option>
           ))}
         </Select>
-      </Form.Item>
-      <Form.Item name="poolImage" label="Pool Profile Image (optional)">
-        <Upload 
-          beforeUpload={(file) => {
-            setPoolImage(file);
-            return false;
-          }}
-        >
-          <Button icon={<UploadOutlined />}>Click to Upload</Button>
-        </Upload>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">CREATE</Button>

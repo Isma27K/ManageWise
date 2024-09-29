@@ -15,7 +15,7 @@ const Nav = () => {
     const { user } = useContext(UserContext);
     const [avatarLoadError, setAvatarLoadError] = useState(false);
 
-    console.log(user);
+    //console.log(user);
 
     // Function to get the first letter of the name
     const getNameInitial = (name) => {

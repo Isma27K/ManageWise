@@ -22,7 +22,7 @@ const Dashboard = () => {
   
   // Define the menu click handler
   const handleMenuClick = (e) => {
-    console.log('Clicked menu item:', e.key);
+    //console.log('Clicked menu item:', e.key);
     setSelectedKey(e.key);
     switch (e.key) {
       case '1':

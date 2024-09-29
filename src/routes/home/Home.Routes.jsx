@@ -6,13 +6,15 @@ import Footer from '../../components/footer/footer.component.jsx';
 import { notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Lottie from "lottie-react";
-import loadingAnimation from '../../asset/gif/loading.json'; // You'll need to add this JSON file
+import loadingAnimation from '../../asset/gif/loading.json'; // Make sure this JSON file exists
 
 const Home = () => {
-    const { user, setUser } = useContext(UserContext);
+    const { user, setUser, allUsers, setAllUsers } = useContext(UserContext);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
-    
+
+    const token = localStorage.getItem('jwtToken');
+
     const openNotification = (type, message, description) => {
         notification[type]({
             message,
@@ -22,15 +24,15 @@ const Home = () => {
     };
 
     useEffect(() => {
-        const fetchUser = async () => {
-            const token = localStorage.getItem('jwtToken');
-            if (!token) {
-                console.error('No JWT token found');
-                openNotification('error', 'Authentication Error', 'Please log in again.');
-                navigate('/login');
-                return;
-            }
+        // Redirect to login if there's no token
+        if (!token) {
+            console.error('No JWT token found');
+            openNotification('error', 'Authentication Error', 'Please log in again.');
+            navigate('/login');
+            return; // Exit early to avoid fetching user data
+        }
 
+        const fetchUser = async () => {
             try {
                 const response = await fetch('http://localhost:5000/api/data/DUdata', {
                     method: 'POST',
@@ -56,15 +58,38 @@ const Home = () => {
                 console.error('Error fetching user data:', error);
                 openNotification('error', 'Error', error.message || 'An unexpected error occurred');
                 navigate('/login');
-            } finally {
-                // Add a 3-second delay supaya kau boleh tangga nya pun LODING
-                //await new Promise(resolve => setTimeout(resolve, 3000));
-                setIsLoading(false);
             }
         };
 
-        fetchUser();
-    }, [setUser, navigate]);
+        const fetchAllUsers = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/data/AllUserData', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (!response.ok) {
+                    openNotification('error', 'Error', 'Failed to fetch all users');
+                    return;
+                }
+
+                const data = await response.json();
+                setAllUsers(data);
+            } catch (error) {
+                console.error('Error fetching all users:', error);
+                openNotification('error', 'Error', error.message || 'An unexpected error occurred');
+                navigate('/login');
+            }finally {
+                setIsLoading(false); // Ensure loading state is set to false after fetching
+            }
+        };
+
+        fetchUser(); // Fetch user data
+        fetchAllUsers(); // Fetch all users data
+    }, [token, navigate, setUser, setAllUsers]);
 
     if (isLoading) {
         return (
@@ -74,7 +99,7 @@ const Home = () => {
         );
     }
 
-    if (!user) {
+    if (!user || !allUsers) {
         return <div>No user data available.</div>;
     }
 
@@ -86,7 +111,7 @@ const Home = () => {
             </div>
             <Footer />
         </div>
-    )
+    );
 }
 
 export default Home;

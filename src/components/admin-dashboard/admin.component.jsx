@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Tabs, message } from 'antd';
 import InvitationTab from './tabs/InvitationTab';
 import UserManagementTab from './tabs/UserManagementTab';
 import PoolManagementTab from './tabs/PoolManagementTab';
 import DeleteOperationsTab from './tabs/DeleteOperationsTab';
 import { dummyUsers, dummyRoles } from './dummyData';
+import { UserContext } from '../../contexts/UserContext';
+
 import './admin.style.scss';
 
 const { TabPane } = Tabs;
 
 // Set this to false when you want to use real API data
-const USE_DUMMY_DATA = true;
+const USE_DUMMY_DATA = false;
 
 const AdminDashboard = () => {
+  const { allUsers } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   //const [loading, setLoading] = useState(true);
@@ -24,31 +27,9 @@ const AdminDashboard = () => {
         setRoles(dummyRoles);
         //setLoading(false);
       } else {
-        try {
-          const token = localStorage.getItem('MJWT'); // tukar kat sitok kelak mengikut nama JWT kau kelak
-          if (!token) {
-            throw new Error('No authentication token found');
-          }
-
-          const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          };
-
-          const usersResponse = await fetch('https://api.example.com/users', { headers });
-          if (!usersResponse.ok) {
-            throw new Error('Failed to fetch users');
-          }
-          const usersData = await usersResponse.json();
-
-          const rolesResponse = await fetch('https://api.example.com/roles', { headers });
-          if (!rolesResponse.ok) {
-            throw new Error('Failed to fetch roles');
-          }
-          const rolesData = await rolesResponse.json();
-          
-          setUsers(usersData);
-          setRoles(rolesData);
+        try {          
+          setUsers(allUsers);
+          setRoles(dummyRoles);
         } catch (error) {
           console.error('Error fetching data:', error);
           message.error(error.message || 'Failed to fetch data from the API. Please try again later.');
