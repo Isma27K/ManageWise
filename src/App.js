@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './routes/home/Home.Routes';
 import PageNotFound from "./routes/404/404.Routes";
 import Login from './routes/login/login.compoment';
-import Register from './routes/register/register.component';
 import ProtectedRoute from './components/ProtectedRoute';
+import ValidateRegister from './routes/vilidateRegister/vilidateReg';
 
 function App() {
     return (
@@ -24,7 +24,7 @@ function App() {
                             } 
                         />*/}
 
-                        <Route path="/register" element={<Register />} />
+                        <Route path="/register" element={<ValidateRegister />} />
 
                         <Route path="/" element={<Login />} />
 

@@ -47,6 +47,7 @@ const InvitationTab = () => {
     const data = await response.json();
     const generatedLink = 'http://localhost:3000/register?invitation=' + data.id;
     setInvitationLink(generatedLink);
+    openNotification('success', 'Success', 'Invitation link generated successfully');
     form.setFieldsValue({ invLink: generatedLink });
   };
 
