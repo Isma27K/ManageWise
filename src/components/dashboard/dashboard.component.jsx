@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Layout, Menu } from 'antd';
 import { SettingOutlined, AppstoreOutlined, SafetyOutlined, AuditOutlined } from '@ant-design/icons';
 import './dashboard.style.scss';
 import MainDashboard from '../main-dashboard/main-dashboard.component.jsx';
 import SettingDashboard from '../setting-dashboard/setting-dashboard.component.jsx';
 import AdminDashboard from '../admin-dashboard/admin.component.jsx';
+import { UserContext } from '../../contexts/UserContext';
 // If you have Settings and Report components, make sure to import them
 // import Settings from '../settings/settings.component.jsx';
 // import Report from '../report/report.component.jsx';
 
 const { Sider, Content } = Layout;
 const Dashboard = () => {
+  const { user } = useContext(UserContext);
   const [content, setContent] = useState(<MainDashboard />);
   const [selectedKey, setSelectedKey] = useState('1');
 
 
-  const isAdmin = true; // Set to true to show the admin menu item
+  const isAdmin = user?.admin; // Set to true to show the admin menu item
   
   
   // Define the menu click handler

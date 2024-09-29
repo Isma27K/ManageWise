@@ -22,6 +22,11 @@ const Nav = () => {
         return name ? name.charAt(0).toUpperCase() : '?';
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('jwtToken');
+        window.location.reload();
+    }
+
     // Define menu items for the avatar dropdown
     const menu = (
         <Menu className="menu">
@@ -34,7 +39,7 @@ const Nav = () => {
             <Menu.Item key="3" icon={<SettingOutlined />} className="menu-item">
                 Settings
             </Menu.Item>
-            <Menu.Item key="4" icon={<LogoutOutlined />} className="menu-item">
+            <Menu.Item key="4" icon={<LogoutOutlined />} onClick={handleLogout} className="menu-item">
                 Logout
             </Menu.Item>
         </Menu>

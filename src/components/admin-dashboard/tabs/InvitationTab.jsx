@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, message, Tooltip } from 'antd';
+import { Form, Input, Button, message, Tooltip, notification } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 
 const InvitationTab = () => {
   const [form] = Form.useForm();
   const [invitationLink, setInvitationLink] = useState('');
+  const token = localStorage.getItem('jwtToken');
+
+  const openNotification = (type, message, description) => {
+    notification[type]({
+        message,
+        description,
+        placement: 'topRight',
+    });
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(invitationLink).then(() => {
@@ -18,8 +27,25 @@ const InvitationTab = () => {
     return link.length > 60 ? `${link.substring(0, 27)}...` : link;
   };
 
-  const handleGenerateInvitation = () => {
-    const generatedLink = 'https://example.com/invite/' + Math.random().toString(36).substring(7);
+  const handleGenerateInvitation = async (e) => {
+    e.preventDefault();
+    const response = await fetch('http://localhost:5000/api/admin/generate', {
+      method: 'POST',
+      headers: 
+      {'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    //console.log(token);
+
+    if (!response.ok) {
+      openNotification('error', 'Error', 'Failed to generate invitation link');
+      return;
+    }
+
+    const data = await response.json();
+    const generatedLink = 'http://localhost:3000/register?invitation=' + data.id;
     setInvitationLink(generatedLink);
     form.setFieldsValue({ invLink: generatedLink });
   };
