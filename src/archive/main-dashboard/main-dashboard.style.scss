@@ -1,0 +1,25 @@
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; // This creates space between cards
+
+    .card-item {
+        flex: 0 0 calc(25% - 15px); // This sets the width to 25% minus the gap
+        max-width: calc(25% - 15px); // This ensures the cards don't grow beyond 25%
+        
+        @media (max-width: 1200px) {
+            flex: 0 0 calc(33.333% - 13.333px);
+            max-width: calc(33.333% - 13.333px);
+        }
+
+        @media (max-width: 900px) {
+            flex: 0 0 calc(50% - 10px);
+            max-width: calc(50% - 10px);
+        }
+
+        @media (max-width: 600px) {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+}

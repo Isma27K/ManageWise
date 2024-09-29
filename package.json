@@ -1,23 +1,19 @@
 {
-  "name": "manage-wise",
+  "name": "ratacode",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.4.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "antd": "^5.20.5",
-    "ants": "^0.0.3-alpha",
-    "crypto-browserify": "^3.12.0",
-    "dotenv": "^16.4.5",
-    "firebase": "^10.13.0",
-    "os-browserify": "^0.3.0",
-    "path-browserify": "^1.0.1",
+    "antd": "^5.20.6",
+    "lucide-react": "^0.445.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-icons": "^5.3.0",
-    "react-router-dom": "^6.26.1",
+    "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
+    "sass-loader": "^16.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -44,13 +40,9 @@
       "last 1 safari version"
     ]
   },
-  "description": "<p align=\"center\">\r   <img src=\"git-image/ManageWise.jpg\" width=\"350\" />\r </p>",
-  "main": "index.js",
   "devDependencies": {
-    "react-app-rewired": "^2.2.1",
-    "sass": "^1.77.8"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.79.3"
+  }
 }

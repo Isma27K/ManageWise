@@ -1,0 +1,50 @@
+.main-dashboard {
+    padding: 20px;
+
+    h2 {
+        margin-bottom: 20px;
+    }
+}
+
+// If you want to override any styles from the card component, you can do it here
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .card-item {
+        flex: 0 0 calc(33.333% - 13.333px);
+        max-width: calc(33.333% - 13.333px);
+        
+        @media (max-width: 1200px) {
+            flex: 0 0 calc(50% - 10px);
+            max-width: calc(50% - 10px);
+        }
+
+        @media (max-width: 768px) {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+}
+
+.custom-card {
+    height: 30vh; // Increased height
+    width: 100%;
+    border: 1px solid #e8e8e8; // Added a light border
+
+    .ant-card-head {
+        background-color: #8c8c8c;
+        padding: 0 16px;
+        min-height: 48px; // Slightly increased min-height
+    }
+
+    .ant-card-head-title {
+        padding: 12px 0; // Increased padding
+        font-size: 16px; // Increased font size
+    }
+
+    .ant-card-body {
+        padding: 16px; // Added padding to the body
+    }
+}

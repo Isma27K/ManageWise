@@ -1,0 +1,33 @@
+.dashboard-layout {
+  min-height: calc(100vh - 64px);
+  background: #f0f2f5;
+
+  .sider-style {
+    background: #fff;
+    position: fixed;
+    left: 0;
+    top: 13vh; // Assuming your Nav is 64px high
+    height: 85vh;
+    overflow-y: auto;
+    border-right: 1px solid #e8e8e8;
+    border-radius: 10px;
+    margin-left: 10px;
+  }
+
+  .content-style {
+    background: #fff;
+    padding: 24px;
+    margin: 0;
+    min-height: 280px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .ant-menu-item-selected {
+    background-color: #d9d9d9 !important;
+
+    .ant-menu-item-icon, .ant-menu-title-content {
+      color: #000000 !important;
+    }
+  }
+}

@@ -1,34 +1,29 @@
-// =============================== Dependancy Import ================================
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
 import './App.css';
-
-// ========================  Pages import =========================================
-import Login from "./routes/login/login.component.jsx";
-import Register from "./routes/register/register.compoment.jsx";
-import NotFound from "./routes/404/404.component.jsx";
-import ForgotPassword from "./routes/reset-password/reset.component.jsx";
-import Dashboard from './routes/dashboard/dashboard.component.jsx';
-import AdminDashboard from './routes/admin-dashboard/admin.component.jsx';
-// ======================== Functions =============================================
-import ProtectedRoute from './functions/protectedRoute.js';
-
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './routes/home/Home.Routes';
+import PageNotFound from "./routes/404/404.Routes";
+import Login from './routes/login/login.compoment';
+import Register from './routes/register/register.component';
 
 function App() {
-  return (
-    <Routes>
-      {/*<Route path="/" element={<CheckLogin element={Login} redirectTo="/dashboard" />} />*/}
-      <Route path='/' element={<Login />} />
-      {/*<Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />*/}
-      <Route path="dashboard" element={<Dashboard/>}/>
-      <Route path="/register" element={<Register />} />
-      <Route path="/reset" element={<ForgotPassword />} />
-      <Route path="admin" element={<AdminDashboard/>}/>
-      {/* For the 404 error page */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
+    return (
+        <Router>
+            <div className="app-container">
+                <div className="content">
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+
+                        {/*================================================= */}
+                        <Route path="/" element={<Login />} />
+                        <Route path="/Dashboard" element={<Home />} />
+
+                        <Route path="*" element={<PageNotFound />} />
+                    </Routes>
+                </div>
+            </div>
+        </Router>
+    );
 }
 
 export default App;
-

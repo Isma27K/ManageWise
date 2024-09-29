@@ -1,0 +1,76 @@
+.setting-dashboard {
+    padding: 20px;
+    h2 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        color: #3b3b3b;
+    }
+
+    .profile-form {
+        .profile-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+
+            .profile-details {
+                flex: 1;
+                margin-left: 20px;
+
+                .profile-display {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+                .save-button {
+                    margin-top: 10px;
+                    background-color: whitesmoke; /* Default color */
+                    border: 2px solid black;
+                    color: black;
+                    &:hover {
+                        background-color: black !important; /* Hover color */
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        .upload-button {
+            background-color: whitesmoke; /* Default color */
+            border: 2px solid black !important;
+            &:hover {
+                background-color: black !important; /* Hover color */
+                color: white;
+            }
+        }
+
+        .settings-section {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+
+            .ant-checkbox-wrapper {
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    label {
+        display: inline-block;
+        width: 100px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 200px;
+        padding: 5px;
+    }
+
+    button {
+        margin-right: 10px;
+        padding: 5px 10px;
+    }
+}

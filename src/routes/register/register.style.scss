@@ -1,76 +1,66 @@
-@import url("https://t4.ftcdn.net/jpg/04/89/68/23/360_F_489682374_ckc0OVyT6Av0NGcuYbwBSCxy62blF4CQ.jpg");
-
-.register {
+.register-container {
     display: flex;
-    align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    width: 100%;
-    padding: 0 10px;
-    position: relative;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    padding: 20px;
 
-
-    &::before {
-        content: "";
-        position: absolute;
+    .register-form {
+        background: #fff;
+        padding: 30px; /* Reduced padding */
+        border-radius: 8px; /* Slightly reduced border-radius */
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Slightly reduced shadow */
         width: 100%;
-        height: 100%;
-        background: url("https://t4.ftcdn.net/jpg/04/89/68/23/360_F_489682374_ckc0OVyT6Av0NGcuYbwBSCxy62blF4CQ.jpg"), #000;
-        background-position: center;
-        background-size: cover;
-        z-index: -1;
-    }
-}
+        max-width: 300px; /* Reduced max-width */
+        h2 {
+            margin-bottom: 15px; /* Reduced margin-bottom */
+            text-align: center;
+            color: #333;
+            font-size: 20px; /* Reduced font size */
+        }
 
-.register-wrapper {
-    width: 400px;
-    border-radius: 8px;
-    padding: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(8px);
+        .form-group {
+            margin-bottom: 20px; /* Slightly reduced margin-bottom */
+            label {
+                display: block;
+                margin-bottom: 8px; /* Reduced margin-bottom */
+                font-weight: bold;
+                color: #555;
+                font-size: 14px; /* Slightly reduced font size */
+            }
 
-    form {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    h2 {
-        font-size: 2rem;
-        text-align: center;
-        margin-bottom: 40px;
-        color: #fff;
-    }
-    
-    .forget {
-        display: flex;
-        align-items: center;
-        justify-content: end;
-        margin: 25px 0 35px 0;
-        color: #fff;
-    }    
+            input {
+                width: 100%;
+                padding: 8px; /* Reduced padding */
+                border-radius: 4px; /* Slightly reduced border-radius */
+                border: 1px solid #ddd;
+                font-size: 14px; /* Slightly reduced font size */
+                box-sizing: border-box;
+            }
 
-    a {
-        color: #fff;
-        text-decoration: none;
-        font-size: 16px;
-    }
-    
-    a:hover {
-        text-decoration: underline;
-        color: #1890ff;
-    }
+            .error {
+                margin-top: 3px;
+                color: red;
+                font-size: 12px;
+            }
+        }
 
-    button {
-        font-weight: 600;
-        margin-top: 20px;
-        padding: 10px auto;
-        border: none;
-        padding: 20px 20px;
-        cursor: pointer;
-        border-radius: 3px;
-        font-size: 16px;
-        border: 2px solid transparent;
-        transition: 0.3s ease;
+        .register-button {
+            width: 100%;
+            padding: 10px; /* Slightly reduced padding */
+            background-color: whitesmoke;
+            border: 2px solid black;
+            border-radius: 4px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+                
+            &:hover {
+                background-color: black;
+                color: whitesmoke;
+            }
+        }
     }
 }

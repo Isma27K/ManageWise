@@ -1,0 +1,352 @@
+.custom-modal {
+  .ant-modal-content {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ant-modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .modal-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .modal-left,
+  .modal-right {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .modal-left {
+    border-right: 1px solid #e8e8e8;
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  .task-list {
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+
+    .ant-list-item {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid #e8e8e8;
+      }
+    }
+
+    .list-item-content {
+      flex: 1;
+    }
+
+    .list-item-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+
+      .anticon {
+        cursor: pointer;
+        font-size: 16px;
+        color: black;
+      }
+
+      .ant-btn {
+        background-color: white;
+        border: 1px solid black;
+        color: black;
+        font-weight: normal;
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: black;
+          color: white;
+        }
+      }
+
+      .attachment-icon {
+        cursor: pointer;
+        font-size: 16px;
+        color: black;
+        margin-right: 8px;
+
+        &:hover {
+          color: #595959;
+        }
+      }
+    }
+  }
+
+  .subtask-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .ant-input,
+    .ant-select,
+    input[type="file"] {
+      width: 100%;
+    }
+
+    .ant-input,
+    .ant-select-selector {
+      border: 1px solid #d9d9d9;
+      &:hover, &:focus {
+        border-color: black;
+      }
+    }
+
+    input[type="file"] {
+      border: 1px solid #d9d9d9;
+      padding: 8px;
+      &:hover, &:focus {
+        border-color: black;
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .contributors-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .contributors-label {
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .no-contributors {
+      margin: 0;
+      font-style: italic;
+      color: #888;
+    }
+
+    .ant-avatar-group {
+      .ant-avatar {
+        border: 2px solid white;
+      }
+    }
+  }
+
+  .save-button {
+    background-color: whitesmoke;
+    border: 2px solid black !important;
+    color: black;
+    font-weight: bold;
+    padding: 8px 24px;
+    height: auto;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: black !important;
+      color: whitesmoke !important;
+    }
+  }
+
+  .close-button {
+    background-color: #d9d9d9; // Light gray background
+    border: 1px solid #8c8c8c; // Darker gray border for contrast
+    color: #262626; // Dark gray text for readability
+    font-weight: bold;
+    transition: all 0.3s;
+
+    &:hover, &:focus {
+      background-color: #bfbfbf; // Slightly darker gray on hover/focus
+      border-color: #595959; // Even darker border on hover/focus
+      color: #000000; // Black text on hover/focus for maximum contrast
+    }
+  }
+}
+
+
+
+// Popconfirm styles
+.ant-popover {
+  .ant-popover-inner-content {
+    padding: 16px;
+  }
+
+  .ant-popover-message {
+    padding-left: 22px;
+
+    > .anticon {
+      color: black;
+    }
+  }
+
+  .ant-popover-buttons {
+    margin-top: 16px;
+
+    .ant-btn-primary {
+      margin-left: 8px;
+      // Add any other custom styles here
+    }
+
+    .ant-btn-default {
+      color: black;
+      border-color: #d9d9d9;
+
+      &:hover {
+        border-color: black;
+      }
+    }
+  }
+}
+
+.file-upload {
+  margin-top: 16px;
+
+  .ant-upload-list {
+    display: none;
+  }
+
+  .ant-btn {
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+
+    &:hover {
+      background-color: black;
+      color: white;
+    }
+  }
+}
+
+.file-list {
+  margin-top: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  padding: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+
+  .file-list-item {
+    padding: 4px 0;
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      max-width: calc(100% - 32px); // Adjust based on the width of your remove button
+      overflow: hidden;
+
+      .attachment-icon {
+        margin-right: 8px;
+        flex-shrink: 0;
+      }
+
+      .file-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .remove-file-button {
+      flex-shrink: 0;
+      padding: 0 8px;
+      
+      &:hover {
+        color: #ff4d4f; // Red color on hover
+      }
+    }
+  }
+}
+
+.ant-modal-content {
+  background-color: white;
+  color: black;
+}
+
+.ant-modal-header {
+  background-color: white;
+  border-bottom: 1px solid black;
+}
+
+.ant-modal-title {
+  color: black;
+}
+
+.ant-modal-close {
+  color: black;
+}
+
+.ant-btn-primary {
+  background-color: black;
+  border-color: black;
+
+  &:hover {
+    background-color: #333;
+    border-color: #333;
+  }
+}
+
+.ant-select-selector {
+  border-color: black !important;
+}
+
+.ant-input {
+  border-color: black;
+
+  &:focus, &:hover {
+    border-color: #333;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+
+  .card-item {
+    flex: 0 0 calc(33.333% - 13.333px);
+    max-width: calc(33.333% - 13.333px);
+    
+    @media (max-width: 1200px) {
+      flex: 0 0 calc(50% - 10px);
+      max-width: calc(50% - 10px);
+    }
+
+    @media (max-width: 768px) {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+.custom-card {
+  height: 300px;
+  width: 100%;
+
+  .ant-card-head {
+    background-color: #8c8c8c;
+  }
+}

@@ -1,17 +1,38 @@
-.not-found {
-    color: black;
-    text-align: center;
+.not-found-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; 
-}
+    height: 100vh;
+    background-color: #ffffff;
+    text-align: center;
+    padding: 20px;
 
-a {
-    text-decoration: none;
-    color: black;
-    
-    &:hover {
-        color: gray;
+    .not-found-image {
+        width: 40vh;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .home-button {
+        width: 100%;
+        padding: 12px;
+        background-color: whitesmoke;
+        border: 2px solid black; /* Fixed border property */
+        border-radius: 5px;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+            
+        &:hover {
+            background-color: black;
+            color: whitesmoke;
+        }
     }
 }
