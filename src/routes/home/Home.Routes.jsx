@@ -9,7 +9,7 @@ import Lottie from "lottie-react";
 import loadingAnimation from '../../asset/gif/loading.json'; // Make sure this JSON file exists
 
 const Home = () => {
-    const { user, setUser, allUsers, setAllUsers } = useContext(UserContext);
+    const { user, setUser, allUsers, setAllUsers, setPools } = useContext(UserContext);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
 
@@ -61,6 +61,30 @@ const Home = () => {
             }
         };
 
+        const fetchPools = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/data/DDdata', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (!response.ok) {
+                    openNotification('error', 'Error', 'Failed to fetch pools');
+                    return;
+                }
+
+                const data = await response.json();
+                setPools(data);
+            }catch (error) {
+                console.error('Error fetching pools:', error);
+                openNotification('error', 'Error', error.message || 'An unexpected error occurred');
+                navigate('/login');
+            }
+        }
+
         const fetchAllUsers = async () => {
             try {
                 const response = await fetch('http://localhost:5000/api/data/AllUserData', {
@@ -88,8 +112,9 @@ const Home = () => {
         };
 
         fetchUser(); // Fetch user data
+        fetchPools(); // Fetch all users data
         fetchAllUsers(); // Fetch all users data
-    }, [token, navigate, setUser, setAllUsers]);
+    }, [token, navigate, setUser, setAllUsers, setPools]);
 
     if (isLoading) {
         return (

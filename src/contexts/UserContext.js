@@ -9,10 +9,11 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [allUsers, setAllUsers] = useState(null);
   const [other, setOther] = useState(null);
+  const [pools, setPools] = useState(null);
 
 
   return (
-    <UserContext.Provider value={{ user, setUser, allUsers, setAllUsers, other, setOther }}>
+    <UserContext.Provider value={{ user, setUser, allUsers, setAllUsers, other, setOther, pools, setPools }}>
       {children}
     </UserContext.Provider>
   );

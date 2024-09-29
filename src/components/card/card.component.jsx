@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Card } from 'antd';
+import { Card, List } from 'antd';
 import TaskModal from '../Modal/task-modal';
 import './card.style.scss';
 
-const CustomCard = () => {
+const CustomCard = ({ pools }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
-	const [selectedTaskTitle, setSelectedTaskTitle] = useState('');
+	const [selectedPool, setSelectedPool] = useState(null);
 
-	const showModal = (title) => {
-		setSelectedTaskTitle(title);
+	const showModal = (pool) => {
+		setSelectedPool(pool);
 		setIsModalVisible(true);
 	};
 
@@ -16,35 +16,39 @@ const CustomCard = () => {
 		setIsModalVisible(false);
 	};
 
-	const cardData = [
-		{title: 'HAL EHWAL PELAJAR'},
-		{title: 'HAL EHWAL AKADEMIK'},
-		{title: 'HAL EHWAL STAF'},
-		{title: 'PENTADBIRAN DAN PENGURUSAN AM'},
-		{title: 'HUBUNGAN INDUSTRI DAN GRADUAN'},
-		{title: 'HAL EHWAL PENGURUSAN FASILITI'},
-	];
-
 	return (
 		<>
 			<div className="card-container">
-				{cardData.map((card, index) => (
+				{pools.map((pool, index) => (
 					<div key={index} className="card-item">
-						<Card  
+						<Card
 							className="custom-card"
-							title={card.title}
-							borderded={false}
+							title={pool.name}
+							bordered={false}
 							hoverable
-							onClick={() => showModal(card.title)}
-						/>
+							onClick={() => showModal(pool)}
+						>
+							<List
+								size="small"
+								dataSource={pool.tasks || []}
+								renderItem={(task, taskIndex) => (
+									<List.Item key={taskIndex}>
+										{task.name || `Task ${taskIndex + 1}`}
+									</List.Item>
+								)}
+							/>
+							{/*pool.tasks && pool.tasks.length === 0 && (
+								<p>No tasks in this pool</p>
+							)*/}
+						</Card>
 					</div>
 				))}
 			</div>
 
-			<TaskModal 
+			<TaskModal
 				visible={isModalVisible}
 				onCancel={handleCancel}
-				taskTitle={selectedTaskTitle}
+				pool={selectedPool}
 			/>
 		</>
 	);
