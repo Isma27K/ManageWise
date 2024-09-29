@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom'; // Corrected import for Link
 import { DownloadOutlined, BookOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Input, Menu, Dropdown } from 'antd';
+import { UserContext } from '../../contexts/UserContext';
 
 // Import assets
-import AvatarImage from "../../asset/test/avatar/OIP.jpeg";
 import './nav.style.scss'; // Import the SCSS file for styling
 
 const avatarSize = {
@@ -12,6 +12,15 @@ const avatarSize = {
 };
 
 const Nav = () => {
+    const { user } = useContext(UserContext);
+    const [avatarLoadError, setAvatarLoadError] = useState(false);
+
+    console.log(user);
+
+    // Function to get the first letter of the name
+    const getNameInitial = (name) => {
+        return name ? name.charAt(0).toUpperCase() : '?';
+    };
 
     // Define menu items for the avatar dropdown
     const menu = (
@@ -46,9 +55,12 @@ const Nav = () => {
                     <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
                         <Avatar
                             size={avatarSize.xxl}
-                            src={AvatarImage}
+                            src={user?.avatarUrl}
                             className="avatar"
-                        />
+                            onError={() => setAvatarLoadError(true)}
+                        >
+                            {(avatarLoadError || !user?.avatarUrl) && getNameInitial(user?.name)}
+                        </Avatar>
                     </Dropdown>
 
                 </div>

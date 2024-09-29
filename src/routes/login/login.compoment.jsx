@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { notification } from 'antd';
 import './login.style.scss';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    //const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
-        
+        //setError('');
+        setIsLoading(true);
+        const openNotification = (type, message, description) => {
+            notification[type]({
+                message,
+                description,
+                placement: 'topRight',
+            });
+        };
+
         try {
             let username = email;
             const response = await fetch('http://localhost:5000/auth/login', {
@@ -31,15 +41,21 @@ const Login = () => {
                     // Redirect to the dashboard or home page
                     navigate('/dashboard');
                 } else {
-                    setError('Login successful, but no token received');
+                    //setError('Login successful, but no token received');
+                    openNotification('error', 'Login successful, but no token received', 'Please try again');
                 }
             } else {
                 const errorData = await response.json();
-                setError(errorData.message || 'Login failed');
+                //setError(errorData.message || 'Login failed');
+                openNotification('error', 'Username or password is incorrect', errorData.message);
             }
         } catch (error) {
             console.error('Error during login:', error);
-            setError('Network error. Please try again.');
+            //setError('Network error. Please try again.');
+            openNotification('error', 'Network error. Please try again.', error);
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 
@@ -47,7 +63,7 @@ const Login = () => {
         <div className="login-container">
             <form className="login-form" onSubmit={handleSubmit}>
                 <h2>Login</h2>
-                {error && <div className="error-message">{error}</div>}
+                {/*error && <div className="error-message">{error}</div>}*/}
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
                     <input
@@ -57,6 +73,7 @@ const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        disabled={isLoading}
                     />
                 </div>
                 <div className="form-group">
@@ -68,9 +85,10 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        disabled={isLoading}
                     />
                 </div>
-                <button type="submit" className="login-button">Login</button>
+                <button type="submit" className="login-button" disabled={isLoading}>{isLoading ? 'Loading...' : 'Login'}</button>
             </form>
         </div>
     );
