@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom'; // Corrected import for Link
 import { DownloadOutlined, BookOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Avatar, Input, Badge, Drawer, Menu, Dropdown } from 'antd';
+import { Avatar, Input, Menu, Dropdown } from 'antd';
 
 // Import assets
 import AvatarImage from "../../asset/test/avatar/OIP.jpeg";

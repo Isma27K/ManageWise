@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { notification } from 'antd';
 import './register.style.scss';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -9,7 +10,7 @@ const Register = () => {
         password: '',
         confirmPassword: ''
     });
-
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const openNotification = (type, message, description) => {
         notification[type]({
@@ -40,15 +41,47 @@ const Register = () => {
         return errors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
-            // Handle successful submission
-            console.log('Form submitted:', formData);
-            openNotification('success', 'Registration Successful', 'You have registered successfully.');
+            try {
+                const response = await fetch('http://localhost:5000/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formData.name,
+                        email: formData.email,
+                        password: formData.password,
+                    }),
+                });
+
+                // if success
+                if (response.status === 200) {
+                    openNotification('success', 'Registration Successful', 'You have registered successfully.');
+                    // Clear the form
+                    setFormData({
+                        name: '',
+                        email: '',
+                        password: '',
+                        confirmPassword: ''
+                    });
+                    setErrors({});
+                    navigate('/login');
+                    // Optionally, you can redirect the user here
+                // if not success
+                } else {
+                    const errorData = await response.json();
+                    openNotification('error', 'Registration Failed', errorData.message || 'An error occurred during registration.');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                openNotification('error', 'Registration Failed', 'An unexpected error occurred. Please try again later.');
+            }
         }
     };
 
