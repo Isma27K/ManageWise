@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
 import { SettingOutlined, AppstoreOutlined, SafetyOutlined, AuditOutlined } from '@ant-design/icons';
 import './dashboard.style.scss';
@@ -11,18 +11,16 @@ import { UserContext } from '../../contexts/UserContext';
 // import Report from '../report/report.component.jsx';
 
 const { Sider, Content } = Layout;
+
 const Dashboard = () => {
   const { user } = useContext(UserContext);
   const [content, setContent] = useState(<MainDashboard />);
   const [selectedKey, setSelectedKey] = useState('1');
 
+  const isAdmin = user?.admin;
 
-  const isAdmin = user?.admin; // Set to true to show the admin menu item
-  
-  
   // Define the menu click handler
   const handleMenuClick = (e) => {
-    //console.log('Clicked menu item:', e.key);
     setSelectedKey(e.key);
     switch (e.key) {
       case '1':
@@ -41,6 +39,7 @@ const Dashboard = () => {
         setContent(<MainDashboard />);
     }
   };
+
   return (
     <Layout className="dashboard-layout">
       <Sider className="sider-style" width="250px">
@@ -58,7 +57,7 @@ const Dashboard = () => {
               {isAdmin && (
                 <Menu.Item key="4" icon={<SafetyOutlined />}>Admin</Menu.Item>
               )}
-              <Menu.Item key="3" icon={<AuditOutlined />}>Report (Coming Soon)</Menu.Item>
+              <Menu.Item key="3" icon={<AuditOutlined />} disabled>Report (Coming Soon)</Menu.Item>
             </Menu.ItemGroup>
           </Menu>
         </div>
@@ -71,4 +70,5 @@ const Dashboard = () => {
     </Layout>
   );
 };
+
 export default Dashboard;
