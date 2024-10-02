@@ -1,77 +1,88 @@
 import React, { useState } from 'react';
-import { Form, Button, Select, message, Avatar } from 'antd';
+import { Form, Button, Select, message, Avatar, notification } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
-const DeleteOperationsTab = ({ users, pools}) => {
+const DeleteOperationsTab = ({ users, pools }) => {
   const [form] = Form.useForm();
   const [deletePoolId, setDeletePoolId] = useState('');
   const [deleteUserId, setDeleteUserId] = useState(null);
 
-  console.log('allPools', pools);
+  //console.log(users);
 
-  const handleDeletePool = (values) => {
-    console.log('Deleting pool with ID:', values.deletePool);
-    message.success(`Pool with ID ${values.deletePool} has been deleted.`);
-    form.resetFields(['deletePool']);
+  const openNotification = (type, message, description) => {
+    notification[type]({
+      message,
+      description,
+      placement: 'topRight',
+    });
+  };
+
+  const handleDeletePool = async (values) => {
+    console.log('Deleting pool with ID:', values.ArchivePool);
+    // Implement the actual delete pool API call here
+    message.success(`Pool with ID ${values.ArchivePool} has been deleted.`);
+    form.resetFields(['ArchivePool']);
     setDeletePoolId('');
   };
 
-  const handleDeleteUser = () => {
+  const handleDeleteUser = async () => {
     if (deleteUserId) {
-      const user = users.find(u => u.id === deleteUserId);
+      const user = users.find(u => u.uid === deleteUserId || u.id === deleteUserId);
       if (user) {
-        console.log('Deleting user:', user.name);
-        message.success(`User ${user.name} has been deleted.`);
-        form.resetFields(['deleteUser']);
-        setDeleteUserId(null);
+        try {
+          // Implement the actual delete user API call here
+          console.log('Deleting user:', user.name);
+          openNotification('success', 'Success', `User ${user.name} has been deleted.`);
+          form.resetFields(['deleteUser']);
+          setDeleteUserId(null);
+        } catch (error) {
+          openNotification('error', 'Error', 'Failed to delete user');
+        }
       } else {
-        message.error('User not found');
+        openNotification('error', 'Error', 'User not found');
       }
     } else {
-      message.error('Please select a user to delete');
+      openNotification('error', 'Error', 'Please select a user to delete');
     }
   };
 
+  const handleUserChange = (value) => {
+    setDeleteUserId(value);
+  };
+
   const filterUsers = (input, option) => {
-    const name = option.label.toLowerCase();
-    const email = option.children.props.children[1].props.children[1].props.children.toLowerCase();
-    return name.indexOf(input.toLowerCase()) >= 0 || email.indexOf(input.toLowerCase()) >= 0;
+    const name = (option.label || '').toLowerCase();
+    const email = (option.email || '').toLowerCase();
+    return name.includes(input.toLowerCase()) || email.includes(input.toLowerCase());
   };
 
   return (
     <>
       <Form layout="vertical" onFinish={handleDeletePool} className="admin-form">
         <Form.Item 
-          name="deletePool" 
-          label="DELETE POOL"
-          rules={[{ required: true, message: 'Please select a pool to delete' }]}
+          name="ArchivePool" 
+          label="Archive POOL"
+          rules={[{ required: true, message: 'Please select a pool to Archive' }]}
         >
           <Select
-            placeholder="Select a pool to delete"
+            placeholder="Select a pool to Archive"
             onChange={(value) => setDeletePoolId(value)}
             style={{ width: '100%' }}
-            optionLabelProp="label"
           >
             {pools.map(pool => (
-              <Option 
-                key={pool._id} 
-                value={pool._id} 
-                label={pool.name}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
-                  <div>{pool.name}</div>
-                </div>
-              </Option>
+              <Option key={pool._id} value={pool._id}>{pool.name}</Option>
             ))}
           </Select>
         </Form.Item>
         <Form.Item>
-          <Button danger htmlType="submit">DELETE POOL</Button>
+          <Button danger htmlType="submit" className='archive-button'>
+            Archive POOL
+          </Button>
         </Form.Item>
       </Form>
-      <Form layout="vertical" onFinish={handleDeleteUser} className="admin-form">
+      <Form form={form} layout="vertical" onFinish={handleDeleteUser} className="admin-form">
         <Form.Item 
           name="deleteUser" 
           label="DELETE USER"
@@ -81,7 +92,8 @@ const DeleteOperationsTab = ({ users, pools}) => {
             showSearch
             placeholder="Search for a user to delete"
             optionFilterProp="children"
-            onChange={(value) => setDeleteUserId(value)}
+            onChange={handleUserChange}
+            value={deleteUserId}
             filterOption={filterUsers}
             style={{ width: '100%' }}
             listHeight={300}
@@ -89,16 +101,17 @@ const DeleteOperationsTab = ({ users, pools}) => {
             optionLabelProp="label"
           >
             {users.map(user => (
-              <Option 
-                key={user.id} 
-                value={user.id} 
-                label={user.name}
+              <Option
+                key={user.uid || user.id}
+                value={user.uid || user.id}
+                label={user.name ? user.name.toUpperCase() : 'NO NAME'}
+                email={user.email}
               >
                 <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
                   <Avatar icon={<UserOutlined />} src={user.avatar} />
                   <div style={{ marginLeft: 8 }}>
-                    <div>{user.name}</div>
-                    <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email}</div>
+                    <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
+                    <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>
                   </div>
                 </div>
               </Option>

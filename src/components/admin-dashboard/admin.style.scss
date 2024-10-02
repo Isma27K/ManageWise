@@ -250,3 +250,15 @@
   color: whitesmoke;
   border-color: black;
 }
+
+.archive-button{
+  border: 2px solid chocolate !important;
+  color: chocolate !important;
+  background-color: transparent !important;
+
+  &:hover, &:focus{
+    background-color: chocolate !important;
+    border-color: chocolate !important;
+    color: white !important;
+  }
+}
