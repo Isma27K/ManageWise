@@ -16,6 +16,11 @@ const CustomCard = ({ pools }) => {
 		setIsModalVisible(false);
 	};
 
+	// Add a check for pools being null or undefined
+	if (!pools || pools.length === 0) {
+		return <div>No pools available</div>;
+	}
+
 	return (
 		<>
 			<div className="card-container">
@@ -37,9 +42,6 @@ const CustomCard = ({ pools }) => {
 									</List.Item>
 								)}
 							/>
-							{/*pool.tasks && pool.tasks.length === 0 && (
-								<p>No tasks in this pool</p>
-							)*/}
 						</Card>
 					</div>
 				))}

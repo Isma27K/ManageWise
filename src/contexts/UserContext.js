@@ -9,7 +9,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [allUsers, setAllUsers] = useState(null);
   const [other, setOther] = useState(null);
-  const [pools, setPools] = useState(null);
+  const [pools, setPools] = useState([]); // Initialize as an empty array
 
   //console.log('pools', pools);
 

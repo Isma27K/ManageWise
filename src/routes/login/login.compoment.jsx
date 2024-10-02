@@ -10,6 +10,9 @@ const Login = () => {
     //const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    // clear local storage first
+    localStorage.clear();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         //setError('');
