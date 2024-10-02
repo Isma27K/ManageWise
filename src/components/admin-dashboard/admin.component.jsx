@@ -15,9 +15,10 @@ const { TabPane } = Tabs;
 const USE_DUMMY_DATA = false;
 
 const AdminDashboard = () => {
-  const { allUsers } = useContext(UserContext);
+  const { allUsers, pools } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
+  const [pool, setPools] = useState([]);
   //const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,16 +26,19 @@ const AdminDashboard = () => {
       if (USE_DUMMY_DATA) {
         setUsers(dummyUsers);
         setRoles(dummyRoles);
+        setPools(pools);
         //setLoading(false);
       } else {
         try {          
           setUsers(allUsers);
           setRoles(dummyRoles);
+          setPools(pools);
         } catch (error) {
           console.error('Error fetching data:', error);
           message.error(error.message || 'Failed to fetch data from the API. Please try again later.');
           setUsers([]);
           setRoles([]);
+          setPools([]);
         } finally {
           //setLoading(false);
         }
@@ -72,7 +76,7 @@ const AdminDashboard = () => {
           <PoolManagementTab users={users} />
         </TabPane>
         <TabPane tab="Delete Operations" key="4">
-          <DeleteOperationsTab users={users} />
+          <DeleteOperationsTab users={users} pools={pool}/>
         </TabPane>
       </Tabs>
     </div>

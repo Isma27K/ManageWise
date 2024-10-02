@@ -11,6 +11,8 @@ export const UserProvider = ({ children }) => {
   const [other, setOther] = useState(null);
   const [pools, setPools] = useState(null);
 
+  //console.log('pools', pools);
+
 
   return (
     <UserContext.Provider value={{ user, setUser, allUsers, setAllUsers, other, setOther, pools, setPools }}>

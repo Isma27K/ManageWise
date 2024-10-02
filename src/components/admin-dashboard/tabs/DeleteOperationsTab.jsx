@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Select, message, Avatar } from 'antd';
+import { Form, Button, Select, message, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
-const DeleteOperationsTab = ({ users }) => {
+const DeleteOperationsTab = ({ users, pools}) => {
   const [form] = Form.useForm();
   const [deletePoolId, setDeletePoolId] = useState('');
   const [deleteUserId, setDeleteUserId] = useState(null);
+
+  console.log('allPools', pools);
 
   const handleDeletePool = (values) => {
     console.log('Deleting pool with ID:', values.deletePool);
@@ -44,12 +46,26 @@ const DeleteOperationsTab = ({ users }) => {
         <Form.Item 
           name="deletePool" 
           label="DELETE POOL"
-          rules={[{ required: true, message: 'Please enter a Pool ID' }]}
+          rules={[{ required: true, message: 'Please select a pool to delete' }]}
         >
-          <Input 
-            placeholder="Enter Pool ID" 
-            onChange={(e) => setDeletePoolId(e.target.value)}
-          />
+          <Select
+            placeholder="Select a pool to delete"
+            onChange={(value) => setDeletePoolId(value)}
+            style={{ width: '100%' }}
+            optionLabelProp="label"
+          >
+            {pools.map(pool => (
+              <Option 
+                key={pool._id} 
+                value={pool._id} 
+                label={pool.name}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
+                  <div>{pool.name}</div>
+                </div>
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item>
           <Button danger htmlType="submit">DELETE POOL</Button>
