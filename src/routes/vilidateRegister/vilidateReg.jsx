@@ -5,7 +5,8 @@ import { notification } from 'antd';
 import Lottie from "lottie-react";
 import loadingAnimation from '../../asset/gif/loading.json'; // You'll need to add this JSON file
 
-const ValidateRegister = () => {
+const 
+ValidateRegister = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [isInvitationValid, setIsInvitationValid] = useState(false);

@@ -107,6 +107,8 @@ const Home = () => {
                 openNotification('error', 'Error', error.message || 'An unexpected error occurred');
                 navigate('/login');
             }finally {
+                // Add a 5-second delay
+                //await new Promise(resolve => setTimeout(resolve, 5000));
                 setIsLoading(false); // Ensure loading state is set to false after fetching
             }
         };

@@ -4,6 +4,8 @@ import './register.style.scss';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const params = new URLSearchParams(window.location.search);
+    const invitation = params.get('invitation');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -57,6 +59,7 @@ const Register = () => {
                         name: formData.name,
                         email: formData.email,
                         password: formData.password,
+                        id: invitation
                     }),
                 });
 
