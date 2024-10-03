@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, Button, Select, message, Avatar, notification } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { UserContext } from '../../../contexts/UserContext';
 
 const { Option } = Select;
 
-const DeleteOperationsTab = ({ users, pools }) => {
+const DeleteOperationsTab = ({ users, pools, setUsers }) => {
   const [form] = Form.useForm();
   const [deletePoolId, setDeletePoolId] = useState('');
   const [deleteUserId, setDeleteUserId] = useState(null);
+  const token = localStorage.getItem('jwtToken');
+  const { setAllUsers, setPools } = useContext(UserContext);
 
   //console.log(users);
 
@@ -32,13 +35,35 @@ const DeleteOperationsTab = ({ users, pools }) => {
       const user = users.find(u => u.uid === deleteUserId || u.id === deleteUserId);
       if (user) {
         try {
-          // Implement the actual delete user API call here
-          console.log('Deleting user:', user.name);
-          openNotification('success', 'Success', `User ${user.name} has been deleted.`);
-          form.resetFields(['deleteUser']);
-          setDeleteUserId(null);
+          const response = await fetch('http://localhost:5000/api/admin/DeleteUser', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: deleteUserId }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+
+          if (result.message === "User deleted successfully") {
+            // Update the local users state
+            const updatedUsers = users.filter(u => u.uid !== deleteUserId && u.id !== deleteUserId);
+            setUsers(updatedUsers);
+
+            openNotification('success', 'Success', `User ${user.name} has been deleted.`);
+            form.resetFields(['deleteUser']);
+            setDeleteUserId(null);
+          } else {
+            throw new Error(result.message || 'Failed to delete user');
+          }
         } catch (error) {
-          openNotification('error', 'Error', 'Failed to delete user');
+          console.error('Error deleting user:', error);
+          openNotification('error', 'Error', `Failed to delete user: ${error.message}`);
         }
       } else {
         openNotification('error', 'Error', 'User not found');

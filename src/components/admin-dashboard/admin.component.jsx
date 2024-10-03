@@ -15,7 +15,7 @@ const { TabPane } = Tabs;
 const USE_DUMMY_DATA = false;
 
 const AdminDashboard = () => {
-  const { allUsers, pools } = useContext(UserContext);
+  const { allUsers, setAllUsers, pools } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   const [pool, setPools] = useState([]);
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
           <PoolManagementTab users={users} />
         </TabPane>
         <TabPane tab="Delete Operations" key="4">
-          <DeleteOperationsTab users={users} pools={pool}/>
+          <DeleteOperationsTab users={allUsers} pools={pools} setUsers={setAllUsers} />
         </TabPane>
       </Tabs>
     </div>
