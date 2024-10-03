@@ -6,9 +6,11 @@ import './card.style.scss';
 const CustomCard = ({ pools }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [selectedPool, setSelectedPool] = useState(null);
+	const [selectedTask, setSelectedTask] = useState(null);
 
-	const showModal = (pool) => {
+	const showModal = (pool, task) => {
 		setSelectedPool(pool);
+		setSelectedTask(task);
 		setIsModalVisible(true);
 	};
 
@@ -31,14 +33,17 @@ const CustomCard = ({ pools }) => {
 							title={pool.name}
 							bordered={false}
 							hoverable
-							onClick={() => showModal(pool)}
 						>
 							<List
 								size="small"
 								dataSource={pool.tasks || []}
-								renderItem={(task, taskIndex) => (
-									<List.Item key={taskIndex}>
-										{task.name || `Task ${taskIndex + 1}`}
+								renderItem={(task) => (
+									<List.Item
+										key={task.id}
+										onClick={() => showModal(pool, task)}
+										style={{ cursor: 'pointer' }}
+									>
+										{task.name || `Task ${task.id}`}
 									</List.Item>
 								)}
 							/>
@@ -51,6 +56,7 @@ const CustomCard = ({ pools }) => {
 				visible={isModalVisible}
 				onCancel={handleCancel}
 				pool={selectedPool}
+				task={selectedTask}
 			/>
 		</>
 	);

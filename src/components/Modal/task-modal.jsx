@@ -1,22 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Divider, Input, DatePicker, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
-const TaskModal = ({ visible, onCreate, onCancel, taskTitle }) => {
+const TaskModal = ({ visible, onCancel, pool, task }) => {
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
     const { RangePicker } = DatePicker;
 
+    useEffect(() => {
+        if (task) {
+            setTaskName(task.name || '');
+            setTaskDescription(task.description || '');
+            // If task has start and end dates, set them here
+            // setDueDate([moment(task.startDate), moment(task.endDate)]);
+        }
+    }, [task]);
+
     const handleCreate = () => {
-        onCreate();
+        // Here you can handle the creation or update of the task
+        console.log('Task data:', { taskName, taskDescription, dueDate, poolId: pool?._id, taskId: task?.id });
+        onCancel();
     };
 
     return (
         <Modal
-            title={taskTitle}
+            title={task ? `Edit Task: ${task.name}` : 'Create New Task'}
             visible={visible}
-            onOk={handleCreate}
             onCancel={onCancel}
             footer={null}
             width={1000}
@@ -28,7 +38,7 @@ const TaskModal = ({ visible, onCreate, onCancel, taskTitle }) => {
 
             <div style={{ display: 'flex', height: '100%', marginTop: '30px', padding: '0 20px' }}>
                 <div style={{ flex: 1, paddingRight: '20px' }}>
-                    <h4>Create Task</h4>
+                    <h4>{task ? 'Edit Task' : 'Create Task'}</h4>
                     <Input
                         placeholder="Task Name"
                         value={taskName}
@@ -55,7 +65,7 @@ const TaskModal = ({ visible, onCreate, onCancel, taskTitle }) => {
                         onClick={handleCreate}
                         style={{ marginTop: '20px' }}
                     >
-                        Create
+                        {task ? 'Update' : 'Create'}
                     </Button>
                 </div>
 
@@ -71,7 +81,17 @@ const TaskModal = ({ visible, onCreate, onCancel, taskTitle }) => {
 
                 {/* Right Content */}
                 <div style={{ flex: 1, paddingLeft: '20px' }}>
-                    <p>The content will be available once the task is created.</p>
+                    {task ? (
+                        <div>
+                            <h4>Task Details</h4>
+                            <p><strong>Task ID:</strong> {task.id}</p>
+                            <p><strong>Pool ID:</strong> {pool?._id}</p>
+                            <p><strong>Pool Name:</strong> {pool?.name}</p>
+                            {/* Add more task details here as needed */}
+                        </div>
+                    ) : (
+                        <p>The content will be available once the task is created.</p>
+                    )}
                 </div>
             </div>
         </Modal>
