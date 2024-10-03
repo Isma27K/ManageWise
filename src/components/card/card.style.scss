@@ -343,10 +343,80 @@
 }
 
 .custom-card {
-  height: 300px;
+  height: 300px !important;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 
   .ant-card-head {
-    background-color: #8c8c8c;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #d9d9d9;
+  }
+
+  .ant-card-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+
+    .scrollable-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .ant-list-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .card-footer {
+    padding: 8px 12px; // Reduced padding
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center; // Center the button vertically
+  }
+}
+
+// Styles for the create task button
+.create-task-btn {
+  background-color: white !important;
+  border: 1.5px solid black !important;
+  color: black !important;
+  height: 32px; // Reduced height
+  width: 32px; // Set width to match height for a perfect circle
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover, &:focus {
+    background-color: black !important;
+    border-color: black !important;
+    color: whitesmoke !important;
+  }
+
+  .anticon {
+    font-size: 16px; // Adjust icon size if needed
   }
 }
