@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider } from 'antd';
-import { UploadOutlined, UserOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider, Collapse } from 'antd';
+import { UploadOutlined, UserOutlined, DownloadOutlined, CaretRightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
 
 const { Text } = Typography;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+const { Panel } = Collapse;
 
 const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick }) => {
     const { allUsers } = useContext(UserContext);
@@ -69,7 +70,73 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
     const handleDownload = (attachment) => {
         console.log('Downloading:', attachment.name);
-        window.open(attachment.url, '_blank');
+        // Implement actual download logic here
+        // For now, we'll just open the link in a new tab
+        window.open(attachment.link, '_blank');
+    };
+
+    const renderAttachments = (attachments) => {
+        if (!attachments || attachments.length === 0) {
+            return null;
+        }
+
+        return (
+            <div style={{ marginTop: '8px' }}>
+                {attachments.map((item, index) => (
+                    <Button 
+                        key={index}
+                        type="link"
+                        icon={<DownloadOutlined />}
+                        onClick={() => handleDownload(item)}
+                        style={{ padding: '0', marginRight: '8px' }}
+                    >
+                        {item.name || `Attachment ${index + 1}`}
+                    </Button>
+                ))}
+            </div>
+        );
+    };
+
+    const renderProgressItem = (item) => {
+        const user = allUsers.find(u => u.uid === item.CID);
+        return (
+            <Collapse
+                ghost
+                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+            >
+                <Panel
+                    key={item.id}
+                    header={
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Avatar 
+                                size="small"
+                                src={user?.avatarUrl} 
+                                icon={!user?.avatarUrl && <UserOutlined />}
+                            >
+                                {(!user?.avatarUrl && user?.name) && getNameInitial(user.name)}
+                            </Avatar>
+                            <span style={{ marginLeft: 8 }}>{item.detail || 'Unknown User'}</span>
+                            <Text type="secondary" style={{ fontSize: '0.8em', marginLeft: 'auto' }}>
+                                {item.date ? dayjs(item.date).format('YYYY-MM-DD HH:mm') : 'No date'}
+                            </Text>
+                        </div>
+                    }
+                >
+                    {item.description && (
+                        <div style={{ marginBottom: '10px' }}>
+                            <Text strong>Description:</Text>
+                            <span>{item.description}</span>
+                        </div>
+                    )}
+                    {item.linkAttachment && item.linkAttachment.length > 0 && (
+                        <div>
+                            <Text strong>Attachments:</Text>
+                            {renderAttachments(item.linkAttachment)}
+                        </div>
+                    )}
+                </Panel>
+            </Collapse>
+        );
     };
 
     return (
@@ -188,31 +255,9 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 {task.progress && task.progress.length > 0 ? (
                     <List
                         style={{ overflowY: 'auto', flex: 1, maxHeight: 'calc(100% - 40px)' }}
-                        itemLayout="horizontal"
+                        itemLayout="vertical"
                         dataSource={task.progress}
-                        renderItem={(item) => {
-                            const user = allUsers.find(u => u.uid === item.CID);
-                            return (
-                                <List.Item>
-                                    <List.Item.Meta
-                                        avatar={
-                                            <Avatar 
-                                                src={user?.avatarUrl} 
-                                                icon={!user?.avatarUrl && <UserOutlined />}
-                                            >
-                                                {(!user?.avatarUrl && user?.name) && getNameInitial(user.name)}
-                                            </Avatar>
-                                        }
-                                        title={item.detail || 'Unknown User'}
-                                        description={
-                                            <Text type="secondary" style={{ fontSize: '0.8em' }}>
-                                                {item.date ? dayjs(item.date).format('YYYY-MM-DD HH:mm') : 'No date provided'}
-                                            </Text>
-                                        }
-                                    />
-                                </List.Item>
-                            );
-                        }}
+                        renderItem={renderProgressItem}
                     />
                 ) : (
                     <Empty
