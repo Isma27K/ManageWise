@@ -15,6 +15,18 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
         setShowUpdateTask(true);
     };
 
+    const handleUpdateSave = (taskData) => {
+        setUpdatedTaskData(taskData);
+        // Here you should implement the logic to save the updated task data
+        console.log('Saving updated task data:', taskData);
+        // For example, you might want to call an API to update the task
+        // updateTaskAPI(taskData).then(() => {
+        //     // Handle successful update
+        // }).catch(error => {
+        //     // Handle error
+        // });
+    };
+
     const handleUpdateTaskCancel = () => {
         setShowUpdateTask(false);
         setUpdatedTaskData(null);
@@ -44,6 +56,7 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
                             maxTaskNameLength={maxTaskNameLength}
                             onCancel={onCancel}
                             onUpdateClick={handleUpdateClick}
+                            handleUpdateSave={handleUpdateSave}
                         />
                     ) : (
                         <CreateTaskModal

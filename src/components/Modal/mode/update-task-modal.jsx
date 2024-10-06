@@ -11,13 +11,14 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
 
-const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick }) => {
+const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick, handleUpdateSave }) => {
     const { allUsers } = useContext(UserContext);
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
     const [selectedContributors, setSelectedContributors] = useState([]);
     const [attachments, setAttachments] = useState([]);
+    const [isChanged, setIsChanged] = useState(false);
 
     useEffect(() => {
         if (task) {
@@ -30,6 +31,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             }
             setSelectedContributors(task.contributor || []);
             setAttachments(task.attachments || []);
+            setIsChanged(false);
         }
     }, [task]);
 
@@ -44,15 +46,41 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         onUpdateClick({ ...taskData, id: task.id });
     };
 
+    const handleSave = () => {
+        const taskData = {
+            id: task.id, // Make sure to include the task id
+            name: taskName,
+            description: taskDescription,
+            dueDate: dueDate ? [dueDate[0].format('YYYY-MM-DD'), dueDate[1].format('YYYY-MM-DD')] : null,
+            contributor: selectedContributors
+        };
+
+        //console.log('Saving task data:', taskData);
+        handleUpdateSave(taskData);
+        setIsChanged(false);
+    };
+
     const handleTaskNameChange = (e) => {
         const value = e.target.value;
         if (value.length <= maxTaskNameLength) {
             setTaskName(value);
+            setIsChanged(true);
         }
+    };
+
+    const handleDescriptionChange = (e) => {
+        setTaskDescription(e.target.value);
+        setIsChanged(true);
+    };
+
+    const handleDateChange = (dates) => {
+        setDueDate(dates);
+        setIsChanged(true);
     };
 
     const handleContributorSelect = (values) => {
         setSelectedContributors(values);
+        setIsChanged(true);
     };
 
     const filterUsers = (input, option) => {
@@ -173,7 +201,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                     <Input.TextArea
                         placeholder="Task Description"
                         value={taskDescription}
-                        onChange={(e) => setTaskDescription(e.target.value)}
+                        onChange={handleDescriptionChange}
                         style={{ marginBottom: '20px' }}
                         disabled={!isEditable}
                     />
@@ -210,7 +238,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                     <RangePicker
                         placeholder={['Start Date', 'End Date']}
                         value={dueDate}
-                        onChange={(dates) => setDueDate(dates)}
+                        onChange={handleDateChange}
                         style={{ marginBottom: '20px', width: '100%' }}
                         format="DD-MM-YYYY"
                         allowClear={true}
@@ -253,13 +281,22 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                     )}
                 </div>
 
-                <Button
-                    type="primary"
-                    onClick={handleSubmit}
-                    style={{ marginTop: '20px', alignSelf: 'flex-start' }}
-                >
-                    Update Progress
-                </Button>
+                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-start' }}>
+                    <Button
+                        type="primary"
+                        onClick={handleSave}
+                        disabled={!isChanged}
+                        style={{ marginRight: '10px' }}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        type="primary"
+                        onClick={handleSubmit}
+                    >
+                        Update Progress
+                    </Button>
+                </div>
             </div>
 
             <Divider type="vertical" style={{ height: '100%' }} />

@@ -1,0 +1,49 @@
+.ql-editor {
+    min-height: 200px;
+}
+
+.ql-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ql-container .ql-editor {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.ql-container .ql-toolbar {
+    flex-shrink: 0;
+}
+
+.ql-editor img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.ql-editor .ql-size-small {
+    font-size: 0.75em;
+}
+
+.ql-editor .ql-size-large {
+    font-size: 1.5em;
+}
+
+.ql-editor .ql-size-huge {
+    font-size: 2.5em;
+}
+
+.ql-editor .ql-align-center {
+    text-align: center;
+}
+
+.ql-editor .ql-align-right {
+    text-align: right;
+}
+
+.ql-editor .ql-align-justify {
+    text-align: justify;
+}
