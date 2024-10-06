@@ -67,6 +67,7 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
                     task={updatedTaskData}
                     isEditable={isEditable}
                     maxTaskNameLength={maxTaskNameLength}
+                    taskName={task}
                 />
             </CSSTransition>
         </>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider } from 'antd';
-import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, DownloadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
 
@@ -14,6 +14,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
     const [selectedContributors, setSelectedContributors] = useState([]);
+    const [attachments, setAttachments] = useState([]);
 
     useEffect(() => {
         if (task) {
@@ -25,6 +26,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 setDueDate(null);
             }
             setSelectedContributors(task.contributor || []);
+            setAttachments(task.attachments || []);
         }
     }, [task]);
 
@@ -65,6 +67,11 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         return user ? user.name : 'Unknown User';
     };
 
+    const handleDownload = (attachment) => {
+        console.log('Downloading:', attachment.name);
+        window.open(attachment.url, '_blank');
+    };
+
     return (
         <div style={{ display: 'flex', height: '70vh', maxHeight: '600px' }}>
             <div style={{ flex: 1, paddingRight: '20px', display: 'flex', flexDirection: 'column' }}>
@@ -89,6 +96,36 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                         style={{ marginBottom: '20px' }}
                         disabled={!isEditable}
                     />
+
+                    <div style={{ marginBottom: '20px' }}>
+                        <h5>Attachments</h5>
+                        {attachments.length > 0 ? (
+                            <List
+                                size="small"
+                                dataSource={attachments}
+                                renderItem={(item) => (
+                                    <List.Item
+                                        actions={[
+                                            <Button 
+                                                icon={<DownloadOutlined />} 
+                                                onClick={() => handleDownload(item)}
+                                            >
+                                                Download
+                                            </Button>
+                                        ]}
+                                    >
+                                        <List.Item.Meta
+                                            title={item.name}
+                                            description={`Size: ${item.size} bytes`}
+                                        />
+                                    </List.Item>
+                                )}
+                            />
+                        ) : (
+                            <Empty description="No attachments" />
+                        )}
+                    </div>
+
                     <RangePicker
                         placeholder={['Start Date', 'End Date']}
                         value={dueDate}
@@ -140,7 +177,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                     onClick={handleSubmit}
                     style={{ marginTop: '20px', alignSelf: 'flex-start' }}
                 >
-                    Update Task
+                    Update Progress
                 </Button>
             </div>
 
