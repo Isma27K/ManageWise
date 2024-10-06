@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  ManageWise is an FYP (Final Year Project) developed by students from Politeknik Kuching Sarawak. This project aims to enhance user productivity by automating repetitive tasks.
+  ManageWise is an FYP (Final Year Project) developed by students from Politeknik Kuching Sarawak. This project aims to enhance user productivity by Managing Work Flow.
 </p>
 
 ---
