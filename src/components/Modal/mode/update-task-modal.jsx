@@ -13,7 +13,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel }) => {
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
-    const [selectedSubmitters, setSelectedSubmitters] = useState([]);
+    const [selectedContributors, setSelectedContributors] = useState([]);
 
     useEffect(() => {
         if (task) {
@@ -24,7 +24,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel }) => {
             } else {
                 setDueDate(null);
             }
-            setSelectedSubmitters(task.submitters || []);
+            setSelectedContributors(task.contributor || []);
         }
     }, [task]);
 
@@ -33,7 +33,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel }) => {
             name: taskName,
             description: taskDescription,
             dueDate: dueDate ? [dueDate[0].format('YYYY-MM-DD'), dueDate[1].format('YYYY-MM-DD')] : null,
-            submitters: selectedSubmitters
+            contributor: selectedContributors
         };
 
         console.log('Editing task:', { ...taskData, id: task.id });
@@ -46,8 +46,8 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel }) => {
         }
     };
 
-    const handleSubmitterSelect = (values) => {
-        setSelectedSubmitters(values);
+    const handleContributorSelect = (values) => {
+        setSelectedContributors(values);
     };
 
     const filterUsers = (input, option) => {
@@ -58,6 +58,11 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel }) => {
 
     const getNameInitial = (name) => {
         return name ? name.charAt(0).toUpperCase() : '?';
+    };
+
+    const getContributorName = (userId) => {
+        const user = allUsers.find(u => u.uid === userId);
+        return user ? user.name : 'Unknown User';
     };
 
     return (
@@ -97,9 +102,9 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel }) => {
                     <Select
                         mode="multiple"
                         showSearch
-                        placeholder="Search for Contributors"
-                        value={selectedSubmitters}
-                        onChange={handleSubmitterSelect}
+                        placeholder={selectedContributors.length ? "Contributors" : "No Contributors"}
+                        value={selectedContributors}
+                        onChange={handleContributorSelect}
                         filterOption={filterUsers}
                         style={{ width: '100%', marginBottom: '20px' }}
                         listHeight={300}
