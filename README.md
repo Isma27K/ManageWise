@@ -55,7 +55,7 @@ In the project directory, you can run:
 ## Backend Server
 
 The backend server for this project can be found at:
-[https://github.com/ismasalalu/ManageWise-Backend](https://github.com/isma27k/ManageWise-Backend)
+[https://github.com/isma27k/ManageWise-Backend](https://github.com/isma27k/ManageWise-Backend)
 
 ## Contributing
 
