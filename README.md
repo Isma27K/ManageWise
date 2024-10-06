@@ -10,7 +10,7 @@
 
 ---
 
-## Getting Started
+## Getting Starteded
 
 ### Prerequisites
 

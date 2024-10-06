@@ -3,6 +3,8 @@ import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Em
 import { UploadOutlined, UserOutlined, DownloadOutlined, CaretRightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
+import DOMPurify from 'dompurify';
+import './update-task-modal.css';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -97,6 +99,15 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         );
     };
 
+    const sanitizeHTML = (html) => {
+        return {
+            __html: DOMPurify.sanitize(html, {
+                ADD_TAGS: ['img'],
+                ADD_ATTR: ['src', 'alt', 'style'],
+            })
+        };
+    };
+
     const renderProgressItem = (item) => {
         const user = allUsers.find(u => u.uid === item.CID);
         return (
@@ -123,9 +134,12 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                     }
                 >
                     {item.description && (
-                        <div style={{ marginBottom: '10px' }}>
+                        <div className="progress-description-wrapper">
                             <Text strong>Description:</Text>
-                            <span>{item.description}</span>
+                            <div 
+                                dangerouslySetInnerHTML={sanitizeHTML(item.description)}
+                                className="progress-description"
+                            />
                         </div>
                     )}
                     {item.linkAttachment && item.linkAttachment.length > 0 && (
