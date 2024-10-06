@@ -8,7 +8,7 @@ const { Text } = Typography;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel }) => {
+const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick }) => {
     const { allUsers } = useContext(UserContext);
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
@@ -36,7 +36,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel }) => {
             contributor: selectedContributors
         };
 
-        console.log('Editing task:', { ...taskData, id: task.id });
+        onUpdateClick({ ...taskData, id: task.id });
     };
 
     const handleTaskNameChange = (e) => {

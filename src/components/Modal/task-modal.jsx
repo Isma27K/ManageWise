@@ -1,9 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal } from 'antd';
 import CreateTaskModal from './mode/create-task-modal';
 import UpdateTaskModal from './mode/update-task-modal';
+import UpdateTask from './mode/update-task/update-task';
 
 const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLength = 40 }) => {
+    const [showUpdateTask, setShowUpdateTask] = useState(false);
+    const [updatedTaskData, setUpdatedTaskData] = useState(null);
+
+    const handleUpdateClick = (taskData) => {
+        setUpdatedTaskData(taskData);
+        setShowUpdateTask(true);
+    };
+
+    const handleUpdateTaskCancel = () => {
+        setShowUpdateTask(false);
+        setUpdatedTaskData(null);
+    };
+
+    if (showUpdateTask) {
+        return (
+            <UpdateTask
+                visible={showUpdateTask}
+                onCancel={handleUpdateTaskCancel}
+                task={updatedTaskData}
+                isEditable={isEditable}
+                maxTaskNameLength={maxTaskNameLength}
+            />
+        );
+    }
+
     return (
         <Modal
             title={task ? `${task.name}` : 'Create New Task'}
@@ -20,6 +46,7 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
                     isEditable={isEditable}
                     maxTaskNameLength={maxTaskNameLength}
                     onCancel={onCancel}
+                    onUpdateClick={handleUpdateClick}
                 />
             ) : (
                 <CreateTaskModal
