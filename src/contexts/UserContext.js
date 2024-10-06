@@ -11,8 +11,9 @@ export const UserProvider = ({ children }) => {
   const [other, setOther] = useState(null);
   const [pools, setPools] = useState([]); // Initialize as an empty array
 
-  //console.log('pools', pools);
-
+  // Add a console.log here to check the user data
+  console.log('UserContext user:', user);
+  console.log('UserContext allUsers:', allUsers);
 
   return (
     <UserContext.Provider value={{ user, setUser, allUsers, setAllUsers, other, setOther, pools, setPools }}>

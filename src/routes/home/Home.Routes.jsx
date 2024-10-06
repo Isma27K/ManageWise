@@ -108,7 +108,7 @@ const Home = () => {
                 navigate('/login');
             }finally {
                 // Add a 5-second delay
-                //await new Promise(resolve => setTimeout(resolve, 5000));
+                //await new Promise(resolve => setTimeout(resolve, 1000));
                 setIsLoading(false); // Ensure loading state is set to false after fetching
             }
         };

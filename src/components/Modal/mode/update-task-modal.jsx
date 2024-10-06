@@ -136,8 +136,17 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         };
     };
 
+    const getUser = (userId) => {
+        console.log('Getting user for ID:', userId); // Add this line for debugging
+        console.log('All users:', allUsers); // Add this line for debugging
+        return allUsers.find(u => u.uid === userId) || {};
+    };
+
     const renderProgressItem = (item) => {
-        const user = allUsers.find(u => u.uid === item.CID);
+        const user = getUser(item.CID);
+        console.log('Progress item user:', user); // Add this line for debugging
+        console.log('Progress item:', item); // Add this line for debugging
+
         return (
             <Collapse
                 ghost
@@ -149,15 +158,13 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Avatar 
                                 size="small"
-                                src={user?.avatarUrl} 
-                                icon={!user?.avatarUrl && <UserOutlined />}
+                                src={user.avatar} 
+                                icon={!user.avatar && <UserOutlined />}
                             >
-                                {(!user?.avatarUrl && user?.name) && getNameInitial(user.name)}
+                                {(!user.avatar && user.name) && user.name.charAt(0).toUpperCase()}
                             </Avatar>
-                            <span style={{ marginLeft: 8 }}>{item.detail || 'Unknown User'}</span>
-                            <Text type="secondary" style={{ fontSize: '0.8em', marginLeft: 'auto' }}>
-                                {item.date ? dayjs(item.date).format('YYYY-MM-DD HH:mm') : 'No date'}
-                            </Text>
+                            <span style={{ marginLeft: 8 }}>{item.detail}</span>
+                            <span style={{ marginLeft: 'auto' }}>{dayjs(item.date).format('YYYY-MM-DD HH:mm')}</span>
                         </div>
                     }
                 >

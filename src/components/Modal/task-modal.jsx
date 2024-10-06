@@ -17,9 +17,13 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
 
     const handleUpdateSave = (taskData) => {
         setUpdatedTaskData(taskData);
+
         // Here you should implement the logic to save the updated task data
+
         console.log('Saving updated task data:', taskData);
+
         // For example, you might want to call an API to update the task
+
         // updateTaskAPI(taskData).then(() => {
         //     // Handle successful update
         // }).catch(error => {
@@ -70,7 +74,7 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
 
             <CSSTransition
                 in={showUpdateTask}
-                timeout={300}
+                timeout={10}
                 classNames="fade"
                 unmountOnExit
             >

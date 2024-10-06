@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { UserOutlined, EditOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form, Input, Checkbox, Upload } from 'antd';
+import { Avatar, Button, Form, Input, Checkbox, Upload, notification } from 'antd';
 import './setting-dashboard.style.scss';
+import { UserContext } from '../../contexts/UserContext';
 
 const SettingDashboard = () => {
+    const { user, setUser } = useContext(UserContext);
     const [form] = Form.useForm();
     const [profile, setProfile] = useState({
-        name: 'Muhammad Ismail Bin Helati',
-        avatarUrl: '',
-        avatarFile: null,
+        name: user.name.toUpperCase(),
+        avatarUrl: user.avatar,
+        avatarBase64: null,
     });
     const [settings, setSettings] = useState({
         notifications: false,
     });
     const [isEditing, setIsEditing] = useState(false);
+
+    const token = localStorage.getItem('jwtToken');
 
     const handleProfileChange = (changedValues) => {
         setProfile((prevProfile) => ({
@@ -23,12 +27,22 @@ const SettingDashboard = () => {
     };
 
     const handleAvatarChange = ({ file }) => {
+        const isLt500KB = file.size / 1024 < 500;
+        if (!isLt500KB) {
+            notification.error({
+                message: 'Upload Failed',
+                description: 'Image must be smaller than 500KB!',
+                placement: 'topRight',
+            });
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = (e) => {
             setProfile((prevProfile) => ({
                 ...prevProfile,
                 avatarUrl: e.target.result,
-                avatarFile: file
+                avatarBase64: e.target.result  // Keep the full data URL
             }));
         };
         reader.readAsDataURL(file);
@@ -46,12 +60,55 @@ const SettingDashboard = () => {
         setIsEditing(true);
     };
 
-    const handleSaveClick = () => {
-        form.validateFields().then((values) => {
+    const handleSaveClick = async () => {
+        try {
+            const values = await form.validateFields();
+            
+            const updateData = {
+                name: values.name,
+            };
+
+            if (profile.avatarBase64) {
+                updateData.avatar = profile.avatarBase64;  // Send the full data URL
+            }
+
+            const response = await fetch('http://localhost:5000/update/avatar', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updateData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update profile');
+            }
+
+            const result = await response.json();
+            
             handleProfileChange(values);
             setIsEditing(false);
-            // Handle save logic here
-        });
+            notification.success({
+                message: 'Profile Updated',
+                description: 'Your profile has been successfully updated.',
+                placement: 'topRight',
+            });
+
+            // Update the user context if needed
+            setUser(prevUser => ({
+                ...prevUser,
+                name: values.name,
+                // Update other user properties if necessary
+            }));
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            notification.error({
+                message: 'Update Failed',
+                description: 'There was an error updating your profile. Please try again.',
+                placement: 'topRight',
+            });
+        }
     };
 
     return (
@@ -61,7 +118,6 @@ const SettingDashboard = () => {
                 layout="vertical"
                 initialValues={{ name: profile.name }}
                 onValuesChange={(_, allValues) => handleProfileChange(allValues)}
-                onFinish={handleSaveClick}
                 className="profile-form"
             >
                 <h2>Edit Profile</h2>
@@ -90,12 +146,13 @@ const SettingDashboard = () => {
                                     showUploadList={false}
                                     beforeUpload={() => false} // Prevents auto-upload
                                     onChange={handleAvatarChange}
+                                    accept="image/*"
                                 >
                                     <Button 
                                         icon={<UploadOutlined />} 
                                         className="upload-button"
                                     >
-                                        Upload Avatar
+                                        Upload Avatar (Max 500KB)
                                     </Button>
                                 </Upload>
                                 <Button
@@ -103,6 +160,7 @@ const SettingDashboard = () => {
                                     htmlType="submit"
                                     icon={<SaveOutlined />}
                                     className="save-button"
+                                    onClick={handleSaveClick}
                                 >
                                     Save
                                 </Button>

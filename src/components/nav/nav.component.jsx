@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Corrected import for Link
 import { DownloadOutlined, BookOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Input, Menu, Dropdown } from 'antd';
@@ -13,7 +13,15 @@ const avatarSize = {
 
 const Nav = () => {
     const { user } = useContext(UserContext);
+    const [avatarSrc, setAvatarSrc] = useState('');
     const [avatarLoadError, setAvatarLoadError] = useState(false);
+
+    useEffect(() => {
+        if (user && user.avatar) {
+            setAvatarSrc(user.avatar);
+            setAvatarLoadError(false);
+        }
+    }, [user]);
 
     //console.log(user);
 
@@ -27,6 +35,11 @@ const Nav = () => {
         window.location.reload();
     }
 
+    const handleAvatarError = () => {
+        setAvatarLoadError(true);
+        setAvatarSrc(''); // Clear the src to show initials
+    };
+
     // Define menu items for the avatar dropdown
     const menu = (
         <Menu className="menu">
@@ -37,7 +50,7 @@ const Nav = () => {
                 Saved
             </Menu.Item>
             <Menu.Item key="3" icon={<SettingOutlined />} className="menu-item">
-                Settings
+                <Link to="/settings">Settings</Link>
             </Menu.Item>
             <Menu.Item key="4" icon={<LogoutOutlined />} onClick={handleLogout} className="menu-item">
                 Logout
@@ -60,11 +73,11 @@ const Nav = () => {
                     <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
                         <Avatar
                             size={avatarSize.xxl}
-                            src={user?.avatarUrl}
+                            src={avatarSrc}
                             className="avatar"
-                            onError={() => setAvatarLoadError(true)}
+                            onError={handleAvatarError}
                         >
-                            {(avatarLoadError || !user?.avatarUrl) && getNameInitial(user?.name)}
+                            {(avatarLoadError || !avatarSrc) && getNameInitial(user?.name)}
                         </Avatar>
                     </Dropdown>
 
