@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Input, DatePicker, Button, Upload, Typography, Select, Avatar } from 'antd';
+import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, message } from 'antd';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
@@ -14,8 +14,9 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
     const [selectedSubmitters, setSelectedSubmitters] = useState([]);
+    const token = localStorage.getItem('jwtToken');
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const taskData = {
             name: taskName,
             description: taskDescription,
@@ -24,8 +25,30 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
             submitters: selectedSubmitters
         };
 
-        console.log('Creating task:', taskData);
-        onCancel();
+        try {
+            const response = await fetch('http://localhost:5000/api/task/createTask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    // Add any authentication headers if required
+                    // 'Authorization': 'Bearer ' + yourAuthToken,
+                },
+                body: JSON.stringify(taskData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create task');
+            }
+
+            const result = await response.json();
+            console.log('Task created:', result);
+            message.success('Task created successfully');
+            onCancel(); // Close the modal
+        } catch (error) {
+            console.error('Error creating task:', error);
+            message.error('Failed to create task. Please try again.');
+        }
     };
 
     const handleTaskNameChange = (e) => {

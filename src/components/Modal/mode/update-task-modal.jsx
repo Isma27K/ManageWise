@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider, Collapse } from 'antd';
+import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider, Collapse, Tooltip } from 'antd';
 import { UploadOutlined, UserOutlined, DownloadOutlined, CaretRightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
@@ -144,8 +144,8 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
     const renderProgressItem = (item) => {
         const user = getUser(item.CID);
-        console.log('Progress item user:', user); // Add this line for debugging
-        console.log('Progress item:', item); // Add this line for debugging
+        console.log('Progress item user:', user);
+        console.log('Progress item:', item);
 
         return (
             <Collapse
@@ -155,16 +155,22 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 <Panel
                     key={item.id}
                     header={
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar 
-                                size="small"
-                                src={user.avatar} 
-                                icon={!user.avatar && <UserOutlined />}
-                            >
-                                {(!user.avatar && user.name) && user.name.charAt(0).toUpperCase()}
-                            </Avatar>
-                            <span style={{ marginLeft: 8 }}>{item.detail}</span>
-                            <span style={{ marginLeft: 'auto' }}>{dayjs(item.date).format('YYYY-MM-DD HH:mm')}</span>
+                        <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <Tooltip title={user.name || 'Unknown User'}>
+                                <Avatar 
+                                    size="small"
+                                    src={user.avatar} 
+                                    icon={!user.avatar && <UserOutlined />}
+                                >
+                                    {(!user.avatar && user.name) && user.name.charAt(0).toUpperCase()}
+                                </Avatar>
+                            </Tooltip>
+                            <div style={{ marginLeft: 8, display: 'flex', flexDirection: 'column' }}>
+                                <span>{item.detail}</span>
+                                <Text type="secondary" style={{ fontSize: '0.8em' }}>
+                                    {dayjs(item.date).format('DD-MM-YYYY HH:mm')}
+                                </Text>
+                            </div>
                         </div>
                     }
                 >
@@ -271,7 +277,9 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                                 label={user.name ? user.name.toUpperCase() : 'NO NAME'}
                             >
                                 <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
-                                    <Avatar icon={<UserOutlined />} src={user.avatar} />
+                                    <Tooltip title={user.name || 'Unknown User'}>
+                                        <Avatar icon={<UserOutlined />} src={user.avatar} />
+                                    </Tooltip>
                                     <div style={{ marginLeft: 8 }}>
                                         <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
                                         <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>

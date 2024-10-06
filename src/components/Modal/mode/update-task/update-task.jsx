@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Input, Button, Upload, Typography, Space, Row, Col } from 'antd';
+import { Modal, Input, Button, Upload, Typography, Space, Row, Col, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -17,6 +17,16 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
     };
 
     const handleUpdate = () => {
+
+        if(title.length === 0){
+            notification.error({
+                message: 'Error',
+                description: 'Title is required',
+            });
+            return;
+        }
+
+
         console.log('Updating task:', { title, description });
         onCancel();
     };
@@ -33,7 +43,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
             [{ 'color': [] }, { 'background': [] }],
             [{ 'font': [] }],
             [{ 'align': [] }],
-            ['link', 'image', 'video'],
+            ['link', 'image'],
             ['clean']
         ],
     };
@@ -60,6 +70,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
                                     placeholder="Enter task title"
                                     maxLength={maxTaskNameLength}
                                     style={{ marginTop: '8px' }}
+                                    required
                                 />
                                 <Text type="secondary" style={{ fontSize: '12px', display: 'block', marginTop: '4px' }}>
                                     {title.length}/{maxTaskNameLength}
