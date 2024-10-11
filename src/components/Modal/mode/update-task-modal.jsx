@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider, Collapse, Tooltip } from 'antd';
+import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider, Collapse, Tooltip, notification } from 'antd';
 import { UploadOutlined, UserOutlined, DownloadOutlined, CaretRightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
 import DOMPurify from 'dompurify';
 import './update-task-modal.css';
+import axios from 'axios';  // Make sure to import axios if not already imported
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -98,11 +99,36 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         return user ? user.name : 'Unknown User';
     };
 
-    const handleDownload = (attachment) => {
-        //console.log('Downloading:', attachment.name);
-        // Implement actual download logic here
-        // For now, we'll just open the link in a new tab
-        window.open(attachment.link, '_blank');
+    const handleDownload = async (attachment) => {
+        try {
+            // Split the path and encode each part separately
+            const pathParts = attachment.link.split('\\');
+            const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
+
+            const response = await axios({
+                url: `http://localhost:5000/${encodedPath}`,
+                method: 'GET',
+                responseType: 'blob',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+                },
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', attachment.name || pathParts[pathParts.length - 1]);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error downloading file:', error);
+            notification.error({
+                message: 'Download Failed',
+                description: 'There was an error downloading the file. Please try again.',
+            });
+        }
     };
 
     const renderAttachments = (attachments) => {
