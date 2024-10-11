@@ -7,7 +7,7 @@ const PageNotFound = () => {
         <div className="not-found-container">
             <img src='/404.png' alt="404" className="not-found-image" />
             <p>It looks like the page you are looking for doesn't exist.</p>
-            <Link to="/">
+            <Link to="/Dashboard">
                 <button className="home-button">Back To Home</button>
             </Link>
         </div>

@@ -11,7 +11,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
 
-const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick, handleUpdateSave }) => {
+const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick, handleUpdateSave, pool }) => {
     const { allUsers } = useContext(UserContext);
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
@@ -43,7 +43,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        onUpdateClick({ ...taskData, id: task.id });
+        onUpdateClick({ ...taskData, id: task.id, pool: pool._id });
     };
 
     const handleSave = () => {
@@ -99,7 +99,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     };
 
     const handleDownload = (attachment) => {
-        console.log('Downloading:', attachment.name);
+        //console.log('Downloading:', attachment.name);
         // Implement actual download logic here
         // For now, we'll just open the link in a new tab
         window.open(attachment.link, '_blank');
@@ -137,15 +137,15 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     };
 
     const getUser = (userId) => {
-        console.log('Getting user for ID:', userId); // Add this line for debugging
-        console.log('All users:', allUsers); // Add this line for debugging
+        //console.log('Getting user for ID:', userId); // Add this line for debugging
+        //console.log('All users:', allUsers); // Add this line for debugging
         return allUsers.find(u => u.uid === userId) || {};
     };
 
     const renderProgressItem = (item) => {
         const user = getUser(item.CID);
-        console.log('Progress item user:', user);
-        console.log('Progress item:', item);
+        //console.log('Progress item user:', user);
+        //console.log('Progress item:', item);
 
         return (
             <Collapse

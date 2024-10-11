@@ -61,6 +61,7 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
                             onCancel={onCancel}
                             onUpdateClick={handleUpdateClick}
                             handleUpdateSave={handleUpdateSave}
+                            pool={pool}
                         />
                     ) : (
                         <CreateTaskModal
@@ -85,6 +86,7 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
                     isEditable={isEditable}
                     maxTaskNameLength={maxTaskNameLength}
                     taskName={task}
+                    pool={pool} // Make sure to pass the pool prop here
                 />
             </CSSTransition>
         </>
