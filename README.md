@@ -1,7 +1,7 @@
 # ManageWise
 
 <p align="center">
-  <img src="git-image/ManageWise.jpg" width="350" alt="ManageWise Logo" />
+  <img src="./public/logo192.svg" width="350" alt="ManageWise Logo" />
 </p>
 
 <p align="center">

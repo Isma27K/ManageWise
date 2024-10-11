@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1041.6666pt" height="1041.6666pt" viewBox="0 0 1041.6666 1041.6666">
+<g enable-background="new">
+<clipPath id="cp0">
+<path transform="matrix(.6666666,0,0,.6666666,0,0)" d="M 0 0 L 1562.5 0 L 1562.5 1562.5 L 0 1562.5 Z " fill-rule="evenodd"/>
+</clipPath>
+<g clip-path="url(#cp0)">
+<path transform="matrix(2.0833333,0,0,2.0833333,0,0)" d="M 0 0 L 500 0 L 500 500 L 0 500 Z " fill="#ffffff"/>
+</g>
+<clipPath id="cp1">
+<path transform="matrix(.6666666,0,0,.6666666,0,0)" d="M 0 0 L 1562.5 0 L 1562.5 1562.5 L 0 1562.5 Z " fill-rule="evenodd"/>
+</clipPath>
+<g clip-path="url(#cp1)">
+<path transform="matrix(2.0833333,0,0,2.0833333,0,0)" d="M 0 0 L 500 0 L 500 500 L 0 500 Z " fill="#ffffff"/>
+</g>
+<clipPath id="cp2">
+<path transform="matrix(.6666666,0,0,.6666666,0,0)" d="M 0 0 L 1562.5 0 L 1562.5 1562.5 L 0 1562.5 Z " fill-rule="evenodd"/>
+</clipPath>
+<g clip-path="url(#cp2)">
+<g id="Layer-1" data-name="P">
+<g id="Layer-2" data-name="P">
+</g>
+<symbol id="font_3_72">
+<path d="M .32128907 0 L .16357422 0 L 0 .7138672 L .140625 .7138672 L .24853516 .21191406 L .2607422 .21191406 L .38867188 .7138672 L .50927737 .7138672 L .63964846 .21191406 L .65185549 .21191406 L .7602539 .7138672 L .8959961 .7138672 L .73291018 0 L .57470706 0 L .44970704 .46044923 L .43945313 .46044923 L .32128907 0 Z "/>
+</symbol>
+<use xlink:href="#font_3_72" transform="matrix(-429.9895,0,-0,429.9895,551.9846,352.30335)"/>
+</g>
+<g id="Layer-1" data-name="P">
+<g id="Layer-2" data-name="P">
+</g>
+<use xlink:href="#font_3_72" transform="matrix(429.9895,0,0,-429.9895,514.89559,739.7202)"/>
+</g>
+<g id="Layer-1" data-name="P">
+<g id="Layer-2" data-name="P">
+</g>
+<symbol id="font_3_2c">
+<path d="M .14111328 0 L 0 0 L 0 .7138672 L .14111328 .7138672 L .14111328 0 Z "/>
+</symbol>
+<use xlink:href="#font_3_2c" transform="matrix(0,445.08406,445.08406,0,272.21818,674.10079)"/>
+</g>
+</g>
+<clipPath id="cp4">
+<path transform="matrix(.6666666,0,0,.6666666,0,0)" d="M 0 0 L 1562.5 0 L 1562.5 1562.5 L 0 1562.5 Z "/>
+</clipPath>
+<g clip-path="url(#cp4)">
+<clipPath id="cp5">
+<path transform="matrix(.6666666,0,0,.6666666,0,0)" d="M 0 0 L 1562.5 0 L 1562.5 1562.5 L 0 1562.5 Z "/>
+</clipPath>
+<g clip-path="url(#cp5)">
+<clipPath id="cp6">
+<path transform="matrix(.6666666,0,0,.6666666,0,0)" d="M 346.04426 781.25 L 483.4309 781.25 L 483.4309 1105.9334 L 346.04426 1105.9334 Z "/>
+</clipPath>
+<g clip-path="url(#cp6)">
+<clipPath id="cp7">
+<path transform="matrix(.6666666,0,0,.6666666,0,0)" d="M 414.73759 781.25 L 483.4309 1105.5659 L 346.04426 1105.5659 L 414.73759 781.25 Z "/>
+</clipPath>
+<g clip-path="url(#cp7)">
+<path transform="matrix(.35777769,0,0,.35777769,230.69617,520.8333)" d="M 0 0 L 256 0 L 256 604 L 0 604 Z "/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>
