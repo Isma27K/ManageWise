@@ -14,27 +14,42 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
     const [selectedSubmitters, setSelectedSubmitters] = useState([]);
+    const [fileList, setFileList] = useState([]);
     const token = localStorage.getItem('jwtToken');
 
     const handleSubmit = async () => {
-        const taskData = {
-            name: taskName,
-            description: taskDescription,
-            dueDate: dueDate ? [dueDate[0].format('YYYY-MM-DD'), dueDate[1].format('YYYY-MM-DD')] : null,
-            poolId: pool?._id,
-            submitters: selectedSubmitters
-        };
+        const formData = new FormData();
+        formData.append('name', taskName);
+        formData.append('description', taskDescription);
+        if (dueDate) {
+            formData.append('dueDate', JSON.stringify([dueDate[0].format('YYYY-MM-DD'), dueDate[1].format('YYYY-MM-DD')]));
+        }
+        formData.append('poolId', pool?._id);
+        formData.append('submitters', JSON.stringify(selectedSubmitters));
+
+        // Append files to formData
+        fileList.forEach((file) => {
+            formData.append('files', file.originFileObj);
+        });
+
+        // Log the FormData contents
+        console.log('FormData contents:');
+        for (let [key, value] of formData.entries()) {
+            if (key === 'files') {
+                console.log(key, value.name); // Log file name for files
+            } else {
+                console.log(key, value);
+            }
+        }
 
         try {
+            console.log('Sending request to:', 'http://localhost:5000/api/task/createTask');
             const response = await fetch('http://localhost:5000/api/task/createTask', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                    // Add any authentication headers if required
-                    // 'Authorization': 'Bearer ' + yourAuthToken,
                 },
-                body: JSON.stringify(taskData)
+                body: formData
             });
 
             if (!response.ok) {
@@ -66,6 +81,10 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
         const name = (option.label || '').toLowerCase();
         const email = (option.children?.props?.children[1]?.props?.children[1]?.props?.children || '').toLowerCase();
         return name.indexOf(input.toLowerCase()) >= 0 || email.indexOf(input.toLowerCase()) >= 0;
+    };
+
+    const handleFileChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
     };
 
     return (
@@ -125,9 +144,17 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
                     </Option>
                 ))}
             </Select>
-            <Upload beforeUpload={() => false}>
-                <Button icon={<UploadOutlined />}>Upload File</Button>
+            <Upload
+                fileList={fileList}
+                onChange={handleFileChange}
+                beforeUpload={() => false}
+                multiple
+            >
+                <Button icon={<UploadOutlined />}>Upload File(s)</Button>
             </Upload>
+            <div style={{ marginTop: '10px' }}>
+                {fileList.length > 0 && `${fileList.length} file(s) selected`}
+            </div>
             <Button
                 type="primary"
                 onClick={handleSubmit}
