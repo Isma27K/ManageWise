@@ -12,6 +12,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const token = localStorage.getItem('jwtToken');
 
@@ -37,11 +38,16 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
     };
 
     const handleUpdate = async () => {
+        setLoading(true);
+        // Add a 5-second timer before updating
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        
         if (title.length === 0) {
             notification.error({
                 message: 'Error',
                 description: 'Title is required',
             });
+            setLoading(false);
             return;
         }
     
@@ -108,6 +114,8 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
                 message: 'Error',
                 description: 'Failed to update task. Please try again.',
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -147,7 +155,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
                                 <Input
                                     value={title}
                                     onChange={handleTitleChange}
-                                    placeholder="Enter task title"
+                                    placeholder="Enter task title (optional)"
                                     maxLength={maxTaskNameLength}
                                     style={{ marginTop: '8px' }}
                                     required
@@ -188,8 +196,13 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
                 </Row>
             </div>
             <div style={{ marginTop: '24px', textAlign: 'right' }}>
-                <Button type="primary" onClick={handleUpdate}>
-                    UPDATE
+                <Button 
+                    type="primary" 
+                    onClick={handleUpdate}
+                    loading={loading}
+                    disabled={loading}
+                >
+                    {loading ? 'Updating...' : 'Update'}
                 </Button>
             </div>
         </Modal>
