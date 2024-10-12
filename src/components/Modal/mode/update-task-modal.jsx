@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider, Collapse, Tooltip, notification } from 'antd';
-import { UploadOutlined, UserOutlined, DownloadOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, DownloadOutlined, CaretRightOutlined, FileTextOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
 import DOMPurify from 'dompurify';
@@ -104,29 +104,57 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             // Split the path and encode each part separately
             const pathParts = attachment.link.split('\\');
             const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
+            const fileName = attachment.name || pathParts[pathParts.length - 1];
+            const isPDF = fileName.toLowerCase().endsWith('.pdf');
 
-            const response = await axios({
-                url: `http://localhost:5000/${encodedPath}`,
-                method: 'GET',
-                responseType: 'blob',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
-                },
-            });
+            const url = `http://localhost:5000/${encodedPath}`;
+            const token = localStorage.getItem('jwtToken');
 
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', attachment.name || pathParts[pathParts.length - 1]);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
+            if (isPDF) {
+                // For PDFs, open in a new tab
+                const newTab = window.open('about:blank', '_blank');
+                newTab.document.write('Loading PDF...');
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const objectUrl = URL.createObjectURL(blob);
+                    newTab.location.href = objectUrl;
+                } else {
+                    newTab.close();
+                    throw new Error('Failed to load PDF');
+                }
+            } else {
+                // For other file types, download as before
+                const response = await axios({
+                    url: url,
+                    method: 'GET',
+                    responseType: 'blob',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                const blob = new Blob([response.data]);
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(downloadUrl);
+            }
         } catch (error) {
-            console.error('Error downloading file:', error);
+            console.error('Error handling file:', error);
             notification.error({
-                message: 'Download Failed',
-                description: 'There was an error downloading the file. Please try again.',
+                message: 'File Operation Failed',
+                description: 'There was an error processing the file. Please try again.',
             });
         }
     };
@@ -138,17 +166,20 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
         return (
             <div style={{ marginTop: '8px' }}>
-                {attachments.map((item, index) => (
-                    <Button 
-                        key={index}
-                        type="link"
-                        icon={<DownloadOutlined />}
-                        onClick={() => handleDownload(item)}
-                        style={{ padding: '0', marginRight: '8px' }}
-                    >
-                        {item.name || `Attachment ${index + 1}`}
-                    </Button>
-                ))}
+                {attachments.map((item, index) => {
+                    const isPDF = item.name.toLowerCase().endsWith('.pdf');
+                    return (
+                        <Button 
+                            key={index}
+                            type="link"
+                            icon={isPDF ? <FileTextOutlined /> : <DownloadOutlined />}
+                            onClick={() => handleDownload(item)}
+                            style={{ padding: '0', marginRight: '8px' }}
+                        >
+                            {item.name || `Attachment ${index + 1}`}
+                        </Button>
+                    );
+                })}
             </div>
         );
     };
