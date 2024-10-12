@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, message } from 'antd';
-import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
 
@@ -16,8 +16,32 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
     const [selectedSubmitters, setSelectedSubmitters] = useState([]);
     const [fileList, setFileList] = useState([]);
     const token = localStorage.getItem('jwtToken');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
+        setLoading(true);
+
+        // Add a 5-second timer before submitting
+        //await new Promise(resolve => setTimeout(resolve, 5000));
+
+        if (taskName.length === 0) {
+            message.error('Task name is required');
+            setLoading(false);
+            return;
+        }else if (taskDescription.length === 0) {
+            message.error('Task description is required');
+            setLoading(false);
+            return;
+        } else if(dueDate === null) {
+            message.error('Due date is required');
+            setLoading(false);
+            return;
+        } else if (selectedSubmitters.length === 0) {
+            message.error('At least one contributor is required');
+            setLoading(false);
+            return;
+        }
+
         const formData = new FormData();
         formData.append('name', taskName);
         formData.append('description', taskDescription);
@@ -63,6 +87,8 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
         } catch (error) {
             console.error('Error creating task:', error);
             message.error('Failed to create task. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -84,7 +110,9 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
     };
 
     const handleFileChange = ({ fileList: newFileList }) => {
+        setLoading(true);
         setFileList(newFileList);
+        setLoading(false);
     };
 
     return (
@@ -158,9 +186,13 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
             <Button
                 type="primary"
                 onClick={handleSubmit}
-                style={{ marginTop: '20px', display: 'block' }}
+                style={{ marginTop: '20px', display: 'block', width: '100%' }}
+                disabled={loading}
             >
-                Create Task
+                <span style={{ marginRight: loading ? '10px' : '0' }}>
+                    {loading ? 'Creating Task' : 'Create Task'}
+                </span>
+                {loading && <LoadingOutlined style={{ fontSize: 16 }} spin />}
             </Button>
         </div>
     );
