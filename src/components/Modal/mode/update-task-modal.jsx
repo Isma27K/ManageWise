@@ -226,9 +226,6 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 description: 'The task has been successfully archived.',
             });
     
-            // You might want to call a function here to update the UI or parent component
-            // For example: onTaskArchived(task.id);
-    
             onCancel(); // Close the modal
         } catch (error) {
             console.error('Error archiving task:', error);
@@ -404,12 +401,16 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                     >
                         Save
                     </Button>
-                    <Button
-                        type="primary"
-                        onClick={handleArchiveTask}
+                    <Popconfirm
+                        title="Are you sure you want to archive this task?"
+                        onConfirm={handleArchiveTask}
+                        okText="Yes"
+                        cancelText="No"
                     >
-                        Close
-                    </Button>
+                        <Button type="primary">
+                            Close Task
+                        </Button>
+                    </Popconfirm>
                 </div>
             </div>
 
