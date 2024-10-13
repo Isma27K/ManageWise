@@ -43,15 +43,6 @@ const Nav = () => {
     // Define menu items for the avatar dropdown
     const menu = (
         <Menu className="menu">
-            <Menu.Item key="1" icon={<DownloadOutlined />} className="menu-item">
-                Downloads
-            </Menu.Item>
-            <Menu.Item key="2" icon={<BookOutlined />} className="menu-item">
-                Saved
-            </Menu.Item>
-            <Menu.Item key="3" icon={<SettingOutlined />} className="menu-item">
-                <Link to="/settings">Settings</Link>
-            </Menu.Item>
             <Menu.Item key="4" icon={<LogoutOutlined />} onClick={handleLogout} className="menu-item">
                 Logout
             </Menu.Item>

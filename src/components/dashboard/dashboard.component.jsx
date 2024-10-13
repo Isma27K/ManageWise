@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
-import { SettingOutlined, AppstoreOutlined, SafetyOutlined, AuditOutlined } from '@ant-design/icons';
+import { SettingOutlined, AppstoreOutlined, SafetyOutlined, AuditOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import './dashboard.style.scss';
 import MainDashboard from '../main-dashboard/main-dashboard.component.jsx';
 import SettingDashboard from '../setting-dashboard/setting-dashboard.component.jsx';
@@ -51,15 +51,19 @@ const Dashboard = () => {
             selectedKeys={[selectedKey]}
             onClick={handleMenuClick}
           >
+            {/* Menu Group */}
             <Menu.ItemGroup key="g1" title="Main Menu">
               <Menu.Item key="1" icon={<AppstoreOutlined />}>Dashboard</Menu.Item>
-              <Menu.Item key="2" icon={<SettingOutlined />}>Settings</Menu.Item>
+              <Menu.Item key="5" icon={<FieldTimeOutlined />} disabled>Archive (Coming Soon)</Menu.Item>
+              <Menu.Item key="3" icon={<AuditOutlined />} disabled>Report (Coming Soon)</Menu.Item>
               {isAdmin && (
                 <Menu.Item key="4" icon={<SafetyOutlined />}>Admin</Menu.Item>
               )}
-              <Menu.Item key="3" icon={<AuditOutlined />} disabled>Report (Coming Soon)</Menu.Item>
+              <Menu.Item key="2" icon={<SettingOutlined />}>Settings</Menu.Item>
             </Menu.ItemGroup>
           </Menu>
+
+
         </div>
       </Sider>
       <Layout style={{ marginLeft: 250, padding: '24px' }}>
