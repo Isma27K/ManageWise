@@ -51,7 +51,7 @@ const CustomCard = ({ pools, maxTaskNameLength = 40 }) => {
 					<div key={index} className="card-item" ref={cardRef}>
 						<Card
 							className="custom-card"
-							title={pool.name}
+							title={pool.name.toUpperCase()}
 							bordered={false}
 							hoverable
 						>

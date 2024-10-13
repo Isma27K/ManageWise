@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider, Collapse, Tooltip, notification } from 'antd';
+import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, List, Empty, Divider, Collapse, Tooltip, notification, Popconfirm } from 'antd';
 import { UploadOutlined, UserOutlined, DownloadOutlined, CaretRightOutlined, FileTextOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
@@ -20,6 +20,8 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     const [selectedContributors, setSelectedContributors] = useState([]);
     const [attachments, setAttachments] = useState([]);
     const [isChanged, setIsChanged] = useState(false);
+    const token = localStorage.getItem('jwtToken');
+
 
     useEffect(() => {
         if (task) {
@@ -108,7 +110,6 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             const isPDF = fileName.toLowerCase().endsWith('.pdf');
 
             const url = `http://localhost:5000/${encodedPath}`;
-            const token = localStorage.getItem('jwtToken');
 
             if (isPDF) {
                 // For PDFs, open in a new tab
@@ -198,6 +199,47 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         //console.log('All users:', allUsers); // Add this line for debugging
         return allUsers.find(u => u.uid === userId) || {};
     };
+
+    const handleArchiveTask = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/archive/archiveTask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ 
+                    taskId: task.id,
+                    poolId: pool._id
+                }),
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to archive task');
+            }
+    
+            const result = await response.json();
+            
+            notification.success({
+                message: 'Task Archived',
+                description: 'The task has been successfully archived.',
+            });
+    
+            // You might want to call a function here to update the UI or parent component
+            // For example: onTaskArchived(task.id);
+    
+            onCancel(); // Close the modal
+        } catch (error) {
+            console.error('Error archiving task:', error);
+            notification.error({
+                message: 'Error',
+                description: error.message || 'Failed to archive the task. Please try again.',
+            });
+        }
+    };
+    
+    
 
     const renderProgressItem = (item) => {
         const user = getUser(item.CID);
@@ -295,7 +337,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                                     >
                                         <List.Item.Meta
                                             title={item.name}
-                                            description={`Size: ${item.size} bytes`}
+                                            //description={`Size: ${item.size} bytes`}
                                         />
                                     </List.Item>
                                 )}
@@ -364,9 +406,9 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                     </Button>
                     <Button
                         type="primary"
-                        onClick={handleSubmit}
+                        onClick={handleArchiveTask}
                     >
-                        Update Progress
+                        Close
                     </Button>
                 </div>
             </div>
@@ -376,12 +418,14 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             <div style={{ flex: 1, paddingLeft: '20px', display: 'flex', flexDirection: 'column' }}>
                 <h4>Progress</h4>
                 {task.progress && task.progress.length > 0 ? (
-                    <List
-                        style={{ overflowY: 'auto', flex: 1, maxHeight: 'calc(100% - 40px)' }}
-                        itemLayout="vertical"
-                        dataSource={task.progress}
-                        renderItem={renderProgressItem}
-                    />
+                    <>
+                        <List
+                            style={{ overflowY: 'auto', flex: 1, maxHeight: 'calc(100% - 40px)' }}
+                            itemLayout="vertical"
+                            dataSource={task.progress}
+                            renderItem={renderProgressItem}
+                        />
+                    </>
                 ) : (
                     <Empty
                         image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -389,6 +433,13 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                         style={{ margin: 'auto' }}
                     />
                 )}
+
+                <Button 
+                    type="primary" 
+                    onClick={handleSubmit}
+                >
+                    Update Progress
+                </Button>
             </div>
         </div>
     );
