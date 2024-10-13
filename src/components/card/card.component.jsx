@@ -112,6 +112,7 @@ const CustomCard = ({ pools, maxTaskNameLength = 40 }) => {
 				task={selectedTask}
 				isEditable={!selectedTask}
 				maxTaskNameLength={maxTaskNameLength}
+				isSelfTask={selectedPool?.isSelfTask}
 			/>
 		</>
 	);

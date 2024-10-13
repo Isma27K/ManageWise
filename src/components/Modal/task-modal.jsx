@@ -6,7 +6,7 @@ import UpdateTaskModal from './mode/update-task-modal';
 import UpdateTask from './mode/update-task/update-task';
 import './task-modal.css'; // We'll create this CSS file next
 
-const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLength = 40 }) => {
+const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLength = 40, isSelfTask }) => {
     const [showUpdateTask, setShowUpdateTask] = useState(false);
     const [updatedTaskData, setUpdatedTaskData] = useState(null);
 
@@ -62,12 +62,14 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
                             onUpdateClick={handleUpdateClick}
                             handleUpdateSave={handleUpdateSave}
                             pool={pool}
+                            isSelfTask={isSelfTask}
                         />
                     ) : (
                         <CreateTaskModal
                             pool={pool}
                             maxTaskNameLength={maxTaskNameLength}
                             onCancel={onCancel}
+                            isSelfTask={isSelfTask}
                         />
                     )}
                 </Modal>

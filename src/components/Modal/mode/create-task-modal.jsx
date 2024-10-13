@@ -8,8 +8,8 @@ const { Text } = Typography;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
-    const { allUsers } = useContext(UserContext);
+const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
+    const { allUsers, user } = useContext(UserContext);
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
@@ -36,7 +36,7 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
             message.error('Due date is required');
             setLoading(false);
             return;
-        } else if (selectedSubmitters.length === 0) {
+        } else if (!isSelfTask && selectedSubmitters.length === 0) {
             message.error('At least one contributor is required');
             setLoading(false);
             return;
@@ -48,7 +48,14 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
         if (dueDate) {
             formData.append('dueDate', JSON.stringify([dueDate[0].format('YYYY-MM-DD'), dueDate[1].format('YYYY-MM-DD')]));
         }
-        formData.append('poolId', pool?._id);
+        
+        // Use user._id for self-tasks, pool._id for pool tasks
+        if (isSelfTask) {
+            formData.append('userId', user._id);
+        } else {
+            formData.append('poolId', pool?._id);
+        }
+
         formData.append('submitters', JSON.stringify(selectedSubmitters));
 
         // Append files to formData
@@ -67,8 +74,12 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
         }
 
         try {
-            console.log('Sending request to:', 'http://localhost:5000/api/task/createTask');
-            const response = await fetch('http://localhost:5000/api/task/createTask', {
+            const apiUrl = isSelfTask 
+                ? 'http://localhost:5000/api/task/createSelfTask'  // Placeholder URL for self-tasks
+                : 'http://localhost:5000/api/task/createTask';     // Existing URL for pool tasks
+
+            console.log('Sending request to:', apiUrl);
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -144,34 +155,36 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel }) => {
                 allowClear={true}
                 disabledDate={(current) => current && current < dayjs().startOf('day')}
             />
-            <Select
-                mode="multiple"
-                showSearch
-                placeholder="Search for Contributors"
-                value={selectedSubmitters}
-                onChange={handleSubmitterSelect}
-                filterOption={filterUsers}
-                style={{ width: '100%', marginBottom: '20px' }}
-                listHeight={300}
-                dropdownStyle={{ maxHeight: '300px', overflow: 'auto' }}
-                optionLabelProp="label"
-            >
-                {allUsers && allUsers.map(user => (
-                    <Option
-                        key={user.uid}
-                        value={user.uid}
-                        label={user.name ? user.name.toUpperCase() : 'NO NAME'}
-                    >
-                        <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
-                            <Avatar icon={<UserOutlined />} src={user.avatar} />
-                            <div style={{ marginLeft: 8 }}>
-                                <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
-                                <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>
+            {!isSelfTask && (
+                <Select
+                    mode="multiple"
+                    showSearch
+                    placeholder="Search for Contributors"
+                    value={selectedSubmitters}
+                    onChange={handleSubmitterSelect}
+                    filterOption={filterUsers}
+                    style={{ width: '100%', marginBottom: '20px' }}
+                    listHeight={300}
+                    dropdownStyle={{ maxHeight: '300px', overflow: 'auto' }}
+                    optionLabelProp="label"
+                >
+                    {allUsers && allUsers.map(user => (
+                        <Option
+                            key={user.uid}
+                            value={user.uid}
+                            label={user.name ? user.name.toUpperCase() : 'NO NAME'}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
+                                <Avatar icon={<UserOutlined />} src={user.avatar} />
+                                <div style={{ marginLeft: 8 }}>
+                                    <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
+                                    <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>
+                                </div>
                             </div>
-                        </div>
-                    </Option>
-                ))}
-            </Select>
+                        </Option>
+                    ))}
+                </Select>
+            )}
             <Upload
                 fileList={fileList}
                 onChange={handleFileChange}

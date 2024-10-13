@@ -12,8 +12,8 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
 
-const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick, handleUpdateSave, pool }) => {
-    const { allUsers } = useContext(UserContext);
+const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick, handleUpdateSave, pool, isSelfTask }) => {
+    const { allUsers, user } = useContext(UserContext);
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
@@ -46,20 +46,36 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        onUpdateClick({ ...taskData, id: task.id, pool: pool._id });
+        const apiUrl = isSelfTask
+            ? 'http://localhost:5000/api/task/updateSelfTaskProgress'
+            : 'http://localhost:5000/api/task/updateTaskProgress';
+
+        onUpdateClick({ 
+            ...taskData, 
+            id: task.id, 
+            [isSelfTask ? 'userId' : 'poolId']: isSelfTask ? user._id : pool._id,
+            apiUrl 
+        });
     };
 
     const handleSave = () => {
         const taskData = {
-            id: task.id, // Make sure to include the task id
+            id: task.id,
             name: taskName,
             description: taskDescription,
             dueDate: dueDate ? [dueDate[0].format('YYYY-MM-DD'), dueDate[1].format('YYYY-MM-DD')] : null,
             contributor: selectedContributors
         };
 
-        //console.log('Saving task data:', taskData);
-        handleUpdateSave(taskData);
+        const apiUrl = isSelfTask
+            ? 'http://localhost:5000/api/task/updateSelfTask'
+            : 'http://localhost:5000/api/task/updateTask';
+
+        handleUpdateSave({ 
+            ...taskData, 
+            [isSelfTask ? 'userId' : 'poolId']: isSelfTask ? user._id : pool._id,
+            apiUrl 
+        });
         setIsChanged(false);
     };
 
@@ -362,36 +378,36 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                         disabledDate={(current) => current && current < dayjs().startOf('day')}
                     />
 
-                    <Select
-                        mode="multiple"
-                        showSearch
-                        placeholder={selectedContributors.length ? "Contributors" : "No Contributors"}
-                        value={selectedContributors}
-                        onChange={handleContributorSelect}
-                        filterOption={filterUsers}
-                        style={{ width: '100%', marginBottom: '20px' }}
-                        listHeight={300}
-                        dropdownStyle={{ maxHeight: '300px', overflow: 'auto' }}
-                        optionLabelProp="label"
-                    >
-                        {allUsers && allUsers.map(user => (
-                            <Option
-                                key={user.uid}
-                                value={user.uid}
-                                label={user.name ? user.name.toUpperCase() : 'NO NAME'}
-                            >
-                                <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
-                                    <Tooltip title={user.name || 'Unknown User'}>
+                    {!isSelfTask && (
+                        <Select
+                            mode="multiple"
+                            showSearch
+                            placeholder="Search for Contributors"
+                            value={selectedContributors}
+                            onChange={handleContributorSelect}
+                            filterOption={filterUsers}
+                            style={{ width: '100%', marginBottom: '20px' }}
+                            listHeight={300}
+                            dropdownStyle={{ maxHeight: '300px', overflow: 'auto' }}
+                            optionLabelProp="label"
+                        >
+                            {allUsers && allUsers.map(user => (
+                                <Option
+                                    key={user.uid}
+                                    value={user.uid}
+                                    label={user.name ? user.name.toUpperCase() : 'NO NAME'}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
                                         <Avatar icon={<UserOutlined />} src={user.avatar} />
-                                    </Tooltip>
-                                    <div style={{ marginLeft: 8 }}>
-                                        <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
-                                        <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>
+                                        <div style={{ marginLeft: 8 }}>
+                                            <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
+                                            <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </Option>
-                        ))}
-                    </Select>
+                                </Option>
+                            ))}
+                        </Select>
+                    )}
 
                     {isEditable && (
                         <Upload beforeUpload={() => false}>
