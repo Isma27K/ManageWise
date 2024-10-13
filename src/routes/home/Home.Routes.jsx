@@ -136,7 +136,6 @@ const Home = () => {
             <div style={{ paddingTop: '10vh' }}>
                 <Dashboard />
             </div>
-            <Footer />
         </div>
     );
 }

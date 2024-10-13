@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Layout, Menu } from 'antd';
 import { SettingOutlined, AppstoreOutlined, SafetyOutlined, AuditOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import './dashboard.style.scss';
 import MainDashboard from '../main-dashboard/main-dashboard.component.jsx';
 import SettingDashboard from '../setting-dashboard/setting-dashboard.component.jsx';
 import AdminDashboard from '../admin-dashboard/admin.component.jsx';
+import Footer from '../footer/footer.component.jsx';
 import { UserContext } from '../../contexts/UserContext';
 // If you have Settings and Report components, make sure to import them
 // import Settings from '../settings/settings.component.jsx';
@@ -70,6 +71,7 @@ const Dashboard = () => {
         <Content className="content-style">
           {content}
         </Content>
+        <Footer />
       </Layout>
     </Layout>
   );
