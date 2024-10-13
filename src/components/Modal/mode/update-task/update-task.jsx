@@ -40,16 +40,16 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
     const handleUpdate = async () => {
         setLoading(true);
         // Add a 5-second timer before updating
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        //await new Promise(resolve => setTimeout(resolve, 5000));
         
-        if (title.length === 0) {
-            notification.error({
-                message: 'Error',
-                description: 'Title is required',
-            });
-            setLoading(false);
-            return;
-        }
+        //if (title.length === 0) {
+        //    notification.error({
+        //        message: 'Error',
+        //        description: 'Title is required',
+        //    });
+        //    setLoading(false);
+        //    return;
+        //}
     
         const formData = new FormData();
         formData.append('title', title);

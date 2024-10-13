@@ -240,8 +240,16 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
     const renderProgressItem = (item) => {
         const user = getUser(item.CID);
-        //console.log('Progress item user:', user);
-        //console.log('Progress item:', item);
+
+        // Function to strip HTML tags and get first 20 words, adding spaces after tags
+        const getPlainTextExcerpt = (html, wordCount = 20) => {
+            const textWithSpaces = html.replace(/<\/?\w+[^>]*>/g, tag => tag + ' ');
+            const plainText = textWithSpaces.replace(/<[^>]+>/g, '');
+            return plainText.split(/\s+/).slice(0, wordCount).join(' ').trim();
+        };
+
+        // Use description as title if detail is empty
+        const title = item.detail || getPlainTextExcerpt(item.description);
 
         return (
             <Collapse
@@ -262,7 +270,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                                 </Avatar>
                             </Tooltip>
                             <div style={{ marginLeft: 8, display: 'flex', flexDirection: 'column' }}>
-                                <span>{item.detail}</span>
+                                <span>{title}</span>
                                 <Text type="secondary" style={{ fontSize: '0.8em' }}>
                                     {dayjs(item.date).format('DD-MM-YYYY HH:mm')}
                                 </Text>
