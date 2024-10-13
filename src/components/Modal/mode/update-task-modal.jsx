@@ -46,9 +46,11 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
+        console.log(isSelfTask);
+
         const apiUrl = isSelfTask
-            ? 'http://localhost:5000/api/task/updateSelfTaskProgress'
-            : 'http://localhost:5000/api/task/updateTaskProgress';
+            ? 'http://localhost:5000/api/task/updateTaskProgress'
+            : 'http://localhost:5000/api/task/updateProgress';
 
         onUpdateClick({ 
             ...taskData, 

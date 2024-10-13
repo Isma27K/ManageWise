@@ -88,7 +88,8 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
                     isEditable={isEditable}
                     maxTaskNameLength={maxTaskNameLength}
                     taskName={task}
-                    pool={pool} // Make sure to pass the pool prop here
+                    isSelfTask={isSelfTask}
+                    pool={pool}
                 />
             </CSSTransition>
         </>

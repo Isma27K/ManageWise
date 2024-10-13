@@ -8,7 +8,7 @@ import { UserContext } from '../../../../contexts/UserContext';
 
 const { Text } = Typography;
 
-const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskNameLength, pool }) => {
+const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskNameLength, pool, isSelfTask }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [file, setFile] = useState(null);
@@ -17,7 +17,6 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
     const token = localStorage.getItem('jwtToken');
 
     const { user } = useContext(UserContext);
-
 
     const handleTitleChange = (e) => {
         if (e.target.value.length <= maxTaskNameLength) {
@@ -39,17 +38,6 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
 
     const handleUpdate = async () => {
         setLoading(true);
-        // Add a 5-second timer before updating
-        //await new Promise(resolve => setTimeout(resolve, 5000));
-        
-        //if (title.length === 0) {
-        //    notification.error({
-        //        message: 'Error',
-        //        description: 'Title is required',
-        //    });
-        //    setLoading(false);
-        //    return;
-        //}
     
         const formData = new FormData();
         formData.append('title', title);
@@ -57,26 +45,21 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
         formData.append('CID', user._id);
         formData.append('taskID', task.id);
         
-        // Debug logging for pool ID
-        console.log('Pool object:', pool);
+        // Debug logging
         console.log('Task object:', task);
+        console.log('Is self task:', isSelfTask);
 
-        if (pool && pool._id) {
-            formData.append('poolID', pool._id);
-            console.log('Pool ID appended:', pool._id);
-        } else if (task && task.poolId) {
-            formData.append('poolID', task.poolId);
-            console.log('Task Pool ID appended:', task.poolId);
+        if (isSelfTask) {
+            formData.append('userID', user._id);
+        } else if (pool && pool._id) {
+            formData.append('poolID', isSelfTask ? user._id : pool._id);
         } else {
-            console.warn('No valid pool ID found');
+            console.warn('No valid pool ID or user ID found');
         }
         
         if (file) {
             formData.append('attachment', file, file.name);
             console.log('File appended to formData:', file);
-            console.log('File name:', file.name);
-            console.log('File type:', file.type);
-            console.log('File size:', file.size);
         } else {
             console.log('No file selected');
         }
@@ -87,8 +70,14 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
         }
 
         try {
-            console.log('Sending request to update task...');
-            const response = await fetch('http://localhost:5000/api/task/updateProgress', {
+            console.log(isSelfTask);
+            const apiUrl = isSelfTask
+                ? 'http://localhost:5000/api/task/updateTaskProgress' // self
+                : 'http://localhost:5000/api/task/updateProgress';    // pool
+            
+            console.log('Using API URL:', apiUrl);
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -143,7 +132,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
             onCancel={onCancel}
             footer={null}
             width="80vw"
-            styles={{ body: { padding: '24px' } }}  // Updated this line
+            styles={{ body: { padding: '24px' } }}
             centered
         >
             <div style={{ maxHeight: 'calc(80vh - 120px)', overflowY: 'auto', paddingRight: '12px', height: '60vh' }}>
