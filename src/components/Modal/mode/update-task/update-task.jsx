@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button, Upload, Typography, Space, Row, Col, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.scss';
+import 'react-quill/dist/quill.snow.css';
 import { useContext } from 'react';
 import { UserContext } from '../../../../contexts/UserContext';
 
