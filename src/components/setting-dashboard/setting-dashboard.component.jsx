@@ -6,6 +6,7 @@ import { UserContext } from '../../contexts/UserContext';
 
 const SettingDashboard = () => {
     const { user, setUser } = useContext(UserContext);
+    const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
     const [profile, setProfile] = useState({
         name: user.name.toUpperCase(),
@@ -62,6 +63,7 @@ const SettingDashboard = () => {
 
     const handleSaveClick = async () => {
         try {
+            setIsLoading(true);
             const values = await form.validateFields();
             
             const updateData = {
@@ -82,6 +84,7 @@ const SettingDashboard = () => {
             });
 
             if (!response.ok) {
+                setIsLoading(false);
                 throw new Error('Failed to update profile');
             }
 
@@ -101,7 +104,9 @@ const SettingDashboard = () => {
                 name: values.name,
                 // Update other user properties if necessary
             }));
+            setIsLoading(false);
         } catch (error) {
+            setIsLoading(false);
             console.error('Error updating profile:', error);
             notification.error({
                 message: 'Update Failed',
@@ -159,6 +164,7 @@ const SettingDashboard = () => {
                                     type="primary"
                                     htmlType="submit"
                                     icon={<SaveOutlined />}
+                                    loading={isLoading}
                                     className="save-button"
                                     onClick={handleSaveClick}
                                 >
