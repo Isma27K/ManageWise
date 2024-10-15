@@ -14,20 +14,9 @@ function App() {
                     <Routes>
                         <Route path="/login" element={<Login />} />
 
-
-                        {/*<Route 
-                            path="/register" 
-                            element={
-                                <ProtectedRoute requiredAuth="authLink" redirectTo="/login">
-                                    <Register />
-                                </ProtectedRoute>
-                            } 
-                        />*/}
-
                         <Route path="/register" element={<ValidateRegister />} />
 
                         <Route path="/" element={<Login />} />
-
 
                         <Route 
                             path="/Dashboard" 
