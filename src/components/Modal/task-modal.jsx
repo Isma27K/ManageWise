@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group';
 import CreateTaskModal from './mode/create-task-modal';
 import UpdateTaskModal from './mode/update-task-modal';
 import UpdateTask from './mode/update-task/update-task';
-import './task-modal.css'; // We'll create this CSS file next
+import './task-modal.scss'; // We'll create this CSS file next
 
 const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLength = 40, isSelfTask }) => {
     const [showUpdateTask, setShowUpdateTask] = useState(false);

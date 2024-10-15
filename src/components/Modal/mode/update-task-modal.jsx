@@ -4,7 +4,7 @@ import { UploadOutlined, UserOutlined, DownloadOutlined, CaretRightOutlined, Fil
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
 import DOMPurify from 'dompurify';
-import './update-task-modal.css';
+import './update-task-modal.scss';
 import axios from 'axios';  // Make sure to import axios if not already imported
 
 const { Text } = Typography;
