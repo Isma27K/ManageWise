@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import TaskModal from '../Modal/task-modal';
 import './card.style.scss';
 
-const CustomCard = ({ pools, maxTaskNameLength = 40 }) => {
+const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [selectedPool, setSelectedPool] = useState(null);
 	const [selectedTask, setSelectedTask] = useState(null);
@@ -89,16 +89,20 @@ const CustomCard = ({ pools, maxTaskNameLength = 40 }) => {
 								/>
 							</div>
 							<div className="card-footer">
-								<Button
-									className="create-task-btn"
-									type="primary"
-									shape="circle"
-									icon={<PlusOutlined />}
-									onClick={(e) => {
-										e.stopPropagation();
-										showModal(pool);
-									}}
-								/>
+								{pool.name.toUpperCase() !== "MY TASKS" ? (
+									<Button
+										className="create-task-btn"
+										type="primary"
+											shape="circle"
+											icon={<PlusOutlined />}
+											onClick={(e) => {
+												e.stopPropagation();
+												showModal(pool);
+											}}
+									/>
+								) : (
+									<></>
+								)}
 							</div>
 						</Card>
 					</div>
