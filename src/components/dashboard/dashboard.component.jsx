@@ -6,6 +6,7 @@ import MainDashboard from '../main-dashboard/main-dashboard.component.jsx';
 import SettingDashboard from '../setting-dashboard/setting-dashboard.component.jsx';
 import AdminDashboard from '../admin-dashboard/admin.component.jsx';
 import Footer from '../footer/footer.component.jsx';
+import Archive from '../../routes/archive/archive.jsx';
 import { UserContext } from '../../contexts/UserContext';
 // If you have Settings and Report components, make sure to import them
 // import Settings from '../settings/settings.component.jsx';
@@ -36,6 +37,9 @@ const Dashboard = () => {
       case '4':
         setContent(<AdminDashboard />);
         break;
+      case '5':
+        setContent(<Archive />);
+        break;
       default:
         setContent(<MainDashboard />);
     }
@@ -55,7 +59,7 @@ const Dashboard = () => {
             {/* Menu Group */}
             <Menu.ItemGroup key="g1" title="Main Menu">
               <Menu.Item key="1" icon={<AppstoreOutlined />}>Dashboard</Menu.Item>
-              <Menu.Item key="5" icon={<FieldTimeOutlined />} disabled>Archive (Coming Soon)</Menu.Item>
+              <Menu.Item key="5" icon={<FieldTimeOutlined />}>Archive</Menu.Item>
               <Menu.Item key="3" icon={<AuditOutlined />} disabled>Report (Coming Soon)</Menu.Item>
               {isAdmin && (
                 <Menu.Item key="4" icon={<SafetyOutlined />}>Admin</Menu.Item>

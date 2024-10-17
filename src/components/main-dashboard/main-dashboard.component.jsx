@@ -21,7 +21,7 @@ const MainDashboard = () => {
     isSelfTask: true
   };
 
-  console.log("selfTasksPool tasks:", selfTasksPool.tasks);
+  //console.log("selfTasksPool tasks:", selfTasksPool.tasks);
 
   // Combine self-tasks with other pools
   const allPools = [selfTasksPool, ...(pools || [])];
