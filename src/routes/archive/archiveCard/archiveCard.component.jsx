@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, List, Button, Tooltip } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import TaskModal from '../../../components/Modal/task-modal';
+import ArchiveModal from '../archiveModal/archiveModal';
 import './archiveCard.style.scss';
 
 const CustomArchiveCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
@@ -88,28 +87,12 @@ const CustomArchiveCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) 
 									}}
 								/>
 							</div>
-							<div className="card-footer">
-								{pool.name.toUpperCase() !== "MY TASKS" ? (
-									<Button
-										className="create-task-btn"
-										type="primary"
-											shape="circle"
-											icon={<PlusOutlined />}
-											onClick={(e) => {
-												e.stopPropagation();
-												showModal(pool);
-											}}
-									/>
-								) : (
-									<></>
-								)}
-							</div>
 						</Card>
 					</div>
 				))}
 			</div>
 
-			<TaskModal
+			<ArchiveModal
 				visible={isModalVisible}
 				onCancel={handleCancel}
 				pool={selectedPool}
