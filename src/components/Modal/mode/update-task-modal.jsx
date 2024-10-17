@@ -219,6 +219,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
     const handleArchiveTask = async () => {
         try {
+            const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
             const response = await fetch('http://localhost:5000/api/archive/archiveTask', {
                 method: 'POST',
                 headers: {
@@ -227,7 +228,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 },
                 body: JSON.stringify({ 
                     taskId: task.id,
-                    poolId: pool._id
+                    poolId: poolIdToUse
                 }),
             });
     
