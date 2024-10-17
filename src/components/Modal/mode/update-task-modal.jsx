@@ -46,16 +46,13 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        console.log(isSelfTask);
-
-        const apiUrl = isSelfTask
-            ? 'http://localhost:5000/api/task/updateTaskProgress'
-            : 'http://localhost:5000/api/task/updateProgress';
+        const apiUrl = 'http://localhost:5000/api/task/updateProgress';
 
         onUpdateClick({ 
             ...taskData, 
             id: task.id, 
-            [isSelfTask ? 'userId' : 'poolId']: isSelfTask ? user._id : pool._id,
+            poolId: pool._id,
+            originalPoolId: task.originalPoolId, // Make sure to include this
             apiUrl 
         });
     };
@@ -71,13 +68,11 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        const apiUrl = isSelfTask
-            ? 'http://localhost:5000/api/task/updateSelfTask' // tok untuk self task
-            : 'http://localhost:5000/api/task/updateTask'; // tok untuk pool task
+        const apiUrl = 'http://localhost:5000/api/task/updateTask'; // tok untuk pool task
 
         handleUpdateSave({ 
             ...taskData, 
-            [isSelfTask ? 'userId' : 'poolId']: isSelfTask ? user._id : pool._id,
+            poolId: pool._id,
             apiUrl 
         });
         setIsChanged(false);

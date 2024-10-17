@@ -16,7 +16,6 @@ const MainDashboard = () => {
 
   // Create a "pool" for self-appointed tasks
   const selfTasksPool = {
-    _id: 'self-tasks',
     name: 'My Tasks',
     tasks: userTasks,
     isSelfTask: true

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Input, Button, Upload, Typography, Space, Row, Col, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useContext } from 'react';
 import { UserContext } from '../../../../contexts/UserContext';
 
 const { Text } = Typography;
@@ -17,6 +16,13 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
     const token = localStorage.getItem('jwtToken');
 
     const { user } = useContext(UserContext);
+
+    useEffect(() => {
+        if (task) {
+            setTitle('');
+            setDescription('');
+        }
+    }, [task]);
 
     const handleTitleChange = (e) => {
         if (e.target.value.length <= maxTaskNameLength) {
@@ -38,44 +44,45 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
 
     const handleUpdate = async () => {
         setLoading(true);
-    
+
+        if (title === "" && description === "") {
+            notification.error({
+                message: 'Error',
+                description: 'At least one field must be filled or a file must be uploaded',
+            });
+            setLoading(false);
+            return;
+        }
+
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
         formData.append('CID', user._id);
         formData.append('taskID', task.id);
         
-        // Debug logging
-        console.log('Task object:', task);
-        console.log('Is self task:', isSelfTask);
-
-        if (isSelfTask) {
-            formData.append('userID', user._id);
-        } else if (pool && pool._id) {
-            formData.append('poolID', isSelfTask ? user._id : pool._id);
-        } else {
-            console.warn('No valid pool ID or user ID found');
+        // Determine which pool ID to use
+        const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
+        
+        console.log("poolIdToUse: ", poolIdToUse);
+        if (!poolIdToUse) {
+            console.error('No valid pool ID found');
+            notification.error({
+                message: 'Error',
+                description: 'No valid pool ID found. Cannot update task.',
+            });
+            setLoading(false);
+            return;
         }
+
+        formData.append('poolID', poolIdToUse);
+        console.log('Using poolID:', poolIdToUse);
         
         if (file) {
             formData.append('attachment', file, file.name);
-            console.log('File appended to formData:', file);
-        } else {
-            console.log('No file selected');
-        }
-
-        // Log the final formData
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value instanceof File ? `File: ${value.name}` : value);
         }
 
         try {
-            console.log(isSelfTask);
-            const apiUrl = isSelfTask
-                ? 'http://localhost:5000/api/task/updateTaskProgress' // self
-                : 'http://localhost:5000/api/task/updateProgress';    // pool
-            
-            console.log('Using API URL:', apiUrl);
+            const apiUrl = 'http://localhost:5000/api/task/updateProgress';
             
             const response = await fetch(apiUrl, {
                 method: 'POST',
