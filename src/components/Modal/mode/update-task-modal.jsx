@@ -382,36 +382,36 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                         disabledDate={(current) => current && current < dayjs().startOf('day')}
                     />
 
-                    {!isSelfTask && (
-                        <Select
-                            mode="multiple"
-                            showSearch
-                            placeholder="Search for Contributors"
-                            value={selectedContributors}
-                            onChange={handleContributorSelect}
-                            filterOption={filterUsers}
-                            style={{ width: '100%', marginBottom: '20px' }}
-                            listHeight={300}
-                            dropdownStyle={{ maxHeight: '300px', overflow: 'auto' }}
-                            optionLabelProp="label"
-                        >
-                            {allUsers && allUsers.map(user => (
-                                <Option
-                                    key={user.uid}
-                                    value={user.uid}
-                                    label={user.name ? user.name.toUpperCase() : 'NO NAME'}
-                                >
-                                    <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
-                                        <Avatar icon={<UserOutlined />} src={user.avatar} />
-                                        <div style={{ marginLeft: 8 }}>
-                                            <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
-                                            <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>
-                                        </div>
+            
+                    <Select
+                        mode="multiple"
+                        showSearch
+                        placeholder="Search for Contributors"
+                        value={selectedContributors}
+                        onChange={handleContributorSelect}
+                        filterOption={filterUsers}
+                        style={{ width: '100%', marginBottom: '20px' }}
+                        listHeight={300}
+                        dropdownStyle={{ maxHeight: '300px', overflow: 'auto' }}
+                        optionLabelProp="label"
+                    >
+                        {allUsers && allUsers.map(user => (
+                            <Option
+                                key={user.uid}
+                                value={user.uid}
+                                label={user.name ? user.name.toUpperCase() : 'NO NAME'}
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', padding: '8px 0' }}>
+                                    <Avatar icon={<UserOutlined />} src={user.avatar} />
+                                    <div style={{ marginLeft: 8 }}>
+                                        <div>{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
+                                        <div style={{ fontSize: '0.8em', color: '#888' }}>{user.email || 'No email'}</div>
                                     </div>
-                                </Option>
-                            ))}
-                        </Select>
-                    )}
+                                </div>
+                            </Option>
+                        ))}
+                    </Select>
+          
 
                     {isEditable && (
                         <Upload beforeUpload={() => false}>
