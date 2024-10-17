@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal } from 'antd';
+import { Modal, notification } from 'antd';
 import { CSSTransition } from 'react-transition-group';
 import CreateTaskModal from './mode/create-task-modal';
 import UpdateTaskModal from './mode/update-task-modal';
@@ -9,25 +9,46 @@ import './task-modal.scss'; // We'll create this CSS file next
 const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLength = 40, isSelfTask }) => {
     const [showUpdateTask, setShowUpdateTask] = useState(false);
     const [updatedTaskData, setUpdatedTaskData] = useState(null);
+    const token = localStorage.getItem('jwtToken');
 
     const handleUpdateClick = (taskData) => {
         setUpdatedTaskData(taskData);
         setShowUpdateTask(true);
     };
 
-    const handleUpdateSave = (taskData) => {
+    const handleUpdateSave = async (taskData) => {
         setUpdatedTaskData(taskData);
-
-
+    
         console.log('Saving updated task data:', taskData);
-
-        // For example, you might want to call an API to update the task
-
-        // updateTaskAPI(taskData).then(() => {
-        //     // Handle successful update
-        // }).catch(error => {
-        //     // Handle error
-        // });
+    
+        try {
+            const response = await fetch(taskData.apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'  // Add this line
+                },
+                body: JSON.stringify(taskData)
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to update task');
+            }
+    
+            const result = await response.json();
+            console.log('Update result:', result);  // Add this line
+            notification.success({
+                message: 'Task Updated',
+                description: 'The task has been updated successfully.',
+            });
+        } catch (error) {
+            console.error('Error updating task:', error);
+            notification.error({
+                message: 'Update Failed',
+                description: error.message,
+            });
+        }
     };
 
     const handleUpdateTaskCancel = () => {

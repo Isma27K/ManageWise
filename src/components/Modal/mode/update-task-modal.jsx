@@ -68,11 +68,13 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        const apiUrl = 'http://localhost:5000/api/task/updateTask'; // tok untuk pool task
+        const apiUrl = 'http://localhost:5000/api/task/saveUpdateTask'; // tok untuk pool task
+        const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
+
 
         handleUpdateSave({ 
             ...taskData, 
-            poolId: pool._id,
+            poolId: poolIdToUse,
             apiUrl 
         });
         setIsChanged(false);
