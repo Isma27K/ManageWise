@@ -18,7 +18,6 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
     const handleUpdateSave = (taskData) => {
         setUpdatedTaskData(taskData);
 
-        // Here you should implement the logic to save the updated task data
 
         console.log('Saving updated task data:', taskData);
 

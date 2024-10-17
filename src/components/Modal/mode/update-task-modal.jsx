@@ -60,18 +60,20 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         });
     };
 
+    // TODO: implement the real save update for the task it self, also mingkin kenak implement also intuk description
+    // real implementation is on task-modal.jsx
     const handleSave = () => {
         const taskData = {
             id: task.id,
-            name: taskName,
+            //name: taskName,
             description: taskDescription,
             dueDate: dueDate ? [dueDate[0].format('YYYY-MM-DD'), dueDate[1].format('YYYY-MM-DD')] : null,
             contributor: selectedContributors
         };
 
         const apiUrl = isSelfTask
-            ? 'http://localhost:5000/api/task/updateSelfTask'
-            : 'http://localhost:5000/api/task/updateTask';
+            ? 'http://localhost:5000/api/task/updateSelfTask' // tok untuk self task
+            : 'http://localhost:5000/api/task/updateTask'; // tok untuk pool task
 
         handleUpdateSave({ 
             ...taskData, 
@@ -338,7 +340,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                         value={taskDescription}
                         onChange={handleDescriptionChange}
                         style={{ marginBottom: '20px' }}
-                        disabled={!isEditable}
+                        //disabled={!isEditable}
                     />
 
                     <div style={{ marginBottom: '20px' }}>
