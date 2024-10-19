@@ -69,9 +69,9 @@ const AdminDashboard = () => {
         <TabPane tab="Invitation" key="1">
           <InvitationTab />
         </TabPane>
-        <TabPane tab="User Management" key="2">
+        {/*<TabPane tab="User Management" key="2">
           <UserManagementTab users={users} roles={roles} />
-        </TabPane>
+        </TabPane>*/}
         <TabPane tab="Pool Management" key="3">
           <PoolManagementTab users={users} />
         </TabPane>
