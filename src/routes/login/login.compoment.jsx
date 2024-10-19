@@ -65,7 +65,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <form className="login-form" onSubmit={handleSubmit}>
-                <h2>Login test from isma</h2>
+                <h2>Login</h2>
                 {/*error && <div className="error-message">{error}</div>}*/}
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
