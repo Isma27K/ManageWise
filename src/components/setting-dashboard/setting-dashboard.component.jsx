@@ -74,7 +74,7 @@ const SettingDashboard = () => {
                 updateData.avatar = profile.avatarBase64;  // Send the full data URL
             }
 
-            const response = await fetch('http://localhost:5000/update/avatar', {
+            const response = await fetch('https://isapi.ratacode.top/update/avatar', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

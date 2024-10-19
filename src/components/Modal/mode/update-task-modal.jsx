@@ -46,7 +46,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        const apiUrl = 'http://localhost:5000/api/task/updateProgress';
+        const apiUrl = 'https://isapi.ratacode.top/api/task/updateProgress';
 
         onUpdateClick({ 
             ...taskData, 
@@ -68,7 +68,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        const apiUrl = 'http://localhost:5000/api/task/saveUpdateTask'; // tok untuk pool task
+        const apiUrl = 'https://isapi.ratacode.top/api/task/saveUpdateTask'; // tok untuk pool task
         const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
 
 
@@ -126,7 +126,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             const fileName = attachment.name || pathParts[pathParts.length - 1];
             const isPDF = fileName.toLowerCase().endsWith('.pdf');
 
-            const url = `http://localhost:5000/${encodedPath}`;
+            const url = `https://isapi.ratacode.top/${encodedPath}`;
 
             if (isPDF) {
                 // For PDFs, open in a new tab
@@ -220,7 +220,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     const handleArchiveTask = async () => {
         try {
             const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
-            const response = await fetch('http://localhost:5000/api/archive/archiveTask', {
+            const response = await fetch('https://isapi.ratacode.top/api/archive/archiveTask', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

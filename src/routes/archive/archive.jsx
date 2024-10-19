@@ -14,7 +14,7 @@ const Archive = () => {
       const token = localStorage.getItem('jwtToken');
 
       try {
-        const response = await fetch('http://localhost:5000/api/data/archivePool', {
+        const response = await fetch('https://isapi.ratacode.top/api/data/archivePool', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,

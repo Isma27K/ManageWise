@@ -50,7 +50,7 @@ const Register = () => {
             setErrors(validationErrors);
         } else {
             try {
-                const response = await fetch('http://localhost:5000/auth/register', {
+                const response = await fetch('https://isapi.ratacode.top/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

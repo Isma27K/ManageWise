@@ -35,7 +35,7 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
       const user = users.find(u => u.uid === deleteUserId || u.id === deleteUserId);
       if (user) {
         try {
-          const response = await fetch('http://localhost:5000/api/admin/DeleteUser', {
+          const response = await fetch('https://isapi.ratacode.top/api/admin/DeleteUser', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,

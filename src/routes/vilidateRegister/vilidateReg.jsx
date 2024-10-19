@@ -33,7 +33,7 @@ ValidateRegister = () => {
             }
 
             try {
-                const response = await fetch('http://localhost:5000/auth/checkLink', {
+                const response = await fetch('https://isapi.ratacode.top/auth/checkLink', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

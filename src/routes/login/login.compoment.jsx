@@ -27,7 +27,7 @@ const Login = () => {
 
         try {
             let username = email;
-            const response = await fetch('http://localhost:5000/auth/login', {
+            const response = await fetch('https://isapi.ratacode.top/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

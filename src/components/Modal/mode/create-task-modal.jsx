@@ -75,8 +75,8 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
 
         try {
             const apiUrl = isSelfTask 
-                ? 'http://localhost:5000/api/task/createSelfTask'  // Placeholder URL for self-tasks
-                : 'http://localhost:5000/api/task/createTask';     // Existing URL for pool tasks
+                ? 'https://isapi.ratacode.top/api/task/createSelfTask'  // Placeholder URL for self-tasks
+                : 'https://isapi.ratacode.top/api/task/createTask';     // Existing URL for pool tasks
 
             console.log('Sending request to:', apiUrl);
             const response = await fetch(apiUrl, {

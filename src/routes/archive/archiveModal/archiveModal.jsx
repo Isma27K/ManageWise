@@ -17,7 +17,7 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
                 ? { taskId: task.id, poolId: pool._id }
                 : { poolId: pool._id };
 
-            const response = await fetch(`http://localhost:5000/api/archive/${endpoint}`, {
+            const response = await fetch(`https://isapi.ratacode.top/api/archive/${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -82,7 +82,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
         }
 
         try {
-            const apiUrl = 'http://localhost:5000/api/task/updateProgress';
+            const apiUrl = 'https://isapi.ratacode.top/api/task/updateProgress';
             
             const response = await fetch(apiUrl, {
                 method: 'POST',
