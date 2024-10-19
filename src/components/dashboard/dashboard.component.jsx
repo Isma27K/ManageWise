@@ -8,6 +8,8 @@ import AdminDashboard from '../admin-dashboard/admin.component.jsx';
 import Footer from '../footer/footer.component.jsx';
 import Archive from '../../routes/archive/archive.jsx';
 import { UserContext } from '../../contexts/UserContext';
+import Report from '../../routes/report/report.jsx';
+
 // If you have Settings and Report components, make sure to import them
 // import Settings from '../settings/settings.component.jsx';
 // import Report from '../report/report.component.jsx';
@@ -15,7 +17,7 @@ import { UserContext } from '../../contexts/UserContext';
 const { Sider, Content } = Layout;
 
 const Dashboard = () => {
-  const { user } = useContext(UserContext);
+  const { user, setGlobalSearchTerm } = useContext(UserContext);
   const [content, setContent] = useState(<MainDashboard />);
   const [selectedKey, setSelectedKey] = useState('1');
 
@@ -32,7 +34,7 @@ const Dashboard = () => {
         setContent(<SettingDashboard />);
         break;
       case '3':
-        // setContent(<Report />);
+        setContent(<Report />);
         break;
       case '4':
         setContent(<AdminDashboard />);
@@ -43,6 +45,8 @@ const Dashboard = () => {
       default:
         setContent(<MainDashboard />);
     }
+    // Clear the global search term when switching sections
+    setGlobalSearchTerm('');
   };
 
   return (
@@ -60,15 +64,13 @@ const Dashboard = () => {
             <Menu.ItemGroup key="g1" title="Main Menu">
               <Menu.Item key="1" icon={<AppstoreOutlined />}>Dashboard</Menu.Item>
               <Menu.Item key="5" icon={<FieldTimeOutlined />}>Archive</Menu.Item>
-              <Menu.Item key="3" icon={<AuditOutlined />} disabled>Report (Coming Soon)</Menu.Item>
+              <Menu.Item key="3" icon={<AuditOutlined />}>Report</Menu.Item>
               {isAdmin && (
                 <Menu.Item key="4" icon={<SafetyOutlined />}>Admin</Menu.Item>
               )}
               <Menu.Item key="2" icon={<SettingOutlined />}>Settings</Menu.Item>
             </Menu.ItemGroup>
           </Menu>
-
-
         </div>
       </Sider>
       <Layout style={{ marginLeft: 250, padding: '24px' }}>

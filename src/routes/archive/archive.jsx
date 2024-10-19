@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import CustomArchiveCard from './archiveCard/archiveCard.component';
 import { notification } from 'antd';
+import { UserContext } from '../../contexts/UserContext';
 
 const Archive = () => {
   const [pools, setPools] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { globalSearchTerm } = useContext(UserContext);
 
   useEffect(() => {
     const fetchArchivePools = async () => {
@@ -39,6 +41,19 @@ const Archive = () => {
     fetchArchivePools();
   }, []);
 
+  const filteredPools = useMemo(() => {
+    return pools.map(pool => ({
+      ...pool,
+      tasks: pool.tasks.filter(task =>
+        task.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
+        task.description.toLowerCase().includes(globalSearchTerm.toLowerCase())
+      )
+    })).filter(pool =>
+      pool.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
+      pool.tasks.length > 0
+    );
+  }, [pools, globalSearchTerm]);
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -48,10 +63,10 @@ const Archive = () => {
       <h2>Archive Pools</h2>
       {isLoading ? (
         <div>Loading pools...</div>
-      ) : pools.length > 0 ? (
-        <CustomArchiveCard pools={pools} />
+      ) : filteredPools.length > 0 ? (
+        <CustomArchiveCard pools={filteredPools} />
       ) : (
-        <div>No archive pools available</div>
+        <div>No matching archive pools available</div>
       )}
     </div>
   );

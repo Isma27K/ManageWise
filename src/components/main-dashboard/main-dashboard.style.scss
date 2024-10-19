@@ -4,6 +4,18 @@
     h2 {
         margin-bottom: 20px;
     }
+
+    .search-container {
+        margin-bottom: 16px;
+        
+        .ant-input {
+            margin-right: 13px;
+        }
+        
+        .ant-select {
+            min-width: 100px;
+        }
+    }
 }
 
 // If you want to override any styles from the card component, you can do it here

@@ -55,37 +55,41 @@ const CustomArchiveCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) 
 							hoverable
 						>
 							<div className="scrollable-content">
-								<List
-									size="small"
-									dataSource={pool.tasks || []}
-									renderItem={(task) => {
-										const taskName = task.name || `Task ${task.id}`;
-										const truncatedName = truncateText(taskName, truncateLength);
-										const isTruncated = truncatedName !== taskName;
+								{pool.tasks && pool.tasks.length > 0 ? (
+									<List
+										size="small"
+										dataSource={pool.tasks}
+										renderItem={(task) => {
+											const taskName = task.name || `Task ${task.id}`;
+											const truncatedName = truncateText(taskName, truncateLength);
+											const isTruncated = truncatedName !== taskName;
 
-										return (
-											isTruncated ? (
-												<Tooltip title={taskName}>
+											return (
+												isTruncated ? (
+													<Tooltip title={taskName}>
+														<List.Item
+															key={task.id}
+															onClick={() => showModal(pool, task)}
+															style={{ cursor: 'pointer' }}
+														>
+															{truncatedName}
+														</List.Item>
+													</Tooltip>
+												) : (
 													<List.Item
 														key={task.id}
 														onClick={() => showModal(pool, task)}
 														style={{ cursor: 'pointer' }}
 													>
-														{truncatedName}
+														{taskName}
 													</List.Item>
-												</Tooltip>
-											) : (
-												<List.Item
-													key={task.id}
-													onClick={() => showModal(pool, task)}
-													style={{ cursor: 'pointer' }}
-												>
-													{taskName}
-												</List.Item>
-											)
-										);
-									}}
-								/>
+												)
+											);
+										}}
+									/>
+								) : (
+									<div>No tasks in this pool match the search criteria</div>
+								)}
 							</div>
 						</Card>
 					</div>

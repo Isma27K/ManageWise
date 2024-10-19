@@ -1,38 +1,59 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
+import { Input, Select } from 'antd';
 import CustomCard from '../card/card.component.jsx';
 import './main-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
 
+const { Option } = Select;
+
 const MainDashboard = () => {
-  const { pools, user } = useContext(UserContext);
+  const { pools, user, globalSearchTerm, setGlobalSearchTerm } = useContext(UserContext);
+  const [searchType, setSearchType] = useState('both');
 
   // Filter tasks associated with the user from all pools
   // and include the original pool ID for each task
-  const userTasks = pools?.flatMap(pool => 
+  const userTasks = useMemo(() => pools?.flatMap(pool => 
     pool.tasks
       .filter(task => task.contributor.includes(user._id))
       .map(task => ({ ...task, originalPoolId: pool._id }))
-  ) || [];
+  ) || [], [pools, user._id]);
 
   // Create a "pool" for self-appointed tasks
-  const selfTasksPool = {
+  const selfTasksPool = useMemo(() => ({
     name: 'My Tasks',
     tasks: userTasks,
     isSelfTask: true
-  };
-
-  //console.log("selfTasksPool tasks:", selfTasksPool.tasks);
+  }), [userTasks]);
 
   // Combine self-tasks with other pools
-  const allPools = [selfTasksPool, ...(pools || [])];
+  const allPools = useMemo(() => [selfTasksPool, ...(pools || [])], [selfTasksPool, pools]);
+
+  // Filter pools and tasks based on global search term and search type
+  const filteredPools = useMemo(() => {
+    return allPools.map(pool => {
+      const poolMatch = pool.name.toLowerCase().includes(globalSearchTerm.toLowerCase());
+      const filteredTasks = pool.tasks.filter(task =>
+        task.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
+        task.description.toLowerCase().includes(globalSearchTerm.toLowerCase())
+      );
+
+      if (searchType === 'pool' && poolMatch) {
+        return { ...pool };
+      } else if (searchType === 'task') {
+        return { ...pool, tasks: filteredTasks };
+      } else { // 'both'
+        return poolMatch ? { ...pool } : { ...pool, tasks: filteredTasks };
+      }
+    }).filter(pool => pool.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) || pool.tasks.length > 0);
+  }, [allPools, globalSearchTerm, searchType]);
 
   return (
     <div className="main-dashboard">
       <h2>Available Pools</h2>
-      {allPools.length > 0 ? (
-        <CustomCard pools={allPools} />
+      {filteredPools.length > 0 ? (
+        <CustomCard pools={filteredPools} />
       ) : (
-        <div>Loading pools...</div>
+        <div>No matching pools or tasks found.</div>
       )}
     </div>
   );

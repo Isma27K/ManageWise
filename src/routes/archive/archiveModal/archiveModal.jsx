@@ -95,7 +95,7 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
                     <br />
                     <Space wrap style={{ marginTop: '8px' }}>
                         {task.contributor.map((contributorId, index) => (
-                            <Tag key={index}>{getUserName(contributorId)}</Tag>
+                            <Tag key={index}>{getUserName(contributorId).toUpperCase()}</Tag>
                         ))}
                     </Space>
                 </Col>

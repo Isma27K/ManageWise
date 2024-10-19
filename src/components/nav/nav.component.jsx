@@ -12,7 +12,7 @@ const avatarSize = {
 };
 
 const Nav = () => {
-    const { user } = useContext(UserContext);
+    const { user, globalSearchTerm, setGlobalSearchTerm } = useContext(UserContext);
     const [avatarSrc, setAvatarSrc] = useState('');
     const [avatarLoadError, setAvatarLoadError] = useState(false);
 
@@ -49,11 +49,19 @@ const Nav = () => {
         </Menu>
     );
 
+    const handleSearch = (e) => {
+        setGlobalSearchTerm(e.target.value);
+    };
+
     return (
         <>
             <nav className="nav">
                 <div className="nav-search">
-                    <Input placeholder="What You Looking For..." />
+                    <Input 
+                        placeholder="What You Looking For..." 
+                        value={globalSearchTerm}
+                        onChange={handleSearch}
+                    />
                 </div>
                 <div className="nav-title">
                     <Link to="/dashboard"><h2>ManageWise</h2></Link> {/* Corrected usage of Link */}
