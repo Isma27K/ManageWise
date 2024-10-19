@@ -85,7 +85,7 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
 
   return (
     <>
-      <Form layout="vertical" onFinish={handleDeletePool} className="admin-form">
+      {/*<Form layout="vertical" onFinish={handleDeletePool} className="admin-form">
         <Form.Item 
           name="ArchivePool" 
           label="Archive POOL"
@@ -106,7 +106,7 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
             Archive POOL
           </Button>
         </Form.Item>
-      </Form>
+      </Form>*/}
       <Form form={form} layout="vertical" onFinish={handleDeleteUser} className="admin-form">
         <Form.Item 
           name="deleteUser" 
