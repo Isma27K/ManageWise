@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# ignore save.bat
+save.bat
+
 # production
 /build
 

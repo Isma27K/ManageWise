@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
-const TaskCompletionSummary = ({ data }) => {
+const PoolTaskPartitions = ({ data }) => {
     return (
         <Row gutter={[16, 16]}>
             <Col span={12}>
@@ -37,4 +37,4 @@ const TaskCompletionSummary = ({ data }) => {
     );
 };
 
-export default TaskCompletionSummary;
+export default PoolTaskPartitions;

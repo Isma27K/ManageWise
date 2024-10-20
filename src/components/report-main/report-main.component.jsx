@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Layout, Typography, Row, Col, Card, Button, Input } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import Lottie from 'react-lottie';
-import TaskCompletionSummary from './TaskCompletionSummary';
+import PoolTaskPartitions from './PoolTaskPartitions';
 import UserPerformanceMetrics from './UserPerformanceMetrics';
 import TaskDeliveryMetrics from './TaskDeliveryMetrics';
 import ProjectOverview from './ProjectOverview';
@@ -161,8 +161,8 @@ const ReportMain = () => {
                 </div>
                 <Row gutter={[16, 16]}>
                     <Col span={12}>
-                        <Card title="Task Completion Summary">
-                            <TaskCompletionSummary data={reportData.taskCompletionSummary} />
+                        <Card title="Pool Task Partitions">
+                            <PoolTaskPartitions data={reportData.taskCompletionSummary} />
                         </Card>
                     </Col>
                     <Col span={12}>
