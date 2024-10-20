@@ -27,13 +27,20 @@ const ReportMain = () => {
         setTimeout(() => {
             setReportData({
                 taskCompletionSummary: {
-                    totalCompleted: 150,
-                    pending: 50,
                     statusBreakdown: [
-                        { status: 'Completed', count: 150 },
-                        { status: 'In Progress', count: 30 },
-                        { status: 'Overdue', count: 20 },
-                    ],
+                        {
+                            status: "TEST",
+                            count: 2
+                        },
+                        {
+                            status: "TEST 2",
+                            count: 1
+                        },
+                        {
+                            status: "MULTIMEDIA",
+                            count: 10
+                        }
+                    ]
                 },
                 userPerformanceMetrics: {
                     taskCompletionRate: 0.85,
