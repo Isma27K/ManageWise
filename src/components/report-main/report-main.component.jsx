@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Typography, Row, Col, Card, Button } from 'antd';
+import React, { useState, useEffect, useContext } from 'react';
+import { Layout, Typography, Row, Col, Card, Button, Input } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import Lottie from 'react-lottie';
 import TaskCompletionSummary from './TaskCompletionSummary';
@@ -10,6 +10,7 @@ import EfficiencyProductivityReports from './EfficiencyProductivityReports';
 import TimeBasedReports from './TimeBasedReports';
 import loadingAnimation from '../../asset/gif/loading.json';
 import './report-main.style.scss';
+import { UserContext } from '../../contexts/UserContext';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -17,6 +18,9 @@ const { Title } = Typography;
 const ReportMain = () => {
     const [loading, setLoading] = useState(true);
     const [reportData, setReportData] = useState(null);
+    const { user } = useContext(UserContext);
+
+    const isAdmin = user?.admin;
 
     useEffect(() => {
         // Simulating data fetching
