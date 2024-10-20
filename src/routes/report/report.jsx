@@ -1,9 +1,10 @@
 import React from 'react';
+import ReportMain from '../../components/report-main/report-main.component';
 
 
 const Report = () => {
     return (
-        <div>Report</div>
+        <ReportMain />
     )
 }
 
