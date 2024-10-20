@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Typography, Row, Col, Card, Spin, Button } from 'antd';
+import { Layout, Typography, Row, Col, Card, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
+import Lottie from 'react-lottie';
 import TaskCompletionSummary from './TaskCompletionSummary';
 import UserPerformanceMetrics from './UserPerformanceMetrics';
 import TaskDeliveryMetrics from './TaskDeliveryMetrics';
 import ProjectOverview from './ProjectOverview';
 import EfficiencyProductivityReports from './EfficiencyProductivityReports';
 import TimeBasedReports from './TimeBasedReports';
+import loadingAnimation from '../../asset/gif/loading.json';
 import './report-main.style.scss';
 
 const { Content } = Layout;
@@ -127,8 +129,21 @@ const ReportMain = () => {
         }
     };
 
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: loadingAnimation,
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+        }
+    };
+
     if (loading) {
-        return <Spin size="large" />;
+        return (
+            <div className="loading-container">
+                <Lottie options={defaultOptions} height={200} width={200} />
+            </div>
+        );
     }
 
     return (
