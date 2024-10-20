@@ -1,5 +1,5 @@
 import React from 'react';
-import { Statistic, Row, Col, Typography } from 'antd';
+import { Statistic, Row, Col, Typography, Divider } from 'antd';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 const { Title } = Typography;
@@ -7,6 +7,9 @@ const { Title } = Typography;
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28DFF', '#FFBB28', '#FF8042', '#A28DFF', '#FFBB28', '#FF8042', '#A28DFF', '#FFBB28', '#FF8042', '#A28DFF'];
 
 const PoolTaskPartitions = ({ data }) => {
+
+    const totalTasks = data.statusBreakdown.reduce((acc, curr) => acc + curr.count, 0);
+
     // Sort the statusBreakdown by count in descending order and take the top 6
     const top6StatusBreakdown = [...data.statusBreakdown]
         .sort((a, b) => b.count - a.count)
@@ -50,6 +53,12 @@ const PoolTaskPartitions = ({ data }) => {
                         <Legend />
                     </PieChart>
                 </ResponsiveContainer>
+            </Col>
+            <Col span={24}>
+                <Divider />
+
+                <Title level={4}>Total Tasks</Title>
+                <Statistic title="Total Tasks" value={totalTasks} />
             </Col>
         </Row>
     );
