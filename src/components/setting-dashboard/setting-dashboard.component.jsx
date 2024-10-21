@@ -74,12 +74,56 @@ const SettingDashboard = () => {
         }));
     };
 
-    const handleRemoveAvatar = () => {
-        setProfile(prevProfile => ({
-            ...prevProfile,
-            avatarUrl: null,
-            avatarBase64: ""
-        }));
+    const handleRemoveAvatar = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch('https://isapi.ratacode.top/update/remove-avater', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uid: user._id }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete avatar');
+            }
+
+            const result = await response.json();
+
+            // Update the user context and component state
+            const updatedUser = {
+                ...user,
+                avatar: null
+            };
+            setUser(updatedUser);
+            setProfile(prevProfile => ({
+                ...prevProfile,
+                avatarUrl: null,
+                avatarBase64: null
+            }));
+
+            // Update the UserContext
+            if (setUser) {
+                setUser(updatedUser);
+            }
+
+            notification.success({
+                message: 'Avatar Removed',
+                description: 'Your avatar has been successfully removed.',
+                placement: 'topRight',
+            });
+        } catch (error) {
+            console.error('Error removing avatar:', error);
+            notification.error({
+                message: 'Remove Avatar Failed',
+                description: 'There was an error removing your avatar. Please try again.',
+                placement: 'topRight',
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSaveClick = async () => {
@@ -93,8 +137,6 @@ const SettingDashboard = () => {
 
             if (profile.avatarBase64) {
                 updateData.avatar = profile.avatarBase64;
-            } else if (profile.avatarUrl === null) {
-                updateData.avatar = null; // This will indicate to the backend to remove the avatar
             }
 
             const response = await fetch('https://isapi.ratacode.top/update/avatar', {
@@ -107,35 +149,39 @@ const SettingDashboard = () => {
             });
 
             if (!response.ok) {
-                setIsLoading(false);
                 throw new Error('Failed to update profile');
             }
 
             const result = await response.json();
             
-            handleProfileChange(values);
+            // Update the user context and component state
+            const updatedUser = {
+                ...user,
+                name: values.name,
+                avatar: profile.avatarBase64 || user.avatar
+            };
+            setUser(updatedUser);
+            setProfile(prevProfile => ({
+                ...prevProfile,
+                name: values.name,
+                avatarUrl: updatedUser.avatar
+            }));
+
             setIsEditing(false);
             notification.success({
                 message: 'Profile Updated',
                 description: 'Your profile has been successfully updated.',
                 placement: 'topRight',
             });
-
-            // Update the user context
-            setUser(prevUser => ({
-                ...prevUser,
-                name: values.name,
-                avatar: profile.avatarUrl
-            }));
-            setIsLoading(false);
         } catch (error) {
-            setIsLoading(false);
             console.error('Error updating profile:', error);
             notification.error({
                 message: 'Update Failed',
                 description: 'There was an error updating your profile. Please try again.',
                 placement: 'topRight',
             });
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -238,6 +284,7 @@ const SettingDashboard = () => {
                                     icon={<DeleteOutlined />}
                                     className="edit-button remove-avatar-button"
                                     onClick={handleRemoveAvatar}
+                                    loading={isLoading}
                                 >
                                     Remove Avatar
                                 </Button>

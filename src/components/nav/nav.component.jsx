@@ -20,6 +20,9 @@ const Nav = () => {
         if (user && user.avatar) {
             setAvatarSrc(user.avatar);
             setAvatarLoadError(false);
+        } else {
+            setAvatarSrc('');
+            setAvatarLoadError(true);
         }
     }, [user]);
 
@@ -37,7 +40,7 @@ const Nav = () => {
 
     const handleAvatarError = () => {
         setAvatarLoadError(true);
-        setAvatarSrc(''); // Clear the src to show initials
+        setAvatarSrc('');
     };
 
     // Define menu items for the avatar dropdown
