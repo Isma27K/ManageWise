@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Layout, Typography, Row, Col, Card, Button, Input } from 'antd';
+import { Layout, Typography, Row, Col, Card, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import Lottie from 'react-lottie';
 import PoolTaskPartitions from './PoolTaskPartitions';
 import UserPerformanceMetrics from './UserPerformanceMetrics';
 import TaskDeliveryMetrics from './TaskDeliveryMetrics';
-import ProjectOverview from './ProjectOverview';
-import EfficiencyProductivityReports from './EfficiencyProductivityReports';
 import TimeBasedReports from './TimeBasedReports';
 import loadingAnimation from '../../asset/gif/loading.json';
 import './report-main.style.scss';
@@ -19,115 +17,45 @@ const ReportMain = () => {
     const [loading, setLoading] = useState(true);
     const [reportData, setReportData] = useState(null);
     const { user } = useContext(UserContext);
-
-    const isAdmin = user?.admin;
+    const token = localStorage.getItem('jwtToken');
 
     useEffect(() => {
-        // Simulating data fetching
-        setTimeout(() => {
-            setReportData({
-                taskCompletionSummary: {
-                    statusBreakdown: [
-                        {
-                            status: "TEST",
-                            count: 2
-                        },
-                        {
-                            status: "TEST 2",
-                            count: 1
-                        },
-                        {
-                            status: "MULTIMEDIA",
-                            count: 10
-                        }
-                    ]
-                },
-                userPerformanceMetrics: {
-                    taskCompletionRate: 0.33,
-                    totalTasks: 3,
-                    completedTasks: 1,
-                    averageCompletionTime: 0.21,
-                    completedTasksCount: 1,
-                    topPerformers: [
-                        {
-                            Pool: "TEST",
-                            tasksCompleted: 1
-                        }
-                    ]
-                },
-                taskDeliveryMetrics: {
-                    onTimeDeliveryRate: 1,
-                    delayedTasks: 0,
-                    taskEscalations: 1
-                },
-                projectOverview: {
-                    totalProjects: 10,
-                    activeProjects: 7,
-                    completedProjects: 3,
-                    tasksPerProject: [
-                        { project: 'Project A', tasks: 45 },
-                        { project: 'Project B', tasks: 32 },
-                        { project: 'Project C', tasks: 28 },
-                        { project: 'Project D', tasks: 20 },
-                        { project: 'Project E', tasks: 15 },
-                    ],
-                },
-                efficiencyProductivity: {
-                    averageTaskAge: 3.5,
-                    avgIdleTime: 4.2,
-                    tasksCompletedThisWeek: 87,
-                    productivityTrends: [
-                        { date: '2023-05-01', tasksCompleted: 15 },
-                        { date: '2023-05-02', tasksCompleted: 20 },
-                        { date: '2023-05-03', tasksCompleted: 18 },
-                        { date: '2023-05-04', tasksCompleted: 22 },
-                        { date: '2023-05-05', tasksCompleted: 25 },
-                        { date: '2023-05-06', tasksCompleted: 17 },
-                        { date: '2023-05-07', tasksCompleted: 12 },
-                    ],
-                },
-                timeBased: {
-                    tasksOverTime: [
-                        {
-                            date: "2024-10-20",
-                            created: 3,
-                            started: 0,
-                            completed: 1
-                        }
-                    ],
-                    weeklyReport: {
-                        tasksCompleted: 1,
-                        onTimeCompletionRate: 1,
-                        averageTaskAge: 0.2,
-                        mostActiveProject: "TEST"
+        const fetchReportData = async () => {
+            try {
+                const response = await fetch('https://isapi.ratacode.top/api/report/report', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     },
-                    monthlyReport: {
-                        tasksCompleted: 1,
-                        onTimeCompletionRate: 1,
-                        averageTaskAge: 0.2,
-                        mostActiveProject: "TEST"
-                    }
-                }
-            });
-            setLoading(false);
-        }, 1500);
-    }, []);
+                });
+                const data = await response.json();
+                setReportData(data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching report data:', error);
+                setLoading(false);
+            }
+        }
+
+        fetchReportData();
+    }, [token]);
 
     const handleDownloadCSV = () => {
         if (!reportData) return;
 
         const csvContent = [
             ['Report Type', 'Metric', 'Value'],
-            ['Task Completion', 'Total Completed', reportData.taskCompletionSummary.totalCompleted],
-            ['Task Completion', 'Pending', reportData.taskCompletionSummary.pending],
+            ['Task Completion', 'Status Breakdown', reportData.taskCompletionSummary.statusBreakdown.map(item => `${item.status}: ${item.count}`).join('; ')],
             ['User Performance', 'Task Completion Rate', reportData.userPerformanceMetrics.taskCompletionRate],
-            ['User Performance', 'Average Completion Time (days)', reportData.userPerformanceMetrics.averageCompletionTime],
+            ['User Performance', 'Total Tasks', reportData.userPerformanceMetrics.totalTasks],
+            ['User Performance', 'Completed Tasks', reportData.userPerformanceMetrics.completedTasks],
+            ['User Performance', 'Average Completion Time', reportData.userPerformanceMetrics.averageCompletionTime],
             ['Task Delivery', 'On-Time Delivery Rate', reportData.taskDeliveryMetrics.onTimeDeliveryRate],
             ['Task Delivery', 'Delayed Tasks', reportData.taskDeliveryMetrics.delayedTasks],
             ['Task Delivery', 'Task Escalations', reportData.taskDeliveryMetrics.taskEscalations],
-            ['Project Overview', 'Total Projects', reportData.projectOverview.totalProjects],
-            ['Project Overview', 'Active Projects', reportData.projectOverview.activeProjects],
-            ['Project Overview', 'Completed Projects', reportData.projectOverview.completedProjects],
+            ['Time-Based', 'Weekly Tasks Completed', reportData.timeBased.weeklyReport.tasksCompleted],
+            ['Time-Based', 'Monthly Tasks Completed', reportData.timeBased.monthlyReport.tasksCompleted],
         ].map(row => row.join(',')).join('\n');
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -185,19 +113,9 @@ const ReportMain = () => {
                             <TaskDeliveryMetrics data={reportData.taskDeliveryMetrics} />
                         </Card>
                     </Col>
-                    {/*<Col span={12}>
-                        <Card title="Project Overview">
-                            <ProjectOverview data={reportData.projectOverview} />
-                        </Card>
-                    </Col>*/}
                     <Col span={12}>
                         <Card title="Time-Based Reports">
                             <TimeBasedReports data={reportData.timeBased} />
-                        </Card>
-                    </Col>
-                    <Col span={24}>
-                        <Card title="Efficiency & Productivity Reports">
-                            <EfficiencyProductivityReports data={reportData.efficiencyProductivity} />
                         </Card>
                     </Col>
                 </Row>
