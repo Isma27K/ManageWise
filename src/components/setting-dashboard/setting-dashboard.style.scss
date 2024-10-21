@@ -73,4 +73,27 @@
         margin-right: 10px;
         padding: 5px 10px;
     }
+
+    .security-section {
+        margin-bottom: 20px;
+
+        .reset-password-button {
+            background-color: #fff;
+            border: 2px solid #000;
+            color: #000;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+
+            &:hover {
+                background-color: #000;
+                color: #fff;
+                border: 2px solid #000;
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+    }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { UserOutlined, EditOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form, Input, Checkbox, Upload, notification } from 'antd';
+import { UserOutlined, EditOutlined, SaveOutlined, UploadOutlined, LockOutlined } from '@ant-design/icons';
+import { Avatar, Button, Form, Input, Checkbox, Upload, notification, Modal } from 'antd';
 import './setting-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -116,6 +116,46 @@ const SettingDashboard = () => {
         }
     };
 
+    const handleResetPassword = () => {
+        Modal.confirm({
+            title: 'Reset Password',
+            icon: <LockOutlined />,
+            content: 'Are you sure you want to reset your password? An email will be sent to your registered email address with further instructions.',
+            onOk: async () => {
+                try {
+                    setIsLoading(true);
+                    const response = await fetch('https://isapi.ratacode.top/auth/forget-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email: user.email }),
+                    });
+
+                    if (response.ok) {
+                        notification.success({
+                            message: 'Reset Email Sent',
+                            description: 'Please check your email for instructions to reset your password.',
+                            placement: 'topRight',
+                        });
+                    } else {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Failed to send reset email');
+                    }
+                } catch (error) {
+                    console.error('Error during password reset request:', error);
+                    notification.error({
+                        message: 'Reset Password Failed',
+                        description: error.message || 'An unexpected error occurred. Please try again later.',
+                        placement: 'topRight',
+                    });
+                } finally {
+                    setIsLoading(false);
+                }
+            },
+        });
+    };
+
     return (
         <div className="setting-dashboard">
             <Form 
@@ -174,12 +214,23 @@ const SettingDashboard = () => {
                         )}
                     </div>
                 </div>
-
                 <h2>Settings</h2>
                 <div className="settings-section">
                     <Form.Item valuePropName="checked">
                         <Checkbox onChange={handleSettingsChange}>Notifications</Checkbox>
                     </Form.Item>
+                </div>
+
+                <h3>Security</h3>
+                <div className="security-section">
+                    <Button
+                        icon={<LockOutlined />}
+                        onClick={handleResetPassword}
+                        loading={isLoading}
+                        className="reset-password-button"
+                    >
+                        Reset Password
+                    </Button>
                 </div>
             </Form>
         </div>
