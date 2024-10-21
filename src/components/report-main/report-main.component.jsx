@@ -56,9 +56,9 @@ const ReportMain = () => {
                     ]
                 },
                 taskDeliveryMetrics: {
-                    onTimeDeliveryRate: 0.78,
-                    delayedTasks: 22,
-                    taskEscalations: 5,
+                    onTimeDeliveryRate: 1,
+                    delayedTasks: 0,
+                    taskEscalations: 1
                 },
                 projectOverview: {
                     totalProjects: 10,
@@ -88,27 +88,26 @@ const ReportMain = () => {
                 },
                 timeBased: {
                     tasksOverTime: [
-                        { date: '2023-05-01', created: 10, started: 8, completed: 5 },
-                        { date: '2023-05-02', created: 12, started: 10, completed: 8 },
-                        { date: '2023-05-03', created: 8, started: 9, completed: 7 },
-                        { date: '2023-05-04', created: 15, started: 12, completed: 10 },
-                        { date: '2023-05-05', created: 11, started: 13, completed: 11 },
-                        { date: '2023-05-06', created: 9, started: 8, completed: 9 },
-                        { date: '2023-05-07', created: 7, started: 6, completed: 8 },
+                        {
+                            date: "2024-10-20",
+                            created: 3,
+                            started: 0,
+                            completed: 1
+                        }
                     ],
                     weeklyReport: {
-                        tasksCompleted: 58,
-                        onTimeCompletionRate: 0.85,
-                        averageTaskAge: 2.7,
-                        mostActiveProject: 'Project A',
+                        tasksCompleted: 1,
+                        onTimeCompletionRate: 1,
+                        averageTaskAge: 0.2,
+                        mostActiveProject: "TEST"
                     },
                     monthlyReport: {
-                        tasksCompleted: 245,
-                        onTimeCompletionRate: 0.82,
-                        averageTaskAge: 3.2,
-                        mostActiveProject: 'Project B',
-                    },
-                },
+                        tasksCompleted: 1,
+                        onTimeCompletionRate: 1,
+                        averageTaskAge: 0.2,
+                        mostActiveProject: "TEST"
+                    }
+                }
             });
             setLoading(false);
         }, 1500);
