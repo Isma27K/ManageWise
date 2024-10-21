@@ -7,6 +7,7 @@ const EditPoolInfo = ({ pools }) => {
     const [form] = Form.useForm();
     const [selectedPool, setSelectedPool] = useState(null);
     const token = localStorage.getItem('jwtToken');
+    const [loading, setLoading] = useState(false);
 
     const handlePoolSelect = (poolId) => {
         const pool = pools.find(p => p._id === poolId);
@@ -20,8 +21,10 @@ const EditPoolInfo = ({ pools }) => {
     };
 
     const handleUpdatePool = async (values) => {
+        setLoading(true);
         if (!selectedPool) {
             message.error('Please select a pool to update');
+            setLoading(false);
             return;
         }
 
@@ -41,7 +44,9 @@ const EditPoolInfo = ({ pools }) => {
             message.success('Pool information updated successfully');
             form.resetFields();
             setSelectedPool(null);
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             message.error('Failed to update pool information');
         }
     };
@@ -81,7 +86,7 @@ const EditPoolInfo = ({ pools }) => {
                 </Form.Item>
                 {/* Add other form items for additional pool information */}
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className='update-button'>
+                    <Button type="primary" htmlType="submit" className='update-button' loading={loading}>
                         Update Pool Info
                     </Button>
                 </Form.Item>
