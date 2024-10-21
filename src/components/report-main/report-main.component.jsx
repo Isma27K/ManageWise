@@ -43,13 +43,17 @@ const ReportMain = () => {
                     ]
                 },
                 userPerformanceMetrics: {
-                    taskCompletionRate: 0.85,
+                    taskCompletionRate: 0.33,
+                    totalTasks: 3,
+                    completedTasks: 1,
+                    averageCompletionTime: 0.21,
+                    completedTasksCount: 1,
                     topPerformers: [
-                        { name: 'John Doe', tasksCompleted: 45 },
-                        { name: 'Jane Smith', tasksCompleted: 38 },
-                        { name: 'Bob Johnson', tasksCompleted: 32 },
-                    ],
-                    averageCompletionTime: 2.5, // in days
+                        {
+                            Pool: "TEST",
+                            tasksCompleted: 1
+                        }
+                    ]
                 },
                 taskDeliveryMetrics: {
                     onTimeDeliveryRate: 0.78,
@@ -182,19 +186,19 @@ const ReportMain = () => {
                             <TaskDeliveryMetrics data={reportData.taskDeliveryMetrics} />
                         </Card>
                     </Col>
-                    <Col span={12}>
+                    {/*<Col span={12}>
                         <Card title="Project Overview">
                             <ProjectOverview data={reportData.projectOverview} />
+                        </Card>
+                    </Col>*/}
+                    <Col span={12}>
+                        <Card title="Time-Based Reports">
+                            <TimeBasedReports data={reportData.timeBased} />
                         </Card>
                     </Col>
                     <Col span={24}>
                         <Card title="Efficiency & Productivity Reports">
                             <EfficiencyProductivityReports data={reportData.efficiencyProductivity} />
-                        </Card>
-                    </Col>
-                    <Col span={24}>
-                        <Card title="Time-Based Reports">
-                            <TimeBasedReports data={reportData.timeBased} />
                         </Card>
                     </Col>
                 </Row>

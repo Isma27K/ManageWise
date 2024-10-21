@@ -5,9 +5,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const UserPerformanceMetrics = ({ data }) => {
     const columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Pool',
+            dataIndex: 'Pool',
+            key: 'Pool',
         },
         {
             title: 'Tasks Completed',
@@ -30,9 +30,9 @@ const UserPerformanceMetrics = ({ data }) => {
                 precision={1}
                 suffix="days"
             />
-            <h4>Top Performers</h4>
+            <h4>Top Pool</h4>
             <Table dataSource={data.topPerformers} columns={columns} pagination={false} />
-            <h4>Tasks Completed by Top Performers</h4>
+            <h4>Tasks Completed by Top Pool</h4>
             <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={data.topPerformers}>
                     <CartesianGrid strokeDasharray="3 3" />
