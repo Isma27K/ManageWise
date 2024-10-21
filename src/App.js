@@ -5,7 +5,7 @@ import PageNotFound from "./routes/404/404.Routes";
 import Login from './routes/login/login.compoment';
 import ProtectedRoute from './components/ProtectedRoute';
 import ValidateRegister from './routes/vilidateRegister/vilidateReg';
-
+import ForgetPassword from './routes/forget/forget';
 function App() {
     return (
         <Router>
@@ -26,6 +26,8 @@ function App() {
                                 </ProtectedRoute>
                             } 
                         />
+
+                        <Route path="/forget-password" element={<ForgetPassword />} />
 
                         <Route path="*" element={<PageNotFound />} />
                     </Routes>

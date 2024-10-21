@@ -1,11 +1,11 @@
-.login-container {
+.forget-password-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     background-color: #f0f2f5;
 
-    .login-form {
+    .forget-password-form {
         background: #fff;
         padding: 40px;
         border-radius: 10px;
@@ -15,6 +15,7 @@
         h2 {
             margin-bottom: 20px;
             text-align: center;
+            color: #000;
         }
 
         .form-group {
@@ -24,48 +25,54 @@
                 display: block;
                 margin-bottom: 5px;
                 font-weight: bold;
+                color: #000;
             }
 
             input {
                 width: 95%;
                 padding: 8px;
                 border-radius: 5px;
-                border: 1px solid #ddd;
+                border: 1px solid #000;
             }
         }
 
-        .login-button {
+        .reset-button {
             width: 100%;
             padding: 12px;
-            background-color: whitesmoke;
-            border: 2px solid black; /* Fixed border property */
+            background-color: #fff;
+            border: 2px solid #000;
             border-radius: 5px;
-            color: black;
+            color: #000;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
                 
             &:hover {
-                background-color: black;
-                color: whitesmoke;
+                background-color: #000;
+                color: #fff;
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
             }
         }
 
-        .login-forget {
+        .back-to-login {
             margin-top: 15px;
             text-align: center;
 
             a {
-                color: #1890ff;
+                color: #000;
                 text-decoration: none;
                 font-size: 14px;
                 transition: color 0.3s;
 
                 &:hover {
-                    color: #40a9ff;
                     text-decoration: underline;
                 }
             }
         }
     }
 }
+

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useMemo } from 'react';
 import { Input, Select, FloatButton, message } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, FolderOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import CustomCard from '../card/card.component.jsx';
 import './main-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
@@ -13,6 +13,11 @@ const MainDashboard = () => {
 
   const handleAddSelfTask = () => {
     message.success('Add Self Task');
+  };
+
+  const handleCreatePool = () => {
+    message.success('self task');
+    // You can add logic here to open a modal for creating a new pool
   };
 
   // Filter tasks associated with the user from all pools
@@ -68,6 +73,7 @@ const MainDashboard = () => {
           right: 40,
         }}
       >
+        <FloatButton icon={<FolderOutlined />} tooltip="self task" onClick={handleCreatePool}/>
         <FloatButton icon={<PlusOutlined />} tooltip="Add Self task" onClick={handleAddSelfTask}/>
         <FloatButton.BackTop visibilityHeight={0} tooltip="Back to top"/>
       </FloatButton.Group>

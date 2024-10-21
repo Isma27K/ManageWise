@@ -66,7 +66,6 @@ const Login = () => {
         <div className="login-container">
             <form className="login-form" onSubmit={handleSubmit}>
                 <h2>Login</h2>
-                {/*error && <div className="error-message">{error}</div>}*/}
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
                     <input
@@ -91,7 +90,12 @@ const Login = () => {
                         disabled={isLoading}
                     />
                 </div>
-                <button type="submit" className="login-button" disabled={isLoading}>{isLoading ? 'Loading...' : 'Login'}</button>
+                <button type="submit" className="login-button" disabled={isLoading}>
+                    {isLoading ? 'Loading...' : 'Login'}
+                </button>
+                <div className="login-forget">
+                    <a href="/forget-password">Forgot Password?</a>
+                </div>
             </form>
         </div>
     );

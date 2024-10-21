@@ -60,3 +60,83 @@
         padding: 16px; // Added padding to the body
     }
 }
+
+.self-task-button {
+  transition: all 0.3s ease;
+
+  &.expanded {
+    transform: rotate(45deg);
+  }
+}
+
+.ant-float-btn-group {
+  .ant-float-btn {
+    transition: all 0.3s ease;
+  }
+
+  // Make the main button (first child) always visible
+  .ant-float-btn:first-child {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  // Hide the expanded buttons by default
+  .ant-float-btn:not(:first-child) {
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+  }
+
+  // Show expanded buttons when the group is expanded
+  &.expanded {
+    .ant-float-btn:not(:first-child) {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .ant-float-btn:nth-child(2) {
+      transform: translateY(-60px) scale(1);
+    }
+
+    .ant-float-btn:nth-child(3) {
+      transform: translateY(-120px) scale(1);
+    }
+  }
+}
+
+.float-button-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 100;
+
+  .ant-float-btn {
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .sub-button {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  &.expanded {
+    .main-button {
+      transform: rotate(45deg);
+    }
+
+    .sub-button {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .back-to-top {
+    margin-top: 16px;
+  }
+}
