@@ -93,12 +93,12 @@ const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
 									<Button
 										className="create-task-btn"
 										type="primary"
-											shape="circle"
-											icon={<PlusOutlined />}
-											onClick={(e) => {
-												e.stopPropagation();
-												showModal(pool);
-											}}
+										shape="circle"
+										icon={<PlusOutlined />}
+										onClick={(e) => {
+											e.stopPropagation();
+											showModal(pool);
+										}}
 									/>
 								) : (
 									<></>
@@ -116,7 +116,6 @@ const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
 				task={selectedTask}
 				isEditable={!selectedTask}
 				maxTaskNameLength={maxTaskNameLength}
-				isSelfTask={selectedPool?.isSelfTask}
 			/>
 		</>
 	);

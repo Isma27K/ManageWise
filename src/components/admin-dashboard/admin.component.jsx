@@ -73,7 +73,7 @@ const AdminDashboard = () => {
         {/*<TabPane tab="User Management" key="2">
           <UserManagementTab users={users} roles={roles} />
         </TabPane>*/}
-        <TabPane tab="Pool Management" key="3">
+        <TabPane tab="Create Pool" key="3">
           <PoolManagementTab users={users} />
         </TabPane>
         <TabPane tab="Edit Pool Info" key="4">
