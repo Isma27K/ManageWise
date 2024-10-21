@@ -65,31 +65,21 @@ const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
 										const isTruncated = truncatedName !== taskName;
 
 										return (
-											isTruncated ? (
-												<Tooltip title={taskName}>
-													<List.Item
-														key={task.id}
-														onClick={() => showModal(pool, task)}
-														style={{ cursor: 'pointer' }}
-													>
-														{truncatedName}
-													</List.Item>
-												</Tooltip>
-											) : (
+											<Tooltip title={isTruncated ? taskName : ''}>
 												<List.Item
 													key={task.id}
 													onClick={() => showModal(pool, task)}
 													style={{ cursor: 'pointer' }}
 												>
-													{taskName}
+													{truncatedName}
 												</List.Item>
-											)
+											</Tooltip>
 										);
 									}}
 								/>
 							</div>
 							<div className="card-footer">
-								{pool.name.toUpperCase() !== "MY TASKS" ? (
+								{pool.name.toUpperCase() !== "MY TASKS" && (
 									<Button
 										className="create-task-btn"
 										type="primary"
@@ -100,8 +90,6 @@ const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
 											showModal(pool);
 										}}
 									/>
-								) : (
-									<></>
 								)}
 							</div>
 						</Card>

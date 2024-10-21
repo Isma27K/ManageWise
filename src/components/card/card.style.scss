@@ -323,16 +323,16 @@
 .card-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
+  gap: 24px;
+  padding: 24px;
 
   .card-item {
-    flex: 0 0 calc(33.333% - 13.333px);
-    max-width: calc(33.333% - 13.333px);
+    flex: 0 0 calc(33.333% - 16px);
+    max-width: calc(33.333% - 16px);
     
     @media (max-width: 1200px) {
-      flex: 0 0 calc(50% - 10px);
-      max-width: calc(50% - 10px);
+      flex: 0 0 calc(50% - 12px);
+      max-width: calc(50% - 12px);
     }
 
     @media (max-width: 768px) {
@@ -343,14 +343,30 @@
 }
 
 .custom-card {
-  height: 300px !important;
+  height: 320px !important;
   width: 100%;
   display: flex;
   flex-direction: column;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
 
   .ant-card-head {
-    background-color: #737171 !important;
-    border-bottom: 1px solid #d9d9d9;
+    background-color: #f0f2f5 !important;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 16px 20px;
+
+    .ant-card-head-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
   }
 
   .ant-card-body {
@@ -363,7 +379,7 @@
     .scrollable-content {
       flex: 1;
       overflow-y: auto;
-      padding: 12px;
+      padding: 16px 20px;
 
       &::-webkit-scrollbar {
         width: 6px;
@@ -373,16 +389,21 @@
         border-radius: 3px;
       }
       &::-webkit-scrollbar-track {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.05);
       }
     }
 
     .ant-list-item {
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px solid #f0f0f0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
 
       &:last-child {
         border-bottom: none;
@@ -391,32 +412,34 @@
   }
 
   .card-footer {
-    padding: 8px 12px; // Reduced padding
+    padding: 12px 20px;
     border-top: 1px solid #f0f0f0;
     display: flex;
     justify-content: flex-end;
-    align-items: center; // Center the button vertically
+    align-items: center;
   }
 }
 
 // Styles for the create task button
 .create-task-btn {
-  background-color: white !important;
-  border: 1.5px solid black !important;
-  color: black !important;
-  height: 32px; // Reduced height
-  width: 32px; // Set width to match height for a perfect circle
+  background-color: #1890ff !important;
+  border: none !important;
+  color: white !important;
+  height: 36px;
+  width: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.3);
+  transition: all 0.3s ease;
 
   &:hover, &:focus {
-    background-color: black !important;
-    border-color: black !important;
-    color: whitesmoke !important;
+    background-color: #40a9ff !important;
+    transform: scale(1.1);
   }
 
   .anticon {
-    font-size: 16px; // Adjust icon size if needed
+    font-size: 18px;
   }
 }
