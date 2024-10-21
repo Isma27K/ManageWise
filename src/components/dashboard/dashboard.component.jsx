@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, FloatButton } from 'antd';
 import { SettingOutlined, AppstoreOutlined, SafetyOutlined, AuditOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import './dashboard.style.scss';
 import MainDashboard from '../main-dashboard/main-dashboard.component.jsx';
@@ -79,6 +79,15 @@ const Dashboard = () => {
         </Content>
         <Footer />
       </Layout>
+      <FloatButton.Group
+            shape="circle"
+            style={{
+              insetInlineEnd: 24,
+              right: 40,
+            }}
+          >
+        <FloatButton.BackTop visibilityHeight={0} tooltip="Back to top"/>
+      </FloatButton.Group>
     </Layout>
   );
 };

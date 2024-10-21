@@ -1,5 +1,6 @@
 import React, { useContext, useState, useMemo } from 'react';
-import { Input, Select } from 'antd';
+import { Input, Select, FloatButton, message } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import CustomCard from '../card/card.component.jsx';
 import './main-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
@@ -9,6 +10,10 @@ const { Option } = Select;
 const MainDashboard = () => {
   const { pools, user, globalSearchTerm, setGlobalSearchTerm } = useContext(UserContext);
   const [searchType, setSearchType] = useState('both');
+
+  const handleAddSelfTask = () => {
+    message.success('Add Self Task');
+  };
 
   // Filter tasks associated with the user from all pools
   // and include the original pool ID for each task
@@ -55,6 +60,18 @@ const MainDashboard = () => {
       ) : (
         <div>No matching pools or tasks found.</div>
       )}
+
+      <FloatButton.Group
+        shape="circle"
+        style={{
+          insetInlineEnd: 24,
+          right: 40,
+        }}
+      >
+        <FloatButton icon={<PlusOutlined />} tooltip="Add Self task" onClick={handleAddSelfTask}/>
+        <FloatButton.BackTop visibilityHeight={0} tooltip="Back to top"/>
+      </FloatButton.Group>
+
     </div>
   );
 };
