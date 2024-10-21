@@ -5,6 +5,7 @@ import { CopyOutlined } from '@ant-design/icons';
 const InvitationTab = () => {
   const [form] = Form.useForm();
   const [invitationLink, setInvitationLink] = useState('');
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem('jwtToken');
 
   const openNotification = (type, message, description) => {
@@ -29,6 +30,7 @@ const InvitationTab = () => {
 
   const handleGenerateInvitation = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const response = await fetch('https://isapi.ratacode.top/api/admin/generate', {
       method: 'POST',
       headers: 
@@ -41,6 +43,7 @@ const InvitationTab = () => {
 
     if (!response.ok) {
       openNotification('error', 'Error', 'Failed to generate invitation link');
+      setLoading(false);
       return;
     }
 
@@ -49,6 +52,7 @@ const InvitationTab = () => {
     setInvitationLink(generatedLink);
     openNotification('success', 'Success', 'Invitation link generated successfully');
     form.setFieldsValue({ invLink: generatedLink });
+    setLoading(false);
   };
 
   return (
@@ -72,7 +76,7 @@ const InvitationTab = () => {
         </div>
       </Form.Item>
       <Form.Item>
-        <Button type="primary" onClick={handleGenerateInvitation} className="generate-button">GENERATE</Button>
+        <Button type="primary" onClick={handleGenerateInvitation} className="generate-button" loading={loading}>GENERATE</Button>
       </Form.Item>
     </Form>
   );
