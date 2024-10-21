@@ -13,7 +13,7 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
-    const [selectedSubmitters, setSelectedSubmitters] = useState([]);
+    const [selectedSubmitters, setSelectedSubmitters] = useState(pool?.userIds || []);
     const [fileList, setFileList] = useState([]);
     const token = localStorage.getItem('jwtToken');
     const [loading, setLoading] = useState(false);
@@ -23,7 +23,6 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
 
         // Add a 5-second timer before submitting
         //await new Promise(resolve => setTimeout(resolve, 5000));
-
         if (taskName.length === 0) {
             message.error('Task name is required');
             setLoading(false);
