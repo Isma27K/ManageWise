@@ -78,7 +78,7 @@ const SettingDashboard = () => {
         setProfile(prevProfile => ({
             ...prevProfile,
             avatarUrl: null,
-            avatarBase64: null
+            avatarBase64: ""
         }));
     };
 

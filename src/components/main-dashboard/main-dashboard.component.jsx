@@ -1,6 +1,5 @@
 import React, { useContext, useState, useMemo } from 'react';
-import { Input, Select, FloatButton, message } from 'antd';
-import { PlusOutlined, FolderOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { Input, Select, message } from 'antd';
 import CustomCard from '../card/card.component.jsx';
 import './main-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
@@ -65,19 +64,6 @@ const MainDashboard = () => {
       ) : (
         <div>No matching pools or tasks found.</div>
       )}
-
-      <FloatButton.Group
-        shape="circle"
-        style={{
-          insetInlineEnd: 24,
-          right: 40,
-        }}
-      >
-        <FloatButton icon={<FolderOutlined />} tooltip="self task" onClick={handleCreatePool}/>
-        <FloatButton icon={<PlusOutlined />} tooltip="Add Self task" onClick={handleAddSelfTask}/>
-        <FloatButton.BackTop visibilityHeight={0} tooltip="Back to top"/>
-      </FloatButton.Group>
-
     </div>
   );
 };
