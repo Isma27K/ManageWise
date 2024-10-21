@@ -4,6 +4,7 @@ import InvitationTab from './tabs/InvitationTab';
 import UserManagementTab from './tabs/UserManagementTab';
 import PoolManagementTab from './tabs/PoolManagementTab';
 import DeleteOperationsTab from './tabs/DeleteOperationsTab';
+import EditPoolInfo from './tabs/EditPoolInfo';
 import { dummyUsers, dummyRoles } from './dummyData';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -75,7 +76,10 @@ const AdminDashboard = () => {
         <TabPane tab="Pool Management" key="3">
           <PoolManagementTab users={users} />
         </TabPane>
-        <TabPane tab="Delete Operations" key="4">
+        <TabPane tab="Edit Pool Info" key="4">
+          <EditPoolInfo pools={pools} />
+        </TabPane>
+        <TabPane tab="Delete Operations" key="5">
           <DeleteOperationsTab users={allUsers} pools={pools} setUsers={setAllUsers} />
         </TabPane>
       </Tabs>
