@@ -25,8 +25,6 @@ const ReportMain = () => {
     const [dataError, setDataError] = useState(null);
     const [initialDataFetched, setInitialDataFetched] = useState(false);
 
-    console.log(selectedUser);
-
     useEffect(() => {
         const fetchInitialReportData = async () => {
             try {
@@ -42,7 +40,6 @@ const ReportMain = () => {
                 setInitialDataFetched(true);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching initial report data:', error);
                 setDataError('Failed to fetch initial report data. Please try again.');
                 setLoading(false);
             }
@@ -77,7 +74,6 @@ const ReportMain = () => {
                 setDataError(null);
             }
         } catch (error) {
-            console.error('Error fetching report data:', error);
             setDataError('Failed to fetch report data. Please try again.');
             message.error('Failed to fetch report data. Please try again.');
         } finally {
