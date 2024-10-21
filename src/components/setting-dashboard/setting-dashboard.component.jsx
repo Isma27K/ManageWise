@@ -1,15 +1,17 @@
 import React, { useState, useContext } from 'react';
-import { UserOutlined, EditOutlined, SaveOutlined, UploadOutlined, LockOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form, Input, Checkbox, Upload, notification, Modal } from 'antd';
+import { UserOutlined, EditOutlined, SaveOutlined, UploadOutlined, LockOutlined, MailOutlined, IdcardOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Avatar, Button, Form, Input, Checkbox, Upload, notification, Modal, Card, Typography, Tag } from 'antd';
 import './setting-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
+
+const { Title, Text } = Typography;
 
 const SettingDashboard = () => {
     const { user, setUser } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
     const [profile, setProfile] = useState({
-        name: user.name.toUpperCase(),
+        name: user.name,
         avatarUrl: user.avatar,
         avatarBase64: null,
     });
@@ -61,6 +63,25 @@ const SettingDashboard = () => {
         setIsEditing(true);
     };
 
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+        form.setFieldsValue({ name: user.name });
+        setProfile(prevProfile => ({
+            ...prevProfile,
+            name: user.name,
+            avatarUrl: user.avatar,
+            avatarBase64: null
+        }));
+    };
+
+    const handleRemoveAvatar = () => {
+        setProfile(prevProfile => ({
+            ...prevProfile,
+            avatarUrl: null,
+            avatarBase64: null
+        }));
+    };
+
     const handleSaveClick = async () => {
         try {
             setIsLoading(true);
@@ -71,7 +92,9 @@ const SettingDashboard = () => {
             };
 
             if (profile.avatarBase64) {
-                updateData.avatar = profile.avatarBase64;  // Send the full data URL
+                updateData.avatar = profile.avatarBase64;
+            } else if (profile.avatarUrl === null) {
+                updateData.avatar = null; // This will indicate to the backend to remove the avatar
             }
 
             const response = await fetch('https://isapi.ratacode.top/update/avatar', {
@@ -98,11 +121,11 @@ const SettingDashboard = () => {
                 placement: 'topRight',
             });
 
-            // Update the user context if needed
+            // Update the user context
             setUser(prevUser => ({
                 ...prevUser,
                 name: values.name,
-                // Update other user properties if necessary
+                avatar: profile.avatarUrl
             }));
             setIsLoading(false);
         } catch (error) {
@@ -158,6 +181,18 @@ const SettingDashboard = () => {
 
     return (
         <div className="setting-dashboard">
+            <Card className="profile-card">
+                <div className="profile-header">
+                    <Avatar size={100} src={profile.avatarUrl} icon={<UserOutlined />} />
+                    <div className="profile-info">
+                        <Title level={2}>{user.name}</Title>
+                        <Text type="secondary"><MailOutlined /> {user.email}</Text>
+                        <Text type="secondary"><IdcardOutlined /> {user._id}</Text>
+                        {user.admin && <Tag color="green">Admin</Tag>}
+                    </div>
+                </div>
+            </Card>
+
             <Form 
                 form={form}
                 layout="vertical"
@@ -165,16 +200,15 @@ const SettingDashboard = () => {
                 onValuesChange={(_, allValues) => handleProfileChange(allValues)}
                 className="profile-form"
             >
-                <h2>Edit Profile</h2>
+                <Title level={3}>Edit Profile</Title>
                 <div className="profile-section">
-                    <Avatar size={64} src={profile.avatarUrl} icon={<UserOutlined />} />
                     <div className="profile-details">
-                        <Form.Item name="name">
+                        <Form.Item name="name" label="Name">
                             {isEditing ? (
                                 <Input placeholder="Enter your name" />
                             ) : (
                                 <div className="profile-display">
-                                    <span>{profile.name || 'No name set'}</span>
+                                    <Text>{profile.name || 'No name set'}</Text>
                                     <Button
                                         type="link"
                                         icon={<EditOutlined />}
@@ -189,39 +223,54 @@ const SettingDashboard = () => {
                             <>
                                 <Upload
                                     showUploadList={false}
-                                    beforeUpload={() => false} // Prevents auto-upload
+                                    beforeUpload={() => false}
                                     onChange={handleAvatarChange}
                                     accept="image/*"
                                 >
                                     <Button 
                                         icon={<UploadOutlined />} 
-                                        className="upload-button"
+                                        className="edit-button"
                                     >
                                         Upload Avatar (Max 500KB)
                                     </Button>
                                 </Upload>
                                 <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    icon={<SaveOutlined />}
-                                    loading={isLoading}
-                                    className="save-button"
-                                    onClick={handleSaveClick}
+                                    icon={<DeleteOutlined />}
+                                    className="edit-button remove-avatar-button"
+                                    onClick={handleRemoveAvatar}
                                 >
-                                    Save
+                                    Remove Avatar
                                 </Button>
+                                <div className="edit-actions">
+                                    <Button
+                                        icon={<SaveOutlined />}
+                                        loading={isLoading}
+                                        className="edit-button"
+                                        onClick={handleSaveClick}
+                                    >
+                                        Save
+                                    </Button>
+                                    <Button
+                                        icon={<CloseOutlined />}
+                                        className="edit-button"
+                                        onClick={handleCancelEdit}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
                             </>
                         )}
                     </div>
                 </div>
-                <h2>Settings</h2>
+
+                <Title level={3}>Settings</Title>
                 <div className="settings-section">
                     <Form.Item valuePropName="checked">
                         <Checkbox onChange={handleSettingsChange}>Notifications</Checkbox>
                     </Form.Item>
                 </div>
 
-                <h3>Security</h3>
+                <Title level={3}>Security</Title>
                 <div className="security-section">
                     <Button
                         icon={<LockOutlined />}
