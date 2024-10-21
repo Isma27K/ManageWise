@@ -5,7 +5,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
     }
 
     .ant-card {
@@ -43,4 +43,79 @@
     align-items: center;
     height: 100vh;
     background-color: #f0f2f5; // You can adjust this to match your design
+}
+
+.admin-select-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: linear-gradient(135deg, #1a237e, #283593);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .admin-icon {
+        font-size: 24px;
+        color: #ffd700;
+        margin-right: 16px;
+    }
+
+    .admin-select {
+        flex-grow: 1;
+
+        .ant-select-selector {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            &:hover, &:focus {
+                border-color: #ffd700 !important;
+            }
+        }
+
+        .ant-select-selection-placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .ant-select-selection-item {
+            color: #ffffff;
+        }
+
+        .ant-select-arrow {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+}
+
+.ant-select-dropdown {
+    .user-option {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+
+        .ant-avatar {
+            margin-right: 12px;
+        }
+
+        .user-info {
+            .user-name {
+                font-weight: bold;
+                color: #333;
+            }
+
+            .user-email {
+                font-size: 0.8em;
+                color: #888;
+            }
+        }
+    }
+}
+
+.error-card {
+  margin-bottom: 16px;
+  text-align: center;
+  
+  .ant-typography {
+    font-size: 16px;
+  }
 }

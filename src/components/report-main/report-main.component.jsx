@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Layout, Typography, Row, Col, Card, Button } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { Layout, Typography, Row, Col, Card, Button, Select, Avatar, Tooltip, message } from 'antd';
+import { DownloadOutlined, UserOutlined, CrownOutlined } from '@ant-design/icons';
 import Lottie from 'react-lottie';
 import PoolTaskPartitions from './PoolTaskPartitions';
 import UserPerformanceMetrics from './UserPerformanceMetrics';
@@ -12,15 +12,23 @@ import { UserContext } from '../../contexts/UserContext';
 
 const { Content } = Layout;
 const { Title } = Typography;
+const { Option } = Select;
+
 
 const ReportMain = () => {
     const [loading, setLoading] = useState(true);
     const [reportData, setReportData] = useState(null);
-    const { user } = useContext(UserContext);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectLoading, setSelectLoading] = useState(false);
+    const { user, allUsers } = useContext(UserContext);
     const token = localStorage.getItem('jwtToken');
+    const [dataError, setDataError] = useState(null);
+    const [initialDataFetched, setInitialDataFetched] = useState(false);
+
+    console.log(selectedUser);
 
     useEffect(() => {
-        const fetchReportData = async () => {
+        const fetchInitialReportData = async () => {
             try {
                 const response = await fetch('https://isapi.ratacode.top/api/report/report', {
                     method: 'POST',
@@ -31,15 +39,57 @@ const ReportMain = () => {
                 });
                 const data = await response.json();
                 setReportData(data);
+                setInitialDataFetched(true);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching report data:', error);
+                console.error('Error fetching initial report data:', error);
+                setDataError('Failed to fetch initial report data. Please try again.');
                 setLoading(false);
             }
         }
 
-        fetchReportData();
+        fetchInitialReportData();
     }, [token]);
+
+    const adminFetch = useCallback(async () => {
+        if (!selectedUser) return;
+
+        try {
+            setDataError(null);
+            setSelectLoading(true);
+            const response = await fetch('https://isapi.ratacode.top/api/report/report', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    selectUser: selectedUser
+                })
+            });
+            const data = await response.json();
+            
+            if (data.targetUser !== selectedUser) {
+                setDataError(`Requested data for user ${selectedUser}, but received data for user ${data.targetUser}`);
+                message.error('Received incorrect user data. Please try again.');
+            } else {
+                setReportData(data);
+                setDataError(null);
+            }
+        } catch (error) {
+            console.error('Error fetching report data:', error);
+            setDataError('Failed to fetch report data. Please try again.');
+            message.error('Failed to fetch report data. Please try again.');
+        } finally {
+            setSelectLoading(false);
+        }
+    }, [selectedUser, token]);
+
+    useEffect(() => {
+        if (selectedUser && initialDataFetched) {
+            adminFetch();
+        }
+    }, [selectedUser, initialDataFetched, adminFetch]);
 
     const handleDownloadCSV = () => {
         if (!reportData) return;
@@ -88,6 +138,17 @@ const ReportMain = () => {
         );
     }
 
+    const handleUserSelect = (value) => {
+        setSelectedUser(value);
+    };
+
+    const filterUsers = (input, option) => {
+        const name = (option.label || '').toLowerCase();
+        const email = (option.email || '').toLowerCase();
+        return name.includes(input.toLowerCase()) || email.includes(input.toLowerCase());
+    };
+
+
     return (
         <Layout className="report-main">
             <Content>
@@ -97,28 +158,75 @@ const ReportMain = () => {
                         Download CSV
                     </Button>
                 </div>
-                <Row gutter={[16, 16]}>
-                    <Col span={12}>
-                        <Card title="Pool Task Partitions">
-                            <PoolTaskPartitions data={reportData.taskCompletionSummary} />
-                        </Card>
-                    </Col>
-                    <Col span={12}>
-                        <Card title="User Performance Metrics">
-                            <UserPerformanceMetrics data={reportData.userPerformanceMetrics} />
-                        </Card>
-                    </Col>
-                    <Col span={12}>
-                        <Card title="Task Delivery Metrics">
-                            <TaskDeliveryMetrics data={reportData.taskDeliveryMetrics} />
-                        </Card>
-                    </Col>
-                    <Col span={12}>
-                        <Card title="Time-Based Reports">
-                            <TimeBasedReports data={reportData.timeBased} />
-                        </Card>
-                    </Col>
-                </Row>
+                {user.admin && (
+                    <div className="admin-select-container">
+                        <Tooltip title="Admin User Selection" placement="right">
+                            <CrownOutlined className="admin-icon" />
+                        </Tooltip>
+                        <Select
+                            showSearch
+                            placeholder="Select a user to view their report"
+                            optionFilterProp="children"
+                            onChange={handleUserSelect}
+                            filterOption={filterUsers}
+                            className="admin-select"
+                            listHeight={300}
+                            dropdownStyle={{ maxHeight: '300px', overflow: 'auto' }}
+                            optionLabelProp="label"
+                            loading={selectLoading}
+                            disabled={selectLoading}
+                        >
+                            {allUsers.map(user => (
+                                <Option
+                                    key={user.uid || user.id}
+                                    value={user.uid || user.id}
+                                    label={user.name ? user.name.toUpperCase() : 'NO NAME'}
+                                    email={user.email}
+                                >
+                                    <div className="user-option">
+                                        <Avatar icon={<UserOutlined />} src={user.avatar} />
+                                        <div className="user-info">
+                                            <div className="user-name">{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
+                                            <div className="user-email">{user.email || 'No email'}</div>
+                                        </div>
+                                    </div>
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
+                )}
+                {dataError ? (
+                    <Card className="error-card">
+                        <Typography.Text type="danger">{dataError}</Typography.Text>
+                    </Card>
+                ) : loading ? (
+                    <div className="loading-container">
+                        <Lottie options={defaultOptions} height={200} width={200} />
+                    </div>
+                ) : (
+                    <Row gutter={[16, 16]}>
+                        <Col span={12}>
+                            <Card title="Pool Task Partitions">
+                                <PoolTaskPartitions data={reportData.taskCompletionSummary} />
+                            </Card>
+                        </Col>
+                        <Col span={12}>
+                            <Card title="User Performance Metrics">
+                                <UserPerformanceMetrics data={reportData.userPerformanceMetrics} />
+                            </Card>
+                        </Col>
+                        <Col span={12}>
+                            <Card title="Task Delivery Metrics">
+                                <TaskDeliveryMetrics data={reportData.taskDeliveryMetrics} />
+                            </Card>
+                        </Col>
+                        <Col span={12}>
+                            <Card title="Time-Based Reports">
+                                <TimeBasedReports data={reportData.timeBased} />
+                            </Card>
+                        </Col>
+                    </Row>
+                )}
             </Content>
         </Layout>
     );
