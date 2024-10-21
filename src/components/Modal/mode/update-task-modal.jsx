@@ -120,45 +120,28 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
     const handleDownload = async (attachment) => {
         try {
-            // Split the path and encode each part separately
-            const pathParts = attachment.link.split('\\');
-            const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
-            const fileName = attachment.name || pathParts[pathParts.length - 1];
+            const fileName = attachment.name || attachment.link.split('/').pop();
             const isPDF = fileName.toLowerCase().endsWith('.pdf');
+            const url = `https://isapi.ratacode.top/${attachment.link}`; // Remove encodeURIComponent
 
-            const url = `https://isapi.ratacode.top/${encodedPath}`;
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch file');
+            }
+
+            const blob = await response.blob();
 
             if (isPDF) {
                 // For PDFs, open in a new tab
-                const newTab = window.open('about:blank', '_blank');
-                newTab.document.write('Loading PDF...');
-                
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-                
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const objectUrl = URL.createObjectURL(blob);
-                    newTab.location.href = objectUrl;
-                } else {
-                    newTab.close();
-                    throw new Error('Failed to load PDF');
-                }
+                const objectUrl = URL.createObjectURL(blob);
+                window.open(objectUrl, '_blank');
             } else {
-                // For other file types, download as before
-                const response = await axios({
-                    url: url,
-                    method: 'GET',
-                    responseType: 'blob',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-
-                const blob = new Blob([response.data]);
+                // For other file types, trigger download
                 const downloadUrl = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = downloadUrl;
