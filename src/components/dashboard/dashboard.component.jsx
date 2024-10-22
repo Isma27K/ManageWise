@@ -80,13 +80,13 @@ const Dashboard = () => {
         <Footer />
       </Layout>
       <FloatButton.Group
-            shape="circle"
-            style={{
-              insetInlineEnd: 24,
-              right: 40,
-            }}
-          >
-        <FloatButton.BackTop visibilityHeight={0} tooltip="Back to top"/>
+        shape="circle"
+        style={{
+          insetInlineEnd: 24,
+          right: 40,
+        }}
+      >
+        <FloatButton.BackTop visibilityHeight={50} tooltip="Back to top" />
       </FloatButton.Group>
     </Layout>
   );
