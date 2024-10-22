@@ -92,16 +92,16 @@ const ReportMain = () => {
 
         const csvContent = [
             ['Report Type', 'Metric', 'Value'],
-            ['Task Completion', 'Status Breakdown', reportData.taskCompletionSummary.statusBreakdown.map(item => `${item.status}: ${item.count}`).join('; ')],
-            ['User Performance', 'Task Completion Rate', reportData.userPerformanceMetrics.taskCompletionRate],
-            ['User Performance', 'Total Tasks', reportData.userPerformanceMetrics.totalTasks],
-            ['User Performance', 'Completed Tasks', reportData.userPerformanceMetrics.completedTasks],
-            ['User Performance', 'Average Completion Time', reportData.userPerformanceMetrics.averageCompletionTime],
-            ['Task Delivery', 'On-Time Delivery Rate', reportData.taskDeliveryMetrics.onTimeDeliveryRate],
-            ['Task Delivery', 'Delayed Tasks', reportData.taskDeliveryMetrics.delayedTasks],
-            ['Task Delivery', 'Task Escalations', reportData.taskDeliveryMetrics.taskEscalations],
-            ['Time-Based', 'Weekly Tasks Completed', reportData.timeBased.weeklyReport.tasksCompleted],
-            ['Time-Based', 'Monthly Tasks Completed', reportData.timeBased.monthlyReport.tasksCompleted],
+            ['Task Completion', 'Status Breakdown', reportData.poolTaskPartion.taskCompletionSummary.statusBreakdown.map(item => `${item.status}: ${item.count}`).join('; ')],
+            ['User Performance', 'Task Completion Rate', reportData.userPerformanceMatrix.userPerformanceMetrics.taskCompletionRate],
+            ['User Performance', 'Total Tasks', reportData.userPerformanceMatrix.userPerformanceMetrics.totalTasks],
+            ['User Performance', 'Completed Tasks', reportData.userPerformanceMatrix.userPerformanceMetrics.completedTasks],
+            ['User Performance', 'Average Completion Time', reportData.userPerformanceMatrix.userPerformanceMetrics.averageCompletionTime],
+            ['Task Delivery', 'On-Time Delivery Rate', reportData.taskDeliveryMatrix.taskDeliveryMetrics.onTimeDeliveryRate],
+            ['Task Delivery', 'Delayed Tasks', reportData.taskDeliveryMatrix.taskDeliveryMetrics.delayedTasks],
+            ['Task Delivery', 'Task Escalations', reportData.taskDeliveryMatrix.taskDeliveryMetrics.taskEscalations],
+            ['Time-Based', 'Completed Tasks', reportData.theGreatTaskFilter.completedTasks.length],
+            ['Time-Based', 'Incomplete Tasks', reportData.theGreatTaskFilter.incompleteTasks.length],
         ].map(row => row.join(',')).join('\n');
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -204,22 +204,22 @@ const ReportMain = () => {
                     <Row gutter={[16, 16]}>
                         <Col span={12}>
                             <Card title="Pool Task Partitions">
-                                <PoolTaskPartitions data={reportData.taskCompletionSummary} />
+                                <PoolTaskPartitions data={reportData.poolTaskPartion.taskCompletionSummary} />
                             </Card>
                         </Col>
                         <Col span={12}>
                             <Card title="User Performance Metrics">
-                                <UserPerformanceMetrics data={reportData.userPerformanceMetrics} />
+                                <UserPerformanceMetrics data={reportData.userPerformanceMatrix.userPerformanceMetrics} />
                             </Card>
                         </Col>
                         <Col span={12}>
                             <Card title="Task Delivery Metrics">
-                                <TaskDeliveryMetrics data={reportData.taskDeliveryMetrics} />
+                                <TaskDeliveryMetrics data={reportData.taskDeliveryMatrix.taskDeliveryMetrics} />
                             </Card>
                         </Col>
                         <Col span={12}>
                             <Card title="Time-Based Reports">
-                                <TimeBasedReports user={selectedUser ? selectedUser : user._id}/>
+                                <TimeBasedReports data={reportData.theGreatTaskFilter} />
                             </Card>
                         </Col>
                     </Row>
