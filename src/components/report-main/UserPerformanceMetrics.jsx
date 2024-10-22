@@ -16,6 +16,10 @@ const UserPerformanceMetrics = ({ data }) => {
         },
     ];
 
+    const truncateText = (text, maxLength = 20) => {
+        return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+    };
+
     return (
         <div>
             <Statistic
@@ -36,7 +40,11 @@ const UserPerformanceMetrics = ({ data }) => {
             <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={data.topPerformers}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
+                    <XAxis 
+                        dataKey="Pool" 
+                        tickFormatter={(value) => truncateText(value)}
+                        interval={0}
+                    />
                     <YAxis />
                     <Tooltip />
                     <Bar dataKey="tasksCompleted" fill="#8884d8" />
