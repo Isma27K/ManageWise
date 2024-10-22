@@ -1,13 +1,12 @@
 import React from 'react';
-import { Statistic, Row, Col, Typography, Divider } from 'antd';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { Statistic, Row, Col, Typography, Divider, Tooltip } from 'antd';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip as RechartsTooltip } from 'recharts';
 
 const { Title } = Typography;
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28DFF', '#FFBB28', '#FF8042', '#A28DFF', '#FFBB28', '#FF8042', '#A28DFF', '#FFBB28', '#FF8042', '#A28DFF'];
 
 const PoolTaskPartitions = ({ data }) => {
-
     const totalTasks = data.statusBreakdown.reduce((acc, curr) => acc + curr.count, 0);
 
     // Sort the statusBreakdown by count in descending order and take the top 6
@@ -21,13 +20,30 @@ const PoolTaskPartitions = ({ data }) => {
         value: item.count
     }));
 
+    // Function to truncate text
+    const truncateText = (text, maxLength) => {
+        if (text.length <= maxLength) return text;
+        return `${text.substring(0, maxLength)}...`;
+    };
+
     return (
         <Row gutter={[16, 16]}>
             <Col span={24}>
                 <Row gutter={[16, 16]}>
                     {top6StatusBreakdown.map((item, index) => (
                         <Col key={index} xs={12} sm={8} md={6} lg={4}>
-                            <Statistic title={item.status} value={item.count} />
+                            <Tooltip title={item.status}>
+                                <Statistic 
+                                    title={truncateText(item.status, 20)} 
+                                    value={item.count} 
+                                    valueStyle={{ fontSize: '16px', lineHeight: '22px' }}
+                                    style={{ 
+                                        whiteSpace: 'nowrap', 
+                                        overflow: 'hidden', 
+                                        textOverflow: 'ellipsis' 
+                                    }}
+                                />
+                            </Tooltip>
                         </Col>
                     ))}
                 </Row>
@@ -49,14 +65,13 @@ const PoolTaskPartitions = ({ data }) => {
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>
-                        <Tooltip />
+                        <RechartsTooltip />
                         <Legend />
                     </PieChart>
                 </ResponsiveContainer>
             </Col>
             <Col span={24}>
                 <Divider />
-
                 <Title level={4}>Total Tasks</Title>
                 <Statistic title="Total Tasks" value={totalTasks} />
             </Col>
