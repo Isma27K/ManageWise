@@ -42,16 +42,20 @@ const Archive = () => {
   }, []);
 
   const filteredPools = useMemo(() => {
-    return pools.map(pool => ({
-      ...pool,
-      tasks: pool.tasks.filter(task =>
-        task.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
-        task.description.toLowerCase().includes(globalSearchTerm.toLowerCase())
-      )
-    })).filter(pool =>
-      pool.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
-      pool.tasks.length > 0
-    );
+    return pools
+      .map(pool => ({
+        ...pool,
+        tasks: pool.tasks.filter(task =>
+          task.isArchived === true &&
+          (task.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
+          task.description.toLowerCase().includes(globalSearchTerm.toLowerCase()))
+        )
+      }))
+      .filter(pool =>
+        pool.tasks.length > 0 &&
+        (pool.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
+        pool.tasks.length > 0)
+      );
   }, [pools, globalSearchTerm]);
 
   if (error) {
