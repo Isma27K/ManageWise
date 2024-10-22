@@ -218,7 +218,7 @@ const ReportMain = () => {
                             </Card>
                         </Col>
                         <Col span={12}>
-                            <Card title="Time-Based Reports">
+                            <Card title="Task Completion Details">
                                 <TimeBasedReports data={reportData.theGreatTaskFilter} />
                             </Card>
                         </Col>

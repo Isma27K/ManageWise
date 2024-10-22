@@ -37,7 +37,7 @@ const TimeBasedReports = ({ data }) => {
 
     return (
         <div className="time-based-reports">
-            <h2>Your Tasks</h2>
+            <h2>Tasks</h2>
             {renderTaskList(incompleteTasks, 'In Progress Tasks')}
             {renderTaskList(completedTasks, 'Completed Tasks')}
         </div>
