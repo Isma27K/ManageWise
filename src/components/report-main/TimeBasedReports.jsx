@@ -1,43 +1,56 @@
-import React from 'react';
-import { Tabs } from 'antd';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { useContext } from 'react';
+import { List, Card, Tag } from 'antd';
+import { UserContext } from '../../contexts/UserContext';
 
-const { TabPane } = Tabs;
+const TimeBasedReports = ({ user }) => {
+    const { pools } = useContext(UserContext);
 
-const TimeBasedReports = ({ data }) => {
-    return (
-        <div>
-            <h4>Tasks Over Time</h4>
-            <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={data.tasksOverTime}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area type="monotone" dataKey="created" stackId="1" stroke="#8884d8" fill="#8884d8" />
-                    <Area type="monotone" dataKey="started" stackId="1" stroke="#82ca9d" fill="#82ca9d" />
-                    <Area type="monotone" dataKey="completed" stackId="1" stroke="#ffc658" fill="#ffc658" />
-                </AreaChart>
-            </ResponsiveContainer>
-            <Tabs defaultActiveKey="1">
-                <TabPane tab="Weekly Report" key="1">
-                    <WeeklyMonthlyReport data={data.weeklyReport} />
-                </TabPane>
-                <TabPane tab="Monthly Report" key="2">
-                    <WeeklyMonthlyReport data={data.monthlyReport} />
-                </TabPane>
-            </Tabs>
-        </div>
+    const getUserTasks = () => {
+        return pools.flatMap(pool => 
+            pool.tasks
+                .filter(task => task.contributor.includes(user))
+                .map(task => ({ ...task, poolName: pool.name }))
+        );
+    };
+
+    const userTasks = getUserTasks();
+    console.log('User tasks:', userTasks);
+    const inProgressTasks = userTasks.filter(task => !task.isArchived);
+    const completedTasks = userTasks.filter(task => task.isArchived);
+
+    const renderTaskList = (tasks, title) => (
+        <Card title={title} style={{ marginBottom: 16 }}>
+            <List
+                dataSource={tasks}
+                renderItem={task => (
+                    <List.Item>
+                        <List.Item.Meta
+                            title={task.name}
+                            description={
+                                <>
+                                    <p>{task.description}</p>
+                                    <p>Pool: {task.poolName}</p>
+                                    <p>Due Date: {task.dueDate.join(' to ')}</p>
+                                    {task.isArchived && (
+                                        <p>Archived At: {new Date(task.archivedAt.$date).toLocaleString()}</p>
+                                    )}
+                                </>
+                            }
+                        />
+                        <Tag color={task.isArchived ? 'green' : 'blue'}>
+                            {task.isArchived ? 'Completed' : 'In Progress'}
+                        </Tag>
+                    </List.Item>
+                )}
+            />
+        </Card>
     );
-};
 
-const WeeklyMonthlyReport = ({ data }) => {
     return (
         <div>
-            <h5>Tasks Completed: {data.tasksCompleted}</h5>
-            <h5>On-Time Completion Rate: {(data.onTimeCompletionRate * 100).toFixed(2)}%</h5>
-            <h5>Average Task Age: {data.averageTaskAge.toFixed(1)} days</h5>
-            <h5>Most Active Project: {data.mostActiveProject}</h5>
+            <h2>Your Tasks</h2>
+            {renderTaskList(inProgressTasks, 'In Progress Tasks')}
+            {renderTaskList(completedTasks, 'Completed Tasks')}
         </div>
     );
 };

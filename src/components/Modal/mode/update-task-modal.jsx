@@ -38,6 +38,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         }
     }, [task]);
 
+
     const handleSubmit = () => {
         const taskData = {
             name: taskName,
@@ -57,7 +58,10 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         });
     };
 
-    // TODO: implement the real save update for the task it self, also mingkin kenak implement also intuk description
+    console.log('isSelfTask:', isSelfTask);
+
+
+    // TODO: implement the real save update for the task it self, also mingkin kenak implement juga intuk description
     // real implementation is on task-modal.jsx
     const handleSave = () => {
         const taskData = {

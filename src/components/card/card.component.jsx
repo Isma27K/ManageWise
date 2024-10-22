@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import TaskModal from '../Modal/task-modal';
 import './card.style.scss';
 
-const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
+const CustomCard = ({ pools, maxTaskNameLength = 40, isSelfTask }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [selectedPool, setSelectedPool] = useState(null);
 	const [selectedTask, setSelectedTask] = useState(null);
@@ -44,6 +44,8 @@ const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
 		return <div>No pools available</div>;
 	}
 
+	console.log('isSelfTask:', isSelfTask);
+
 	return (
 		<>
 			<div className="card-container">
@@ -79,7 +81,7 @@ const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
 								/>
 							</div>
 							<div className="card-footer">
-								{pool.name.toUpperCase() !== "MY TASKS" && (
+								{!pool.isSelfTask && (
 									<Button
 										className="create-task-btn"
 										type="primary"
@@ -104,6 +106,7 @@ const CustomCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
 				task={selectedTask}
 				isEditable={!selectedTask}
 				maxTaskNameLength={maxTaskNameLength}
+				isSelfTask={selectedPool?.isSelfTask}
 			/>
 		</>
 	);

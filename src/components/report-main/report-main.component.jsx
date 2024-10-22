@@ -144,6 +144,7 @@ const ReportMain = () => {
         return name.includes(input.toLowerCase()) || email.includes(input.toLowerCase());
     };
 
+    console.log(selectedUser);
 
     return (
         <Layout className="report-main">
@@ -218,7 +219,7 @@ const ReportMain = () => {
                         </Col>
                         <Col span={12}>
                             <Card title="Time-Based Reports">
-                                <TimeBasedReports data={reportData.timeBased} />
+                                <TimeBasedReports user={selectedUser ? selectedUser : user._id}/>
                             </Card>
                         </Col>
                     </Row>

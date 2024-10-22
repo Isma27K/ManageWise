@@ -27,15 +27,18 @@ const MainDashboard = () => {
       .map(task => ({ ...task, originalPoolId: pool._id }))
   ) || [], [pools, user._id]);
 
-  // Create a "pool" for self-appointed tasks
+  // Modify the selfTasksPool to include isSelfTask property
   const selfTasksPool = useMemo(() => ({
     name: 'My Tasks',
     tasks: userTasks,
     isSelfTask: true
   }), [userTasks]);
 
-  // Combine self-tasks with other pools
-  const allPools = useMemo(() => [selfTasksPool, ...(pools || [])], [selfTasksPool, pools]);
+  // Modify allPools to explicitly set isSelfTask for each pool
+  const allPools = useMemo(() => [
+    selfTasksPool,
+    ...(pools || []).map(pool => ({ ...pool, isSelfTask: false }))
+  ], [selfTasksPool, pools]);
 
   // Filter pools and tasks based on global search term and search type
   const filteredPools = useMemo(() => {
