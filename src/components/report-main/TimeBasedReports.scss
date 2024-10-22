@@ -1,0 +1,26 @@
+.time-based-reports {
+    h2 {
+        margin-bottom: 16px;
+    }
+
+    .task-list-card {
+        margin-bottom: 16px;
+
+        .ant-card-head-title {
+            font-size: 18px;
+        }
+
+        .ant-list-item {
+            padding: 12px 0;
+
+            .ant-list-item-meta-title {
+                font-size: 16px;
+                margin-bottom: 4px;
+            }
+
+            .ant-space {
+                width: 100%;
+            }
+        }
+    }
+}

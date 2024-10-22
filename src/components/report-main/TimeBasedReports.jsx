@@ -1,8 +1,11 @@
 import React from 'react';
-import { List, Card, Tag } from 'antd';
+import { List, Card, Tag, Collapse } from 'antd';
+import TaskDetails from './TaskDetails';
+import './TimeBasedReports.scss';
+
+const { Panel } = Collapse;
 
 const TimeBasedReports = ({ data }) => {
-    console.log('Data:', data);
     const { completedTasks, incompleteTasks } = data || {};
 
     const renderTaskList = (tasks, title) => (
@@ -11,22 +14,21 @@ const TimeBasedReports = ({ data }) => {
                 dataSource={tasks}
                 renderItem={task => (
                     <List.Item>
-                        <List.Item.Meta
-                            title={task.name}
-                            description={
-                                <>
-                                    <p>{task.description}</p>
-                                    <p>Pool: {task.poolName}</p>
-                                    <p>Due Date: {task.dueDate.join(' to ')}</p>
-                                    {task.isArchived && (
-                                        <p>Archived At: {new Date(task.archivedAt).toLocaleString()}</p>
-                                    )}
-                                </>
-                            }
-                        />
-                        <Tag color={task.isArchived ? 'green' : 'blue'}>
-                            {task.isArchived ? 'Completed' : 'In Progress'}
-                        </Tag>
+                        <Collapse style={{ width: '100%' }} expandIconPosition="right">
+                            <Panel
+                                header={
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                        <span>{task.name}</span>
+                                        <Tag color={task.isArchived ? 'green' : 'blue'}>
+                                            {task.isArchived ? 'Completed' : 'In Progress'}
+                                        </Tag>
+                                    </div>
+                                }
+                                key={task.id}
+                            >
+                                <TaskDetails task={task} />
+                            </Panel>
+                        </Collapse>
                     </List.Item>
                 )}
             />
@@ -34,7 +36,7 @@ const TimeBasedReports = ({ data }) => {
     );
 
     return (
-        <div>
+        <div className="time-based-reports">
             <h2>Your Tasks</h2>
             {renderTaskList(incompleteTasks, 'In Progress Tasks')}
             {renderTaskList(completedTasks, 'Completed Tasks')}
