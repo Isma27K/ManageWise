@@ -44,8 +44,6 @@ const CustomCard = ({ pools, maxTaskNameLength = 40, isSelfTask }) => {
 		return <div>No pools available</div>;
 	}
 
-	console.log('isSelfTask:', isSelfTask);
-
 	return (
 		<>
 			<div className="card-container">

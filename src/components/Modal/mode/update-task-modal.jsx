@@ -58,8 +58,6 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         });
     };
 
-    console.log('isSelfTask:', isSelfTask);
-
 
     // TODO: implement the real save update for the task it self, also mingkin kenak implement juga intuk description
     // real implementation is on task-modal.jsx

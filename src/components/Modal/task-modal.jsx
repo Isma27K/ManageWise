@@ -37,13 +37,11 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
             }
     
             const result = await response.json();
-            console.log('Update result:', result);  // Add this line
             notification.success({
                 message: 'Task Updated',
                 description: 'The task has been updated successfully.',
             });
         } catch (error) {
-            console.error('Error updating task:', error);
             notification.error({
                 message: 'Update Failed',
                 description: error.message,
