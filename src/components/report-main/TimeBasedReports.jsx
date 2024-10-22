@@ -9,7 +9,7 @@ const TimeBasedReports = ({ data }) => {
     const { completedTasks, incompleteTasks } = data || {};
 
     const renderTaskList = (tasks, title) => (
-        <Card title={title} style={{ marginBottom: 16 }}>
+        <Card title={title} style={{ height: '100%' }}>
             <List
                 dataSource={tasks}
                 renderItem={task => (
@@ -38,8 +38,14 @@ const TimeBasedReports = ({ data }) => {
     return (
         <div className="time-based-reports">
             <h2>Tasks</h2>
-            {renderTaskList(incompleteTasks, 'In Progress Tasks')}
-            {renderTaskList(completedTasks, 'Completed Tasks')}
+            <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ flex: 1 }}>
+                    {renderTaskList(incompleteTasks, 'In Progress Tasks')}
+                </div>
+                <div style={{ flex: 1 }}>
+                    {renderTaskList(completedTasks, 'Completed Tasks')}
+                </div>
+            </div>
         </div>
     );
 };

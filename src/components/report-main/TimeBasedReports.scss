@@ -23,4 +23,14 @@
             }
         }
     }
+
+    .ant-card {
+        margin-bottom: 16px;
+    }
+
+    @media (max-width: 768px) {
+        > div {
+            flex-direction: column;
+        }
+    }
 }

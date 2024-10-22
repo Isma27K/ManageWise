@@ -212,12 +212,12 @@ const ReportMain = () => {
                                 <UserPerformanceMetrics data={reportData.userPerformanceMatrix.userPerformanceMetrics} />
                             </Card>
                         </Col>
-                        <Col span={12}>
+                        {/*<Col span={12}>
                             <Card title="Task Delivery Metrics">
                                 <TaskDeliveryMetrics data={reportData.taskDeliveryMatrix.taskDeliveryMetrics} />
                             </Card>
-                        </Col>
-                        <Col span={12}>
+                        </Col>*/}
+                        <Col span={24}>
                             <Card title="Task Completion Details">
                                 <TimeBasedReports data={reportData.theGreatTaskFilter} />
                             </Card>
