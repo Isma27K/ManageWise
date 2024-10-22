@@ -10,6 +10,7 @@ const PoolManagementTab = ({ users }) => {
   const [poolDescription, setPoolDescription] = useState('');
   const [selectedPoolUsers, setSelectedPoolUsers] = useState([]);
 
+
   const openNotification = (type, message, description) => {
     notification[type]({
       message,

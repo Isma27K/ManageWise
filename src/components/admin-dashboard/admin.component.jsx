@@ -77,7 +77,7 @@ const AdminDashboard = () => {
           <PoolManagementTab users={users} />
         </TabPane>
         <TabPane tab="Edit Pool Info" key="4">
-          <EditPoolInfo pools={pools} />
+          <EditPoolInfo pools={pools} users={users} />
         </TabPane>
         <TabPane tab="Delete Operations" key="5">
           <DeleteOperationsTab users={allUsers} pools={pools} setUsers={setAllUsers} />
