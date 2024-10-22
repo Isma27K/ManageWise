@@ -28,6 +28,11 @@
         margin-bottom: 16px;
     }
 
+    .ant-pagination {
+        margin-top: 16px;
+        text-align: right;
+    }
+
     @media (max-width: 768px) {
         > div {
             flex-direction: column;

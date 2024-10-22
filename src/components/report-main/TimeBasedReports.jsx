@@ -1,5 +1,5 @@
-import React from 'react';
-import { List, Card, Tag, Collapse } from 'antd';
+import React, { useState } from 'react';
+import { List, Card, Tag, Collapse, Pagination } from 'antd';
 import TaskDetails from './TaskDetails';
 import './TimeBasedReports.scss';
 
@@ -7,11 +7,14 @@ const { Panel } = Collapse;
 
 const TimeBasedReports = ({ data }) => {
     const { completedTasks, incompleteTasks } = data || {};
+    const [inProgressPage, setInProgressPage] = useState(1);
+    const [completedPage, setCompletedPage] = useState(1);
+    const pageSize = 5;
 
-    const renderTaskList = (tasks, title) => (
+    const renderTaskList = (tasks, title, currentPage, setPage) => (
         <Card title={title} style={{ height: '100%' }}>
             <List
-                dataSource={tasks}
+                dataSource={tasks.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
                 renderItem={task => (
                     <List.Item>
                         <Collapse style={{ width: '100%' }} expandIconPosition="right">
@@ -32,6 +35,15 @@ const TimeBasedReports = ({ data }) => {
                     </List.Item>
                 )}
             />
+            {tasks.length > pageSize && (
+                <Pagination
+                    current={currentPage}
+                    onChange={setPage}
+                    total={tasks.length}
+                    pageSize={pageSize}
+                    style={{ marginTop: '16px', textAlign: 'right' }}
+                />
+            )}
         </Card>
     );
 
@@ -40,10 +52,10 @@ const TimeBasedReports = ({ data }) => {
             <h2>Tasks</h2>
             <div style={{ display: 'flex', gap: '16px' }}>
                 <div style={{ flex: 1 }}>
-                    {renderTaskList(incompleteTasks, 'In Progress Tasks')}
+                    {renderTaskList(incompleteTasks, 'In Progress Tasks', inProgressPage, setInProgressPage)}
                 </div>
                 <div style={{ flex: 1 }}>
-                    {renderTaskList(completedTasks, 'Completed Tasks')}
+                    {renderTaskList(completedTasks, 'Completed Tasks', completedPage, setCompletedPage)}
                 </div>
             </div>
         </div>
