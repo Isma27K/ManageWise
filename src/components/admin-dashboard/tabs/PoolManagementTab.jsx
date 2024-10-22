@@ -35,7 +35,7 @@ const PoolManagementTab = ({ users }) => {
 
       if (response.ok) {
         openNotification('success', 'Success', 'Pool created successfully');
-      } else if (response.status === 400) {
+      } else if (response.status === 400 || response.status === 409) {
         openNotification('error', 'Error', 'Pool already exists');
       } else {
         openNotification('error', 'Error', 'Failed to create pool');
