@@ -48,7 +48,12 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             setLoading(false);
             return;
         }
-        if (values.dueDate && values.dueDate[0] && values.dueDate[1] && values.dueDate[1].isBefore(values.dueDate[0])) {
+        if (!values.dueDate || !Array.isArray(values.dueDate) || values.dueDate.length !== 2) {
+            message.error('Please select both start and end dates');
+            setLoading(false);
+            return;
+        }
+        if (values.dueDate[1].isBefore(values.dueDate[0])) {
             message.error('End date cannot be before start date');
             setLoading(false);
             return;
