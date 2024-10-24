@@ -22,6 +22,10 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
     const [selectedPoolUsers, setSelectedPoolUsers] = useState([]);
 
     const handleDateChange = (dates) => {
+        if (dates && dates[0] && dates[1] && dates[1].isBefore(dates[0])) {
+            message.error('End date cannot be before start date');
+            return;
+        }
         setDueDate(dates);
         form.setFieldsValue({ dueDate: dates });
     };
@@ -44,8 +48,8 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             setLoading(false);
             return;
         }
-        if (!values.dueDate || values.dueDate.length !== 2) {
-            message.error('Due date is required');
+        if (values.dueDate && values.dueDate[0] && values.dueDate[1] && values.dueDate[1].isBefore(values.dueDate[0])) {
+            message.error('End date cannot be before start date');
             setLoading(false);
             return;
         }
@@ -188,7 +192,10 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                         style={{ width: '100%' }}
                         format="DD-MM-YYYY"
                         allowClear={true}
-                        disabledDate={(current) => current && current < dayjs().startOf('day')}
+                        disabledDate={(current) => {
+                            // Can't select days before today
+                            return current && current < dayjs().startOf('day');
+                        }}
                     />
                 </Form.Item>
 
