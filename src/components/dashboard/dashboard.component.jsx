@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Layout, Menu, FloatButton } from 'antd';
 import { SettingOutlined, AppstoreOutlined, SafetyOutlined, AuditOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import './dashboard.style.scss';
@@ -20,8 +20,19 @@ const Dashboard = () => {
   const { user, setGlobalSearchTerm } = useContext(UserContext);
   const [content, setContent] = useState(<MainDashboard />);
   const [selectedKey, setSelectedKey] = useState('1');
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   const isAdmin = user?.admin;
+
+  // Handle scroll event to show/hide BackToTop button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.pageYOffset >= 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Define the menu click handler
   const handleMenuClick = (e) => {
@@ -79,15 +90,17 @@ const Dashboard = () => {
         </Content>
         <Footer />
       </Layout>
-      <FloatButton.Group
-        shape="circle"
-        style={{
-          insetInlineEnd: 24,
-          right: 40,
-        }}
-      >
-        <FloatButton.BackTop visibilityHeight={50} tooltip="Back to top" />
-      </FloatButton.Group>
+      {showBackToTop && (
+        <FloatButton.Group
+          shape="circle"
+          style={{
+            insetInlineEnd: 24,
+            right: 40,
+          }}
+        >
+          <FloatButton.BackTop visibilityHeight={50} tooltip="Back to top" />
+        </FloatButton.Group>
+      )}
     </Layout>
   );
 };
