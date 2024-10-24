@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, message, Modal } from 'antd';
+import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, message, Modal, Form } from 'antd';
 import { UploadOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../contexts/UserContext';
@@ -9,7 +9,8 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }) => {
-    const { allUsers, user } = useContext(UserContext);
+    const { allUsers, user, pools } = useContext(UserContext);
+    const [form] = Form.useForm();
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
@@ -17,67 +18,57 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
     const [fileList, setFileList] = useState([]);
     const token = localStorage.getItem('jwtToken');
     const [loading, setLoading] = useState(false);
+    const [selectedPool, setSelectedPool] = useState(null);
+    const [selectedPoolUsers, setSelectedPoolUsers] = useState([]);
 
-    const handleSubmit = async () => {
+    const handleDateChange = (dates) => {
+        setDueDate(dates);
+        form.setFieldsValue({ dueDate: dates });
+    };
+
+    const handleSubmit = async (values) => {
         setLoading(true);
 
-        // Add a 5-second timer before submitting
-        //await new Promise(resolve => setTimeout(resolve, 5000));
-        if (taskName.length === 0) {
+        if (!selectedPool) {
+            message.error('Please select a pool');
+            setLoading(false);
+            return;
+        }
+        if (!values.name || values.name.trim().length === 0) {
             message.error('Task name is required');
             setLoading(false);
             return;
-        }else if (taskDescription.length === 0) {
+        }
+        if (!values.description || values.description.trim().length === 0) {
             message.error('Task description is required');
             setLoading(false);
             return;
-        } else if(dueDate === null) {
+        }
+        if (!values.dueDate || values.dueDate.length !== 2) {
             message.error('Due date is required');
             setLoading(false);
             return;
-        } else if (!isSelfTask && selectedSubmitters.length === 0) {
+        }
+        if (!values.users || values.users.length === 0) {
             message.error('At least one contributor is required');
             setLoading(false);
             return;
         }
 
         const formData = new FormData();
-        formData.append('name', taskName);
-        formData.append('description', taskDescription);
-        if (dueDate) {
-            formData.append('dueDate', JSON.stringify([dueDate[0].format('YYYY-MM-DD'), dueDate[1].format('YYYY-MM-DD')]));
-        }
-        
-        // Use user._id for self-tasks, pool._id for pool tasks
-        if (isSelfTask) {
-            formData.append('userId', user._id);
-        } else {
-            formData.append('poolId', pool?._id); // =========================== kenak fix tok kastok, add pool them gunakan ya
-        }
-
-        formData.append('submitters', JSON.stringify(selectedSubmitters));
+        formData.append('name', values.name);
+        formData.append('description', values.description);
+        formData.append('dueDate', JSON.stringify(values.dueDate.map(date => date.format('YYYY-MM-DD'))));
+        formData.append('poolId', selectedPool._id);
+        formData.append('submitters', JSON.stringify(values.users));
 
         // Append files to formData
         fileList.forEach((file) => {
             formData.append('files', file.originFileObj);
         });
 
-        // Log the FormData contents
-        console.log('FormData contents:');
-        for (let [key, value] of formData.entries()) {
-            if (key === 'files') {
-                console.log(key, value.name); // Log file name for files
-            } else {
-                console.log(key, value);
-            }
-        }
-
         try {
-            const apiUrl = isSelfTask 
-                ? 'https://isapi.ratacode.top/api/task/createSelfTask'  // Placeholder URL for self-tasks
-                : 'https://isapi.ratacode.top/api/task/createTask';     // Existing URL for pool tasks
-
-            const response = await fetch(apiUrl, {
+            const response = await fetch('https://isapi.ratacode.top/api/task/createTask', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -86,7 +77,8 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             });
 
             if (!response.ok) {
-                throw new Error('Failed to create task');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to create task');
             }
 
             const result = await response.json();
@@ -95,7 +87,7 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             onCancel(); // Close the modal
         } catch (error) {
             console.error('Error creating task:', error);
-            message.error('Failed to create task. Please try again.');
+            message.error(error.message || 'Failed to create task. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -106,6 +98,30 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
         if (value.length <= maxTaskNameLength) {
             setTaskName(value);
         }
+    };
+
+    const handlePoolSelect = (poolId) => {
+        const selectedPool = pools.find(p => p._id === poolId);
+        setSelectedPool(selectedPool);
+        // Set the poolId in the form
+        form.setFieldsValue({
+            poolId: selectedPool._id,
+        });
+        // Set the selected submitters to the users associated with the pool
+        const poolUsers = selectedPool.userIds || [];
+        setSelectedSubmitters(poolUsers);
+        setSelectedPoolUsers(poolUsers);
+        // Update the form field for users
+        form.setFieldsValue({
+            users: poolUsers,
+        });
+        // Keep task name and description fields empty
+        setTaskName('');
+        setTaskDescription('');
+        form.setFieldsValue({
+            name: '',
+            description: '',
+        });
     };
 
     const handleSubmitterSelect = (values) => {
@@ -132,43 +148,58 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             footer={null}
             width={600}
         >
-            <div style={{ padding: '20px' }}>
-                <h4>Create New Task</h4>
-                <div style={{ marginBottom: '20px' }}>
+            <Form form={form} onFinish={handleSubmit} layout="vertical">
+                <Form.Item name="poolId" label="Select Pool">
+                    <Select
+                        placeholder="Select a pool"
+                        onChange={handlePoolSelect}
+                        style={{ width: '100%' }}
+                    >
+                        {pools.map(pool => (
+                            <Option key={pool._id} value={pool._id}>{pool.name}</Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+
+                <Form.Item name="name" label="Task Name">
                     <Input
-                        placeholder="Task Name"
                         value={taskName}
                         onChange={handleTaskNameChange}
                         maxLength={maxTaskNameLength}
+                        placeholder="Enter task name"
                     />
-                    <Text type="secondary">
-                        {taskName.length}/{maxTaskNameLength}
-                    </Text>
-                </div>
-                <Input.TextArea
-                    placeholder="Task Description"
-                    value={taskDescription}
-                    onChange={(e) => setTaskDescription(e.target.value)}
-                    style={{ marginBottom: '20px' }}
-                />
-                <RangePicker
-                    placeholder={['Start Date', 'End Date']}
-                    value={dueDate}
-                    onChange={(dates) => setDueDate(dates)}
-                    style={{ marginBottom: '20px', width: '100%' }}
-                    format="DD-MM-YYYY"
-                    allowClear={true}
-                    disabledDate={(current) => current && current < dayjs().startOf('day')}
-                />
-                {!isSelfTask && (
+                </Form.Item>
+                <Text type="secondary">
+                    {taskName.length}/{maxTaskNameLength}
+                </Text>
+
+                <Form.Item name="description" label="Task Description">
+                    <Input.TextArea
+                        value={taskDescription}
+                        onChange={(e) => setTaskDescription(e.target.value)}
+                        placeholder="Enter task description"
+                    />
+                </Form.Item>
+
+                <Form.Item name="dueDate" label="Due Date">
+                    <RangePicker
+                        value={dueDate}
+                        onChange={handleDateChange}
+                        style={{ width: '100%' }}
+                        format="DD-MM-YYYY"
+                        allowClear={true}
+                        disabledDate={(current) => current && current < dayjs().startOf('day')}
+                    />
+                </Form.Item>
+
+                <Form.Item name="users" label="Contributors">
                     <Select
                         mode="multiple"
                         showSearch
                         placeholder="Search for Contributors"
-                        value={selectedSubmitters}
                         onChange={handleSubmitterSelect}
                         filterOption={filterUsers}
-                        style={{ width: '100%', marginBottom: '20px' }}
+                        style={{ width: '100%' }}
                         listHeight={300}
                         dropdownStyle={{ maxHeight: '300px', overflow: 'auto' }}
                         optionLabelProp="label"
@@ -189,30 +220,36 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                             </Option>
                         ))}
                     </Select>
-                )}
-                <Upload
-                    fileList={fileList}
-                    onChange={handleFileChange}
-                    beforeUpload={() => false}
-                    multiple
-                >
-                    <Button icon={<UploadOutlined />}>Upload File(s)</Button>
-                </Upload>
+                </Form.Item>
+                
+                <Form.Item name="files" label="Upload Files">
+                    <Upload
+                        fileList={fileList}
+                        onChange={handleFileChange}
+                        beforeUpload={() => false}
+                        multiple
+                    >
+                        <Button icon={<UploadOutlined />}>Upload File(s)</Button>
+                    </Upload>
+                </Form.Item>
                 <div style={{ marginTop: '10px' }}>
                     {fileList.length > 0 && `${fileList.length} file(s) selected`}
                 </div>
-                <Button
-                    type="primary"
-                    onClick={handleSubmit}
-                    style={{ marginTop: '20px', display: 'block', width: '100%' }}
-                    disabled={loading}
-                >
-                    <span style={{ marginRight: loading ? '10px' : '0' }}>
-                        {loading ? 'Creating Task' : 'Create Task'}
-                    </span>
-                    {loading && <LoadingOutlined style={{ fontSize: 16 }} spin />}
-                </Button>
-            </div>
+
+                <Form.Item>
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        style={{ display: 'block', width: '100%' }}
+                        disabled={loading}
+                    >
+                        <span style={{ marginRight: loading ? '10px' : '0' }}>
+                            {loading ? 'Creating Task' : 'Create Task'}
+                        </span>
+                        {loading && <LoadingOutlined style={{ fontSize: 16 }} spin />}
+                    </Button>
+                </Form.Item>
+            </Form>
         </Modal>
     );
 };
