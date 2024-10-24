@@ -443,3 +443,240 @@
     font-size: 18px;
   }
 }
+
+.card-flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+
+  .pool-card {
+    flex: 0 0 calc(25% - 16px); // Adjust this value to control how many cards per row
+    min-width: 250px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    transition: all 0.3s ease;
+
+    &.expanded {
+      flex-basis: 100%;
+    }
+
+    .pool-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background-color: #f0f2f5;
+      border-bottom: 1px solid #e8e8e8;
+      cursor: pointer;
+
+      .anticon {
+        margin-right: 8px;
+      }
+
+      span {
+        flex-grow: 1;
+        font-weight: 600;
+      }
+    }
+
+    .task-list {
+      .ant-list-item {
+        padding: 8px 16px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: #f9f9f9;
+        }
+      }
+    }
+
+    .task-item {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.create-task-btn {
+  padding: 4px 8px;
+  height: auto;
+  font-size: 12px;
+
+  .anticon {
+    font-size: 12px;
+  }
+}
+
+.pool-categories {
+  .ant-collapse-item {
+    margin-bottom: 16px;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+
+    .ant-collapse-header {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+
+    .ant-collapse-content-box {
+      padding: 0;
+    }
+  }
+}
+
+.pool-list {
+  .pool-item {
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .pool-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #fafafa;
+    cursor: pointer;
+
+    .anticon {
+      margin-right: 8px;
+    }
+
+    span {
+      flex-grow: 1;
+      font-weight: 600;
+    }
+
+    .create-task-btn {
+      margin-left: 8px;
+    }
+  }
+
+  .task-list {
+    background-color: white;
+
+    .task-item {
+      padding: 8px 16px 8px 40px;
+      border-top: 1px solid #f0f0f0;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+
+      span {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+.create-task-btn {
+  padding: 4px 8px;
+  height: auto;
+  font-size: 12px;
+
+  .anticon {
+    font-size: 12px;
+  }
+}
+
+.pool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 16px;
+
+  .pool-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &.expanded {
+      grid-column: 1 / -1;
+    }
+
+    .ant-card-head {
+      background-color: #f5f5f5;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 0 16px;
+    }
+
+    .pool-header {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      .anticon {
+        margin-right: 8px;
+      }
+
+      .pool-title {
+        flex-grow: 1;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: calc(100% - 60px); // Adjust this value based on your layout
+      }
+    }
+
+    .ant-card-extra {
+      padding: 8px 0;
+    }
+
+    .ant-card-body {
+      padding: 0;
+    }
+
+    .task-list {
+      .ant-list-item {
+        padding: 8px 16px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: #f9f9f9;
+        }
+      }
+    }
+
+    .task-item {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.create-task-btn {
+  padding: 0;
+  height: 32px;
+  width: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+
+  .anticon {
+    font-size: 16px;
+  }
+}
+
+// Keep other existing styles for modal, etc.
+
