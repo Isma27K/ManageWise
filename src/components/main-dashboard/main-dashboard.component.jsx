@@ -2,6 +2,7 @@ import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { message, FloatButton } from 'antd';
 import MainCard from '../main-card/main-card.component.jsx';
 import CustomCard from '../card/card.component.jsx';
+import CustomCreate from '../custom-create/custom-create.jsx';
 import './main-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
 import { PlusOutlined } from '@ant-design/icons';
@@ -9,6 +10,7 @@ import { PlusOutlined } from '@ant-design/icons';
 const MainDashboard = () => {
   const { pools, user, globalSearchTerm } = useContext(UserContext);
   const [buttonPosition, setButtonPosition] = useState(24);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,6 +86,14 @@ const MainDashboard = () => {
 
   console.log('Button position:', buttonPosition); // Debugging log
 
+  const handleOpenModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <div className="main-dashboard">
       <h2>My Pools</h2>
@@ -103,6 +113,7 @@ const MainDashboard = () => {
       <FloatButton 
         icon={<PlusOutlined />} 
         tooltip="Create Task" 
+        onClick={handleOpenModal}
         style={{
           position: 'fixed',
           right: 40,
@@ -112,6 +123,12 @@ const MainDashboard = () => {
         }}
       />
 
+      <CustomCreate
+        isSelfTask={true}
+        maxTaskNameLength={100}
+        onCancel={handleCloseModal}
+        visible={isModalVisible}
+      />
     </div>
   );
 };
