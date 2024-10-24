@@ -1,4 +1,6 @@
 .main-dashboard {
+    position: relative;
+    overflow: visible;
     padding: 20px;
 
     h2 {
@@ -15,6 +17,10 @@
         .ant-select {
             min-width: 100px;
         }
+    }
+
+    .ant-float-btn {
+        transition: bottom 0.3s ease;
     }
 }
 

@@ -1,12 +1,30 @@
-import React, { useContext, useMemo } from 'react';
-import { message } from 'antd';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
+import { message, FloatButton } from 'antd';
 import MainCard from '../main-card/main-card.component.jsx';
 import CustomCard from '../card/card.component.jsx';
 import './main-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
+import { PlusOutlined } from '@ant-design/icons';
 
 const MainDashboard = () => {
   const { pools, user, globalSearchTerm } = useContext(UserContext);
+  const [buttonPosition, setButtonPosition] = useState(24);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      console.log('Current scroll position:', currentScrollY); // Debugging log
+      if (currentScrollY > 50) {
+        setButtonPosition(100);
+      } else {
+        setButtonPosition(50);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleAddSelfTask = () => {
     message.success('Add Self Task');
@@ -64,6 +82,8 @@ const MainDashboard = () => {
   const filteredUserPools = useMemo(() => filterPools([selfTasksPool, ...userPools]), [selfTasksPool, userPools, globalSearchTerm]);
   const filteredOtherPools = useMemo(() => filterPools(otherPools), [otherPools, globalSearchTerm]);
 
+  console.log('Button position:', buttonPosition); // Debugging log
+
   return (
     <div className="main-dashboard">
       <h2>My Pools</h2>
@@ -79,6 +99,19 @@ const MainDashboard = () => {
       ) : (
         <div>No matching pools or tasks found in other pools.</div>
       )}
+
+      <FloatButton 
+        icon={<PlusOutlined />} 
+        tooltip="Create Task" 
+        style={{
+          position: 'fixed',
+          right: 40,
+          bottom: buttonPosition,
+          transition: 'bottom 0.3s',
+          zIndex: 1000,
+        }}
+      />
+
     </div>
   );
 };
