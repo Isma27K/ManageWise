@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Modal, Button, Typography, Space, List, Tag, Divider, Row, Col, notification } from 'antd';
-import { UndoOutlined, CalendarOutlined, TeamOutlined, FolderOutlined } from '@ant-design/icons';
+import { Modal, Button, Typography, Space, Tag, Row, Col, notification, Popconfirm } from 'antd';
+import { UndoOutlined, CalendarOutlined, TeamOutlined, FolderOutlined, DeleteOutlined } from '@ant-design/icons';
 import { UserContext } from '../../../contexts/UserContext';
 import './archiveModal.scss';
 
@@ -12,12 +12,11 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
 
     const handleUnarchive = async () => {
         try {
-            const endpoint = task ? 'unarchiveTask' : 'unarchivePool';
             const body = task 
                 ? { taskId: task.id, poolId: pool._id }
                 : { poolId: pool._id };
 
-            const response = await fetch(`https://isapi.ratacode.top/api/archive/${endpoint}`, {
+            const response = await fetch(`https://isapi.ratacode.top/api/archive/unarchiveTask`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,6 +54,46 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
         const user = allUsers.find(user => user.uid === userId);
         return user ? user.name : 'Unknown User';
     };
+
+    const handleDelete = async () => {
+        try {
+            const body = task 
+                ? { taskId: task.id, poolId: pool._id }
+                : { poolId: pool._id };
+
+            const response = await fetch(`https://isapi.ratacode.top/api/archive/deleteTask`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to delete ${task ? 'task' : 'pool'}`);
+            }
+
+            const result = await response.json();
+            notification.success({
+                message: `${task ? 'Task' : 'Pool'} Deleted`,
+                description: `The ${task ? 'task' : 'pool'} has been successfully deleted.`,
+            });
+
+            // Call the onUnarchive callback to update the parent component
+            if (onUnarchive) {
+                onUnarchive(task ? task.id : pool._id, true);
+            }
+        } catch (error) {
+            console.error(`Error deleting ${task ? 'task' : 'pool'}:`, error);
+            notification.error({
+                message: 'Delete Failed',
+                description: `Failed to delete the ${task ? 'task' : 'pool'}. Please try again.`,
+            });
+        }
+
+        onCancel();
+    }
 
     const renderTaskDetails = () => (
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
@@ -108,14 +147,36 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
             title={<Title level={3}>Unarchive {task ? 'Task' : 'Pool'}</Title>}
             visible={visible}
             onCancel={onCancel}
-            footer={[
-                <Button key="cancel" onClick={onCancel}>
-                    Cancel
-                </Button>,
-                <Button key="unarchive" type="primary" icon={<UndoOutlined />} onClick={handleUnarchive}>
-                    Unarchive
-                </Button>,
-            ]}
+            footer={
+                <Row justify="space-between" align="middle">
+                    <Col>
+                        <Popconfirm
+                            title={`Are you sure you want to permanently delete this ${task ? 'task' : 'pool'}?`}
+                            onConfirm={handleDelete}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button 
+                                danger
+                                icon={<DeleteOutlined />}
+                                className="delete-button"
+                            >
+                                Delete
+                            </Button>
+                        </Popconfirm>
+                    </Col>
+                    <Col>
+                        <Space>
+                            <Button onClick={onCancel}>
+                                Cancel
+                            </Button>
+                            <Button type="primary" icon={<UndoOutlined />} onClick={handleUnarchive}>
+                                Unarchive
+                            </Button>
+                        </Space>
+                    </Col>
+                </Row>
+            }
             width={700}
             className="archive-modal"
         >
