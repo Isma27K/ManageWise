@@ -23,11 +23,41 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
   };
 
   const handleDeletePool = async (values) => {
-    console.log('Deleting pool with ID:', values.ArchivePool);
-    // Implement the actual delete pool API call here
-    message.success(`Pool with ID ${values.ArchivePool} has been deleted.`);
-    form.resetFields(['ArchivePool']);
-    setDeletePoolId('');
+    try {
+      const response = await fetch('https://isapi.ratacode.top/api/admin/DeletePool', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ poolId: values.ArchivePool }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete pool');
+      }
+
+      const result = await response.json();
+      if (result.message === "Pool deleted successfully") {
+        // Update the local pools state
+        const updatedPools = pools.filter(pool => pool._id !== values.ArchivePool);
+        setPools(updatedPools);
+        openNotification('success', 'Success', 'Pool has been deleted successfully.');
+      }
+
+      form.resetFields(['ArchivePool']);
+      setDeletePoolId('');
+    } catch (error) {
+      console.error('Error deleting pool:', error);
+      if (error.message === 'Cannot delete pool with tasks') {
+        openNotification('error', 'Error', 'Cannot delete pool with existing tasks.');
+      } else if (error.message === 'Pool not found') {
+        openNotification('error', 'Error', 'The selected pool was not found.');
+      } else {
+        openNotification('error', 'Error', `Failed to delete pool: ${error.message}`);
+      }
+    }
   };
 
   const handleDeleteUser = async () => {
@@ -85,14 +115,14 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
 
   return (
     <>
-      {/*<Form layout="vertical" onFinish={handleDeletePool} className="admin-form">
+      <Form layout="vertical" onFinish={handleDeletePool} className="admin-form">
         <Form.Item 
           name="ArchivePool" 
-          label="Archive POOL"
-          rules={[{ required: true, message: 'Please select a pool to Archive' }]}
+          label="Delete POOL"
+          rules={[{ required: true, message: 'Please select a pool to delete' }]}
         >
           <Select
-            placeholder="Select a pool to Archive"
+            placeholder="Select a pool to delete"
             onChange={(value) => setDeletePoolId(value)}
             style={{ width: '100%' }}
           >
@@ -102,11 +132,11 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
           </Select>
         </Form.Item>
         <Form.Item>
-          <Button danger htmlType="submit" className='archive-button'>
-            Archive POOL
+          <Button danger htmlType="submit" className='delete-button'>
+            Delete POOL
           </Button>
         </Form.Item>
-      </Form>*/}
+      </Form>
       <Form form={form} layout="vertical" onFinish={handleDeleteUser} className="admin-form">
         <Form.Item 
           name="deleteUser" 
