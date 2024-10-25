@@ -3,7 +3,7 @@ import { Card, List, Button, Tooltip } from 'antd';
 import ArchiveModal from '../archiveModal/archiveModal';
 import './archiveCard.style.scss';
 
-const CustomArchiveCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) => {
+const CustomArchiveCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40, onUnarchive }) => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [selectedPool, setSelectedPool] = useState(null);
 	const [selectedTask, setSelectedTask] = useState(null);
@@ -104,6 +104,7 @@ const CustomArchiveCard = ({ isSelfTask, name, pools, maxTaskNameLength = 40 }) 
 				isEditable={!selectedTask}
 				maxTaskNameLength={maxTaskNameLength}
 				isSelfTask={selectedPool?.isSelfTask}
+				onUnarchive={onUnarchive}
 			/>
 		</>
 	);

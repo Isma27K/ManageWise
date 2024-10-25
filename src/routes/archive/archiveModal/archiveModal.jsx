@@ -7,8 +7,33 @@ import './archiveModal.scss';
 const { Title, Text, Paragraph } = Typography;
 
 const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLength, isSelfTask, onUnarchive }) => {
-    const { allUsers } = useContext(UserContext);
+    const { allUsers, setPools } = useContext(UserContext); // Destructure setPools from context
     const token = localStorage.getItem('jwtToken');
+
+    const fetchPools = async () => {
+        try {
+            const response = await fetch('https://isapi.ratacode.top/api/data/DDdata', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch pools');
+            }
+
+            const data = await response.json();
+            setPools(data); // Update pools in context
+        } catch (error) {
+            console.error('Error fetching pools:', error);
+            notification.error({
+                message: 'Error',
+                description: 'Failed to fetch pools. Please try again.',
+            });
+        }
+    };
 
     const handleUnarchive = async () => {
         try {
@@ -39,6 +64,7 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
             if (onUnarchive) {
                 onUnarchive(task ? task.id : pool._id);
             }
+            await fetchPools(); // Refetch pools after unarchiving
         } catch (error) {
             console.error(`Error unarchiving ${task ? 'task' : 'pool'}:`, error);
             notification.error({
@@ -84,6 +110,7 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
             if (onUnarchive) {
                 onUnarchive(task ? task.id : pool._id, true);
             }
+            await fetchPools(); // Refetch pools after deleting
         } catch (error) {
             console.error(`Error deleting ${task ? 'task' : 'pool'}:`, error);
             notification.error({

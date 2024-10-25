@@ -25,7 +25,7 @@ export const UserProvider = ({ children }) => {
       other, 
       setOther, 
       pools, 
-      setPools,
+      setPools, // Ensure setPools is available
       globalSearchTerm,
       setGlobalSearchTerm
     }}>

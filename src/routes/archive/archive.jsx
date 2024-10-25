@@ -31,8 +31,8 @@ const Archive = () => {
         setIsLoading(false);
       } catch (error) {
         notification.error({
-            message: 'Error',
-            description: 'Failed to fetch archive pools',
+          message: 'Error',
+          description: 'Failed to fetch archive pools',
         });
         setIsLoading(false);
       }
@@ -40,6 +40,13 @@ const Archive = () => {
 
     fetchArchivePools();
   }, []);
+
+  const handleUnarchive = (taskId) => {
+    setPools(prevPools => prevPools.map(pool => ({
+      ...pool,
+      tasks: pool.tasks.filter(task => task.id !== taskId)
+    })));
+  };
 
   const filteredPools = useMemo(() => {
     return pools
@@ -68,7 +75,7 @@ const Archive = () => {
       {isLoading ? (
         <div>Loading pools...</div>
       ) : filteredPools.length > 0 ? (
-        <CustomArchiveCard pools={filteredPools} />
+        <CustomArchiveCard pools={filteredPools} onUnarchive={handleUnarchive} />
       ) : (
         <div>No matching archive pools available</div>
       )}
