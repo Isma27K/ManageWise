@@ -13,7 +13,7 @@ const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
 
 const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick, handleUpdateSave, pool, isSelfTask }) => {
-    const { allUsers, user } = useContext(UserContext);
+    const { allUsers = [], user } = useContext(UserContext); // Add default empty array
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
@@ -106,6 +106,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     };
 
     const filterUsers = (input, option) => {
+        if (!option) return false;
         const name = (option.label || '').toLowerCase();
         const email = (option.children?.props?.children[1]?.props?.children[1]?.props?.children || '').toLowerCase();
         return name.indexOf(input.toLowerCase()) >= 0 || email.indexOf(input.toLowerCase()) >= 0;
@@ -116,6 +117,8 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     };
 
     const getContributorName = (userId) => {
+        // Add null check
+        if (!allUsers) return 'Unknown User';
         const user = allUsers.find(u => u.uid === userId);
         return user ? user.name : 'Unknown User';
     };
@@ -197,9 +200,11 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     };
 
     const getUser = (userId) => {
-        //console.log('Getting user for ID:', userId); // Add this line for debugging
-        //console.log('All users:', allUsers); // Add this line for debugging
-        return allUsers.find(u => u.uid === userId) || {};
+        // Add null check and return default object if allUsers is null/undefined
+        if (!allUsers || !userId) {
+            return { name: 'Unknown User' };
+        }
+        return allUsers.find(u => u.uid === userId) || { name: 'Unknown User' };
     };
 
     const handleArchiveTask = async () => {
