@@ -9,7 +9,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }) => {
-    const { allUsers, user, pools } = useContext(UserContext);
+    const { allUsers, user, pools, setPools } = useContext(UserContext);
     const [form] = Form.useForm();
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
@@ -26,49 +26,17 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             message.error('End date cannot be before start date');
             return;
         }
-        setDueDate(dates);
         form.setFieldsValue({ dueDate: dates });
     };
 
     const handleSubmit = async (values) => {
         setLoading(true);
 
-        if (!selectedPool) {
-            message.error('Please select a pool');
-            setLoading(false);
-            return;
-        }
-        if (!values.name || values.name.trim().length === 0) {
-            message.error('Task name is required');
-            setLoading(false);
-            return;
-        }
-        if (!values.description || values.description.trim().length === 0) {
-            message.error('Task description is required');
-            setLoading(false);
-            return;
-        }
-        if (!values.dueDate || !Array.isArray(values.dueDate) || values.dueDate.length !== 2) {
-            message.error('Please select both start and end dates');
-            setLoading(false);
-            return;
-        }
-        if (values.dueDate[1].isBefore(values.dueDate[0])) {
-            message.error('End date cannot be before start date');
-            setLoading(false);
-            return;
-        }
-        if (!values.users || values.users.length === 0) {
-            message.error('At least one contributor is required');
-            setLoading(false);
-            return;
-        }
-
         const formData = new FormData();
         formData.append('name', values.name);
         formData.append('description', values.description);
         formData.append('dueDate', JSON.stringify(values.dueDate.map(date => date.format('YYYY-MM-DD'))));
-        formData.append('poolId', selectedPool._id);
+        formData.append('poolId', values.poolId);
         formData.append('submitters', JSON.stringify(values.users));
 
         // Append files to formData
@@ -90,9 +58,24 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                 throw new Error(errorData.error || 'Failed to create task');
             }
 
-            const result = await response.json();
+            // Fetch updated pools data
+            const poolsResponse = await fetch('https://isapi.ratacode.top/api/data/DDdata', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!poolsResponse.ok) {
+                throw new Error('Failed to fetch updated pools');
+            }
+
+            const updatedPools = await poolsResponse.json();
+            setPools(updatedPools);
+
             message.success('Task created successfully');
-            onCancel(); // Close the modal
+            onCancel();
         } catch (error) {
             console.error('Error creating task:', error);
             message.error(error.message || 'Failed to create task. Please try again.');
@@ -104,7 +87,8 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
     const handleTaskNameChange = (e) => {
         const value = e.target.value;
         if (value.length <= maxTaskNameLength) {
-            setTaskName(value);
+            setTaskName(value); // Add this line to update the taskName state
+            form.setFieldsValue({ name: value });
         }
     };
 
@@ -124,8 +108,6 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             users: poolUsers,
         });
         // Keep task name and description fields empty
-        setTaskName('');
-        setTaskDescription('');
         form.setFieldsValue({
             name: '',
             description: '',
@@ -157,7 +139,10 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             width={600}
         >
             <Form form={form} onFinish={handleSubmit} layout="vertical">
-                <Form.Item name="poolId">
+                <Form.Item 
+                    name="poolId"
+                    rules={[{ required: true, message: 'Please select a pool' }]}
+                >
                     <Select
                         placeholder="Select a pool"
                         onChange={handlePoolSelect}
@@ -169,41 +154,49 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                     </Select>
                 </Form.Item>
 
-                <Form.Item name="name">
+                <Form.Item 
+                    name="name"
+                    rules={[{ required: true, message: 'Task name is required' }]}
+                >
                     <Input
-                        value={taskName}
                         onChange={handleTaskNameChange}
                         maxLength={maxTaskNameLength}
                         placeholder="Enter task name"
                     />
+
                     <Text type="secondary">
                         {taskName.length}/{maxTaskNameLength}
                     </Text>
                 </Form.Item>
 
-                <Form.Item name="description">
+                <Form.Item 
+                    name="description"
+                    rules={[{ required: true, message: 'Task description is required' }]}
+                >
                     <Input.TextArea
-                        value={taskDescription}
-                        onChange={(e) => setTaskDescription(e.target.value)}
                         placeholder="Enter task description"
                     />
                 </Form.Item>
 
-                <Form.Item name="dueDate">
+                <Form.Item 
+                    name="dueDate"
+                    rules={[{ required: true, message: 'Please select start and end dates' }]}
+                >
                     <RangePicker
-                        value={dueDate}
                         onChange={handleDateChange}
                         style={{ width: '100%' }}
                         format="DD-MM-YYYY"
                         allowClear={true}
                         disabledDate={(current) => {
-                            // Can't select days before today
                             return current && current < dayjs().startOf('day');
                         }}
                     />
                 </Form.Item>
 
-                <Form.Item name="users">
+                <Form.Item 
+                    name="users"
+                    rules={[{ required: true, message: 'At least one contributor is required' }]}
+                >
                     <Select
                         mode="multiple"
                         showSearch
