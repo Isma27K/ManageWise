@@ -7,6 +7,7 @@ const { Option } = Select;
 
 const DeleteOperationsTab = ({ users, pools, setUsers }) => {
   const [form] = Form.useForm();
+  const [deletePoolForm] = Form.useForm();
   const [deletePoolId, setDeletePoolId] = useState('');
   const [deleteUserId, setDeleteUserId] = useState(null);
   const token = localStorage.getItem('jwtToken');
@@ -44,10 +45,14 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
         const updatedPools = pools.filter(pool => pool._id !== values.ArchivePool);
         setPools(updatedPools);
         openNotification('success', 'Success', 'Pool has been deleted successfully.');
+        
+        // Clear the select field
+        deletePoolForm.resetFields(['ArchivePool']);
+        setDeletePoolId('');
       }
 
-      form.resetFields(['ArchivePool']);
-      setDeletePoolId('');
+      // Remove this line as we're using a separate form for pool deletion
+      // form.resetFields(['ArchivePool']);
     } catch (error) {
       console.error('Error deleting pool:', error);
       if (error.message === 'Cannot delete pool with tasks') {
@@ -115,7 +120,12 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
 
   return (
     <>
-      <Form layout="vertical" onFinish={handleDeletePool} className="admin-form">
+      <Form 
+        form={deletePoolForm}
+        layout="vertical" 
+        onFinish={handleDeletePool} 
+        className="admin-form"
+      >
         <Form.Item 
           name="ArchivePool" 
           label="Delete POOL"

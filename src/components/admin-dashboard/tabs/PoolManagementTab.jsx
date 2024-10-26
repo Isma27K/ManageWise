@@ -9,6 +9,7 @@ const PoolManagementTab = ({ users }) => {
   const [poolName, setPoolName] = useState('');
   const [poolDescription, setPoolDescription] = useState('');
   const [selectedPoolUsers, setSelectedPoolUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const openNotification = (type, message, description) => {
@@ -21,6 +22,7 @@ const PoolManagementTab = ({ users }) => {
 
   const onFinish = async (values) => {
     try {
+      setIsLoading(true);
       const response = await fetch('https://isapi.ratacode.top/api/admin/CreatePool', {
         method: 'POST',
         headers: {
@@ -43,6 +45,8 @@ const PoolManagementTab = ({ users }) => {
       }
     } catch (error) {
       openNotification('error', 'Error', 'Failed to create pool');
+    } finally {
+      setIsLoading(false);
     }
 
     // Reset form fields
@@ -116,7 +120,7 @@ const PoolManagementTab = ({ users }) => {
         </Select>
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">CREATE</Button>
+        <Button type="primary" htmlType="submit" loading={isLoading}>CREATE</Button>
       </Form.Item>
     </Form>
   );
