@@ -5,17 +5,27 @@
 </p>
 
 <p align="center">
-  ManageWise is an FYP (Final Year Project) developed by students from Politeknik Kuching Sarawak. This project aims to enhance user productivity by Managing Work Flow.
+  ManageWise is an FYP (Final Year Project) developed by students from Politeknik Kuching Sarawak. This project aims to enhance user productivity through intelligent workflow management and team collaboration.
 </p>
 
 ---
 
-## Getting Starteded
+## Features
+
+- Task Management & Organization
+- Real-time Progress Tracking
+- Team Collaboration Tools
+- File Attachments & Sharing
+- Performance Analytics & Reports
+- User-friendly Interface
+
+## Getting Started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [Node.js](https://nodejs.org/) (v18 LTS or higher recommended)
 - [Git](https://git-scm.com/)
+- Modern web browser (Chrome, Firefox, Safari, or Edge)
 
 ### Installation
 
@@ -36,69 +46,61 @@
 
 ### Running the Project
 
-To start the development server:
+Start the development server:
 ```sh
 npm start
 ```
 
-This will run the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The application will be available at [http://localhost:3000](http://localhost:3000)
 
 ## Available Scripts
-
-In the project directory, you can run:
 
 - `npm start`: Runs the app in development mode
 - `npm test`: Launches the test runner
 - `npm run build`: Builds the app for production
-- `npm run eject`: Ejects from Create React App (one-way operation)
+- `npm run eject`: Ejects from Create React App (⚠️ one-way operation)
 
-## Backend Server
+## Tech Stack
 
-The backend server for this project can be found at:
-[https://github.com/isma27k/ManageWise-Backend](https://github.com/isma27k/ManageWise-Backend)
+- Frontend: React.js with Ant Design
+- State Management: React Context
+- UI Components: Ant Design, Recharts
+- Rich Text Editing: React Quill
+- File Handling: PDF Generation with jsPDF
+- Styling: SCSS
+
+## Backend Integration
+
+The backend server repository can be found at:
+[ManageWise-Backend](https://github.com/isma27k/ManageWise-Backend)
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## Git Workflow
+For detailed guidelines, please read [CONTRIBUTING.md](CONTRIBUTING.md)
 
-1. Update your local master:
-   ```sh
-   git checkout master
-   git pull
-   ```
+## Security
 
-2. Create a new branch for your feature:
-   ```sh
-   git checkout -b feature/your-feature-name
-   ```
+For security concerns, please review our [Security Policy](SECURITY.md)
 
-3. Make your changes and commit:
-   ```sh
-   git add .
-   git commit -m "Description of your changes"
-   ```
-
-4. Push your branch:
-   ```sh
-   git push -u origin feature/your-feature-name
-   ```
-
-5. Create a Pull Request on GitHub for review.
-
-## Important Note
-
-This project is under active development. We do not recommend running it in a production environment without thorough testing and approval from the project maintainers.
-
-## Team
+## Development Team
 
 <p align="center">
   <img src="git-image/gp.png" width="350" alt="Team Photo" />
 </p>
 
-A huge thank you to all team members involved in this project!
+Special thanks to all team members from Politeknik Kuching Sarawak who contributed to this project!
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Important Note
+
+This project is under active development. Production use should be preceded by thorough testing and approval from project maintainers.
