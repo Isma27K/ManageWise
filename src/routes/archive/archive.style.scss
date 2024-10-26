@@ -1,0 +1,15 @@
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+}
+
+.archive-container {
+    padding: 24px;
+
+    h2 {
+        margin-bottom: 16px;
+    }
+}

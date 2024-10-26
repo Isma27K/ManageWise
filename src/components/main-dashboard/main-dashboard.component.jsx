@@ -1,21 +1,29 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
-import { message, FloatButton } from 'antd';
+import { message, FloatButton, Layout } from 'antd';
+import Lottie from 'lottie-react';
 import MainCard from '../main-card/main-card.component.jsx';
 import CustomCard from '../card/card.component.jsx';
 import CustomCreate from '../custom-create/custom-create.jsx';
 import './main-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
 import { PlusOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import loadingAnimation from '../../asset/gif/loading.json';
+
+const { Content } = Layout;
 
 const MainDashboard = () => {
-  const { pools, user, globalSearchTerm } = useContext(UserContext);
+  const { pools, user, globalSearchTerm, setPools } = useContext(UserContext);
   const [buttonPosition, setButtonPosition] = useState(24);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const token = localStorage.getItem('jwtToken');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      console.log('Current scroll position:', currentScrollY); // Debugging log
       if (currentScrollY > 50) {
         setButtonPosition(100);
       } else {
@@ -25,8 +33,39 @@ const MainDashboard = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
+    fetchPools();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const fetchPools = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('https://isapi.ratacode.top/api/data/DDdata', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch pools');
+      }
+
+      const data = await response.json();
+      setPools(data);
+    } catch (error) {
+      console.error('Error fetching pools:', error);
+      message.error(error.message || 'An unexpected error occurred');
+      setError(error.message);
+      if (error.message === 'Unauthorized' || error.response?.status === 401) {
+        navigate('/login');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleAddSelfTask = () => {
     message.success('Add Self Task');
@@ -94,42 +133,69 @@ const MainDashboard = () => {
     setIsModalVisible(false);
   };
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingAnimation,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <Lottie
+          animationData={loadingAnimation}
+          loop={true}
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    <div className="main-dashboard">
-      <h2>My Pools</h2>
-      {filteredUserPools.length > 0 ? (
-        <MainCard pools={filteredUserPools} />
-      ) : (
-        <div>No matching pools or tasks found in your pools.</div>
-      )}
+    <Layout className="main-dashboard">
+      <Content>
+        <h2>My Pools</h2>
+        {filteredUserPools.length > 0 ? (
+          <MainCard pools={filteredUserPools} />
+        ) : (
+          <div>No matching pools or tasks found in your pools.</div>
+        )}
 
-      <h2>Other Pools</h2>
-      {filteredOtherPools.length > 0 ? (
-        <CustomCard pools={filteredOtherPools} />
-      ) : (
-        <div>No matching pools or tasks found in other pools.</div>
-      )}
+        <h2>Other Pools</h2>
+        {filteredOtherPools.length > 0 ? (
+          <CustomCard pools={filteredOtherPools} />
+        ) : (
+          <div>No matching pools or tasks found in other pools.</div>
+        )}
 
-      <FloatButton 
-        icon={<PlusOutlined />} 
-        tooltip="Create Task" 
-        onClick={handleOpenModal}
-        style={{
-          position: 'fixed',
-          right: 40,
-          bottom: buttonPosition,
-          transition: 'bottom 0.3s',
-          zIndex: 1000,
-        }}
-      />
+        <FloatButton 
+          icon={<PlusOutlined />} 
+          tooltip="Create Task" 
+          onClick={handleOpenModal}
+          style={{
+            position: 'fixed',
+            right: 40,
+            bottom: buttonPosition,
+            transition: 'bottom 0.3s',
+            zIndex: 1000,
+          }}
+        />
 
-      <CustomCreate
-        isSelfTask={true}
-        maxTaskNameLength={100}
-        onCancel={handleCloseModal}
-        visible={isModalVisible}
-      />
-    </div>
+        <CustomCreate
+          isSelfTask={true}
+          maxTaskNameLength={100}
+          onCancel={handleCloseModal}
+          visible={isModalVisible}
+        />
+      </Content>
+    </Layout>
   );
 };
 

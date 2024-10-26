@@ -114,7 +114,7 @@ const Home = () => {
         };
 
         fetchUser(); // Fetch user data
-        fetchPools(); // Fetch all users data
+        //fetchPools(); // Fetch all users data
         fetchAllUsers(); // Fetch all users data
     }, [token, navigate, setUser, setAllUsers, setPools]);
 

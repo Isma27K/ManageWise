@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import CustomArchiveCard from './archiveCard/archiveCard.component';
-import { notification } from 'antd';
+import { notification, Layout } from 'antd';
 import { UserContext } from '../../contexts/UserContext';
+import Lottie from 'lottie-react';
+import loadingAnimation from '../../asset/gif/loading.json';
+import './archive.style.scss';
+
+const { Content } = Layout;
 
 const Archive = () => {
   const [pools, setPools] = useState([]);
@@ -28,12 +33,13 @@ const Archive = () => {
 
         const data = await response.json();
         setPools(data);
-        setIsLoading(false);
       } catch (error) {
         notification.error({
           message: 'Error',
           description: 'Failed to fetch archive pools',
         });
+        setError(error.message);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -65,21 +71,33 @@ const Archive = () => {
       );
   }, [pools, globalSearchTerm]);
 
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <Lottie
+          animationData={loadingAnimation}
+          loop={true}
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
+    );
+  }
+
   if (error) {
     return <div>Error: {error}</div>;
   }
 
   return (
-    <div className="main-dashboard">
-      <h2>Archive Pools</h2>
-      {isLoading ? (
-        <div>Loading pools...</div>
-      ) : filteredPools.length > 0 ? (
-        <CustomArchiveCard pools={filteredPools} onUnarchive={handleUnarchive} />
-      ) : (
-        <div>No matching archive pools available</div>
-      )}
-    </div>
+    <Layout className="archive-container">
+      <Content>
+        <h2>Archive Pools</h2>
+        {filteredPools.length > 0 ? (
+          <CustomArchiveCard pools={filteredPools} onUnarchive={handleUnarchive} />
+        ) : (
+          <div>No matching archive pools available</div>
+        )}
+      </Content>
+    </Layout>
   );
 };
 
