@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Layout, Typography, Row, Col, Card, Button, Select, Avatar, Tooltip, message } from 'antd';
-import { DownloadOutlined, UserOutlined, CrownOutlined } from '@ant-design/icons';
+import { DownloadOutlined, UserOutlined, CrownOutlined, FilePdfOutlined } from '@ant-design/icons';
 import Lottie from 'react-lottie';
 import PoolTaskPartitions from './PoolTaskPartitions';
 import UserPerformanceMetrics from './UserPerformanceMetrics';
@@ -9,6 +9,7 @@ import TimeBasedReports from './TimeBasedReports';
 import loadingAnimation from '../../asset/gif/loading.json';
 import './report-main.style.scss';
 import { UserContext } from '../../contexts/UserContext';
+import { generatePDFReport } from '../../utils/pdfGenerator';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -24,6 +25,8 @@ const ReportMain = () => {
     const token = localStorage.getItem('jwtToken');
     const [dataError, setDataError] = useState(null);
     const [initialDataFetched, setInitialDataFetched] = useState(false);
+
+    console.log(selectedUser);
 
     useEffect(() => {
         const fetchInitialReportData = async () => {
@@ -117,6 +120,17 @@ const ReportMain = () => {
         }
     };
 
+    const handleDownloadPDF = () => {
+        if (!reportData) return;
+        
+        const doc = generatePDFReport(reportData, allUsers, selectedUser, user);
+        const fileName = selectedUser ? 
+            `task_report_${allUsers.find(u => u.uid === selectedUser || u.id === selectedUser)?.name || 'user'}.pdf` : 
+            `task_report_${user.name || 'user'}.pdf`;
+        
+        doc.save(fileName);
+    };
+
     const defaultOptions = {
         loop: true,
         autoplay: true,
@@ -151,9 +165,23 @@ const ReportMain = () => {
             <Content>
                 <div className="report-header">
                     <Title level={2}>Task Management Report</Title>
-                    <Button type="primary" icon={<DownloadOutlined />} onClick={handleDownloadCSV}>
-                        Download CSV
-                    </Button>
+                    <div className="report-actions">
+                        <Button 
+                            type="primary" 
+                            icon={<FilePdfOutlined />} 
+                            onClick={handleDownloadPDF}
+                            style={{ marginRight: '8px' }}
+                        >
+                            Download PDF
+                        </Button>
+                        <Button 
+                            type="primary" 
+                            icon={<DownloadOutlined />} 
+                            onClick={handleDownloadCSV}
+                        >
+                            Download CSV
+                        </Button>
+                    </div>
                 </div>
                 {user.admin && (
                     <div className="admin-select-container">
