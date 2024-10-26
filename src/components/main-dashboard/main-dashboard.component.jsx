@@ -189,7 +189,7 @@ const MainDashboard = () => {
 
         <CustomCreate
           isSelfTask={true}
-          maxTaskNameLength={100}
+          maxTaskNameLength={40}
           onCancel={handleCloseModal}
           visible={isModalVisible}
         />

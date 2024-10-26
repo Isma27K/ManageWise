@@ -157,7 +157,7 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             width={600}
         >
             <Form form={form} onFinish={handleSubmit} layout="vertical">
-                <Form.Item name="poolId" label="Select Pool">
+                <Form.Item name="poolId">
                     <Select
                         placeholder="Select a pool"
                         onChange={handlePoolSelect}
@@ -169,19 +169,19 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                     </Select>
                 </Form.Item>
 
-                <Form.Item name="name" label="Task Name">
+                <Form.Item name="name">
                     <Input
                         value={taskName}
                         onChange={handleTaskNameChange}
                         maxLength={maxTaskNameLength}
                         placeholder="Enter task name"
                     />
+                    <Text type="secondary">
+                        {taskName.length}/{maxTaskNameLength}
+                    </Text>
                 </Form.Item>
-                <Text type="secondary">
-                    {taskName.length}/{maxTaskNameLength}
-                </Text>
 
-                <Form.Item name="description" label="Task Description">
+                <Form.Item name="description">
                     <Input.TextArea
                         value={taskDescription}
                         onChange={(e) => setTaskDescription(e.target.value)}
@@ -189,7 +189,7 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                     />
                 </Form.Item>
 
-                <Form.Item name="dueDate" label="Due Date">
+                <Form.Item name="dueDate">
                     <RangePicker
                         value={dueDate}
                         onChange={handleDateChange}
@@ -203,7 +203,7 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                     />
                 </Form.Item>
 
-                <Form.Item name="users" label="Contributors">
+                <Form.Item name="users">
                     <Select
                         mode="multiple"
                         showSearch
@@ -233,7 +233,7 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                     </Select>
                 </Form.Item>
                 
-                <Form.Item name="files" label="Upload Files">
+                <Form.Item name="files">
                     <Upload
                         fileList={fileList}
                         onChange={handleFileChange}
