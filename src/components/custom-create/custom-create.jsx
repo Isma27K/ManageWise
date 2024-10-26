@@ -91,7 +91,6 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             }
 
             const result = await response.json();
-            console.log('Task created:', result);
             message.success('Task created successfully');
             onCancel(); // Close the modal
         } catch (error) {

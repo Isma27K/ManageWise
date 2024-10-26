@@ -40,7 +40,6 @@ const Login = () => {
                 if (data.token) {
                     // Save the JWT token to localStorage
                     localStorage.setItem('jwtToken', data.token);
-                    console.log('Login successful, token saved');
                     // Redirect to the dashboard or home page
                     navigate('/dashboard');
                 } else {

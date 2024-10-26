@@ -62,22 +62,11 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
             formData.append('files', file.originFileObj);
         });
 
-        // Log the FormData contents
-        console.log('FormData contents:');
-        for (let [key, value] of formData.entries()) {
-            if (key === 'files') {
-                console.log(key, value.name); // Log file name for files
-            } else {
-                console.log(key, value);
-            }
-        }
-
         try {
             const apiUrl = isSelfTask 
                 ? 'https://isapi.ratacode.top/api/task/createSelfTask'  // Placeholder URL for self-tasks
                 : 'https://isapi.ratacode.top/api/task/createTask';     // Existing URL for pool tasks
 
-            console.log('Sending request to:', apiUrl);
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -91,7 +80,6 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
             }
 
             const result = await response.json();
-            console.log('Task created:', result);
             message.success('Task created successfully');
             onCancel(); // Close the modal
         } catch (error) {

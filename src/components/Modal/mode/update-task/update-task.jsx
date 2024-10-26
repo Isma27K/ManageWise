@@ -33,12 +33,9 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
     const handleFileChange = (info) => {
         if (info.fileList.length > 0) {
             const file = info.fileList[info.fileList.length - 1];
-            console.log('File selected:', file);
-            console.log('File object:', file.originFileObj);
             setFile(file.originFileObj);
         } else {
             setFile(null);
-            console.log('No file selected');
         }
     };
 
@@ -63,7 +60,6 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
         // Determine which pool ID to use
         const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
         
-        console.log("poolIdToUse: ", poolIdToUse);
         if (!poolIdToUse) {
             console.error('No valid pool ID found');
             notification.error({
@@ -75,7 +71,6 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
         }
 
         formData.append('poolID', poolIdToUse);
-        console.log('Using poolID:', poolIdToUse);
         
         if (file) {
             formData.append('attachment', file, file.name);
@@ -98,7 +93,6 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
             }
 
             const result = await response.json();
-            console.log('Task update response:', result);
             notification.success({
                 message: 'Success',
                 description: 'Task updated successfully',

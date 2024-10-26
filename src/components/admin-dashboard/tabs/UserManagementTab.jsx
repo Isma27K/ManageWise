@@ -26,7 +26,6 @@ const UserManagementTab = ({ users, roles }) => {
       if (user) {
         try {
           // Implement the actual role assignment API call here
-          console.log('Assigning role:', selectedRole, 'to user:', user.name);
           openNotification('success', 'Success', `Assigned role ${selectedRole} to ${user.name}`);
           form.resetFields();
           setSelectedUser(null);

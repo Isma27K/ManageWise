@@ -57,7 +57,6 @@ const EditPoolInfo = ({ pools, users }) => {
                 body: JSON.stringify(updatedValues),
             }); 
             
-            console.log(updatedValues);
             message.success('Pool information updated successfully');
             form.resetFields();
             setSelectedPool(null);

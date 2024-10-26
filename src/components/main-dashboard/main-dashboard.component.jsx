@@ -123,7 +123,6 @@ const MainDashboard = () => {
   const filteredUserPools = useMemo(() => filterPools([selfTasksPool, ...userPools]), [selfTasksPool, userPools, globalSearchTerm]);
   const filteredOtherPools = useMemo(() => filterPools(otherPools), [otherPools, globalSearchTerm]);
 
-  console.log('Button position:', buttonPosition); // Debugging log
 
   const handleOpenModal = () => {
     setIsModalVisible(true);

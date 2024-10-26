@@ -26,7 +26,6 @@ const ReportMain = () => {
     const [dataError, setDataError] = useState(null);
     const [initialDataFetched, setInitialDataFetched] = useState(false);
 
-    console.log(selectedUser);
 
     useEffect(() => {
         const fetchInitialReportData = async () => {
@@ -158,7 +157,6 @@ const ReportMain = () => {
         return name.includes(input.toLowerCase()) || email.includes(input.toLowerCase());
     };
 
-    console.log(selectedUser);
 
     return (
         <Layout className="report-main">

@@ -19,7 +19,6 @@ const TaskModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLengt
     const handleUpdateSave = async (taskData) => {
         setUpdatedTaskData(taskData);
     
-        console.log('Saving updated task data:', taskData);
     
         try {
             const response = await fetch(taskData.apiUrl, {
