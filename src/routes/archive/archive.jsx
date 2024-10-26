@@ -47,11 +47,31 @@ const Archive = () => {
     fetchArchivePools();
   }, []);
 
-  const handleUnarchive = (taskId) => {
-    setPools(prevPools => prevPools.map(pool => ({
-      ...pool,
-      tasks: pool.tasks.filter(task => task.id !== taskId)
-    })));
+  const handleUnarchive = async (taskId) => {
+    // Instead of directly modifying the state, let's fetch the updated data
+    const token = localStorage.getItem('jwtToken');
+    
+    try {
+      const response = await fetch('https://isapi.ratacode.top/api/data/archivePool', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch archive pools');
+      }
+
+      const data = await response.json();
+      setPools(data);
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'Failed to update archive pools',
+      });
+    }
   };
 
   const filteredPools = useMemo(() => {

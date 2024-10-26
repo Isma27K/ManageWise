@@ -54,17 +54,20 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
                 throw new Error(`Failed to unarchive ${task ? 'task' : 'pool'}`);
             }
 
-            const result = await response.json();
+            await response.json();
+            
+            // Call onUnarchive to trigger a refresh of the archive pools
+            if (onUnarchive) {
+                onUnarchive(task ? task.id : pool._id);
+            }
+
+            // Fetch updated pools for the main task view
+            await fetchPools();
+
             notification.success({
                 message: `${task ? 'Task' : 'Pool'} Unarchived`,
                 description: `The ${task ? 'task' : 'pool'} has been successfully unarchived.`,
             });
-
-            // Call the onUnarchive callback to update the parent component
-            if (onUnarchive) {
-                onUnarchive(task ? task.id : pool._id);
-            }
-            await fetchPools(); // Refetch pools after unarchiving
         } catch (error) {
             console.error(`Error unarchiving ${task ? 'task' : 'pool'}:`, error);
             notification.error({
