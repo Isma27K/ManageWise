@@ -2,17 +2,15 @@ import React, { useEffect, useContext, useState } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import Nav from "../../components/nav/nav.component";
 import Dashboard from "../../components/dashboard/dashboard.component";
-import Footer from '../../components/footer/footer.component.jsx';
 import { notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Lottie from "lottie-react";
 import loadingAnimation from '../../asset/gif/loading.json'; // Make sure this JSON file exists
 
 const Home = () => {
-    const { user, setUser, allUsers, setAllUsers, setPools } = useContext(UserContext);
+    const { user, setUser, setAllUsers } = useContext(UserContext);
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true);
-
+    const [isLoadingUser, setIsLoadingUser] = useState(true);
     const token = localStorage.getItem('jwtToken');
 
     const openNotification = (type, message, description) => {
@@ -24,15 +22,15 @@ const Home = () => {
     };
 
     useEffect(() => {
-        // Redirect to login if there's no token
         if (!token) {
             console.error('No JWT token found');
             openNotification('error', 'Authentication Error', 'Please log in again.');
             navigate('/login');
-            return; // Exit early to avoid fetching user data
+            return;
         }
 
-        const fetchUser = async () => {
+        // Fetch user data first
+        const fetchUserData = async () => {
             try {
                 const response = await fetch('https://isapi.ratacode.top/api/data/DUdata', {
                     method: 'POST',
@@ -43,17 +41,17 @@ const Home = () => {
                 });
 
                 if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error('User not found. Please check your account.');
-                    } else if (response.status === 401) {
-                        throw new Error('Authentication failed. Please log in again.');
-                    } else {
-                        throw new Error('Failed to fetch user data');
-                    }
+                    throw new Error(response.status === 404 
+                        ? 'User not found. Please check your account.' 
+                        : 'Authentication failed. Please log in again.');
                 }
 
-                const data = await response.json();
-                setUser(data);
+                const userData = await response.json();
+                setUser(userData);
+                setIsLoadingUser(false);
+
+                // After user data is set, fetch all users data in the background
+                fetchAllUsersInBackground();
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 openNotification('error', 'Error', error.message || 'An unexpected error occurred');
@@ -61,31 +59,8 @@ const Home = () => {
             }
         };
 
-        const fetchPools = async () => {
-            try {
-                const response = await fetch('https://isapi.ratacode.top/api/data/DDdata', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                });
-
-                if (!response.ok) {
-                    openNotification('error', 'Error', 'Failed to fetch pools');
-                    return;
-                }
-
-                const data = await response.json();
-                setPools(data);
-            }catch (error) {
-                console.error('Error fetching pools:', error);
-                openNotification('error', 'Error', error.message || 'An unexpected error occurred');
-                navigate('/login');
-            }
-        }
-
-        const fetchAllUsers = async () => {
+        // Fetch all users data in the background
+        const fetchAllUsersInBackground = async () => {
             try {
                 const response = await fetch('https://isapi.ratacode.top/api/data/AllUserData', {
                     method: 'POST',
@@ -95,38 +70,34 @@ const Home = () => {
                     },
                 });
 
-                if (!response.ok) {
-                    openNotification('error', 'Error', 'Failed to fetch all users');
-                    return;
+                if (response.ok) {
+                    const allUsersData = await response.json();
+                    setAllUsers(allUsersData);
+                } else {
+                    console.warn('Failed to fetch all users data');
                 }
-
-                const data = await response.json();
-                setAllUsers(data);
             } catch (error) {
-                console.error('Error fetching all users:', error);
-                openNotification('error', 'Error', error.message || 'An unexpected error occurred');
-                navigate('/login');
-            }finally {
-                // Add a 5-second delay
-                //await new Promise(resolve => setTimeout(resolve, 1000));
-                setIsLoading(false); // Ensure loading state is set to false after fetching
+                console.warn('Error fetching all users data:', error);
+                // Don't show error notification for background fetch
             }
         };
 
-        fetchUser(); // Fetch user data
-        //fetchPools(); // Fetch all users data
-        fetchAllUsers(); // Fetch all users data
-    }, [token, navigate, setUser, setAllUsers, setPools]);
+        fetchUserData();
+    }, [token, navigate, setUser, setAllUsers]);
 
-    if (isLoading) {
+    if (isLoadingUser) {
         return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <Lottie animationData={loadingAnimation} style={{ width: 200, height: 200 }} />
+            <div className="loading-container">
+                <Lottie
+                    animationData={loadingAnimation}
+                    loop={true}
+                    style={{ width: 200, height: 200 }}
+                />
             </div>
         );
     }
 
-    if (!user || !allUsers) {
+    if (!user) {
         return <div>No user data available.</div>;
     }
 
