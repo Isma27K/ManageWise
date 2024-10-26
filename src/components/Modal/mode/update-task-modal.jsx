@@ -13,7 +13,7 @@ const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
 
 const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick, handleUpdateSave, pool, isSelfTask }) => {
-    const { allUsers = [], user } = useContext(UserContext); // Add default empty array
+    const { allUsers = [], user, setPools } = useContext(UserContext); // Add default empty array
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
@@ -207,6 +207,31 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         return allUsers.find(u => u.uid === userId) || { name: 'Unknown User' };
     };
 
+    const fetchPools = async () => {
+        try {
+            const response = await fetch('https://isapi.ratacode.top/api/data/DDdata', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch pools');
+            }
+
+            const data = await response.json();
+            setPools(data); // Update pools in context
+        } catch (error) {
+            console.error('Error fetching pools:', error);
+            notification.error({
+                message: 'Error',
+                description: 'Failed to fetch pools. Please try again.',
+            });
+        }
+    };
+
     const handleArchiveTask = async () => {
         try {
             const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
@@ -228,6 +253,8 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             }
     
             const result = await response.json();
+
+            await fetchPools();
             
             notification.success({
                 message: 'Task Archived',

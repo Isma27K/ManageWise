@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, message } from 'antd';
+import { Input, DatePicker, Button, Upload, Typography, Select, Avatar, message, notification } from 'antd';
 import { UploadOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { UserContext } from '../../../contexts/UserContext';
@@ -9,7 +9,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
-    const { allUsers, user } = useContext(UserContext);
+    const { allUsers, user, setPools } = useContext(UserContext);
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [dueDate, setDueDate] = useState(null);
@@ -17,6 +17,31 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
     const [fileList, setFileList] = useState([]);
     const token = localStorage.getItem('jwtToken');
     const [loading, setLoading] = useState(false);
+
+    const fetchPools = async () => {
+        try {
+            const response = await fetch('https://isapi.ratacode.top/api/data/DDdata', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch pools');
+            }
+
+            const data = await response.json();
+            setPools(data); // Update pools in context
+        } catch (error) {
+            console.error('Error fetching pools:', error);
+            notification.error({
+                message: 'Error',
+                description: 'Failed to fetch pools. Please try again.',
+            });
+        }
+    };
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -80,6 +105,8 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
             }
 
             const result = await response.json();
+            await fetchPools();
+
             message.success('Task created successfully');
             onCancel(); // Close the modal
         } catch (error) {
