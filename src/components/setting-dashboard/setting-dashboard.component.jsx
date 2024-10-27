@@ -77,7 +77,7 @@ const SettingDashboard = () => {
     const handleRemoveAvatar = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch('https://isapi.ratacode.top/update/remove-avater', {
+            const response = await fetch('https://api.managewise.top/update/remove-avater', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -139,7 +139,7 @@ const SettingDashboard = () => {
                 updateData.avatar = profile.avatarBase64;
             }
 
-            const response = await fetch('https://isapi.ratacode.top/update/avatar', {
+            const response = await fetch('https://api.managewise.top/update/avatar', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -193,7 +193,7 @@ const SettingDashboard = () => {
             onOk: async () => {
                 try {
                     setIsLoading(true);
-                    const response = await fetch('https://isapi.ratacode.top/auth/forget-password', {
+                    const response = await fetch('https://api.managewise.top/auth/forget-password', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

@@ -55,7 +55,7 @@ const UserFetch = createFetchFunction(
             console.error('setUser is not a function in the provided context');
         }
     },
-    'https://isapi.ratacode.top/api/data/DUdata',
+    'https://api.managewise.top/api/data/DUdata',
     'Failed to fetch user data'
 );
 
@@ -67,7 +67,7 @@ const AllUserFetch = createFetchFunction(
             console.error('setAllUsers is not a function in the provided context');
         }
     },
-    'https://isapi.ratacode.top/api/data/AllUserData',
+    'https://api.managewise.top/api/data/AllUserData',
     'Failed to fetch all users'
 );
 
@@ -79,7 +79,7 @@ const PoolFetch = createFetchFunction(
             console.error('setPools is not a function in the provided context');
         }
     },
-    'https://isapi.ratacode.top/api/data/DDdata',
+    'https://api.managewise.top/api/data/DDdata',
     'Failed to fetch pools'
 );
 

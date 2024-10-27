@@ -21,7 +21,7 @@ const ForgetPassword = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('https://isapi.ratacode.top/auth/forget-password', {
+            const response = await fetch('https://api.managewise.top/auth/forget-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -19,7 +19,7 @@ const Archive = () => {
       const token = localStorage.getItem('jwtToken');
 
       try {
-        const response = await fetch('https://isapi.ratacode.top/api/data/archivePool', {
+        const response = await fetch('https://api.managewise.top/api/data/archivePool', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -52,7 +52,7 @@ const Archive = () => {
     const token = localStorage.getItem('jwtToken');
     
     try {
-      const response = await fetch('https://isapi.ratacode.top/api/data/archivePool', {
+      const response = await fetch('https://api.managewise.top/api/data/archivePool', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

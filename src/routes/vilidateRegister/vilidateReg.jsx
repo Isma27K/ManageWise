@@ -33,7 +33,7 @@ ValidateRegister = () => {
             }
 
             try {
-                const response = await fetch('https://isapi.ratacode.top/auth/checkLink', {
+                const response = await fetch('https://api.managewise.top/auth/checkLink', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

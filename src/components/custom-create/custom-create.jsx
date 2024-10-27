@@ -45,7 +45,7 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
         });
 
         try {
-            const response = await fetch('https://isapi.ratacode.top/api/task/createTask', {
+            const response = await fetch('https://api.managewise.top/api/task/createTask', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -59,7 +59,7 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             }
 
             // Fetch updated pools data
-            const poolsResponse = await fetch('https://isapi.ratacode.top/api/data/DDdata', {
+            const poolsResponse = await fetch('https://api.managewise.top/api/data/DDdata', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

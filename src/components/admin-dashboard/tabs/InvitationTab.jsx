@@ -31,7 +31,7 @@ const InvitationTab = () => {
   const handleGenerateInvitation = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const response = await fetch('https://isapi.ratacode.top/api/admin/generate', {
+    const response = await fetch('https://api.managewise.top/api/admin/generate', {
       method: 'POST',
       headers: 
       {'Authorization': `Bearer ${token}`,
@@ -48,7 +48,7 @@ const InvitationTab = () => {
     }
 
     const data = await response.json();
-    const generatedLink = 'https://managewise.ratacode.top/register?invitation=' + data.id;
+    const generatedLink = 'https://managewise.top/register?invitation=' + data.id;
     setInvitationLink(generatedLink);
     openNotification('success', 'Success', 'Invitation link generated successfully');
     form.setFieldsValue({ invLink: generatedLink });

@@ -12,7 +12,7 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
 
     const fetchPools = async () => {
         try {
-            const response = await fetch('https://isapi.ratacode.top/api/data/DDdata', {
+            const response = await fetch('https://api.managewise.top/api/data/DDdata', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -41,7 +41,7 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
                 ? { taskId: task.id, poolId: pool._id }
                 : { poolId: pool._id };
 
-            const response = await fetch(`https://isapi.ratacode.top/api/archive/unarchiveTask`, {
+            const response = await fetch(`https://api.managewise.top/api/archive/unarchiveTask`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const ArchiveModal = ({ visible, onCancel, pool, task, isEditable, maxTaskNameLe
                 ? { taskId: task.id, poolId: pool._id }
                 : { poolId: pool._id };
 
-            const response = await fetch(`https://isapi.ratacode.top/api/archive/deleteTask`, {
+            const response = await fetch(`https://api.managewise.top/api/archive/deleteTask`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
