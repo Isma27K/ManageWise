@@ -50,7 +50,7 @@ const Register = () => {
             setErrors(validationErrors);
         } else {
             try {
-                const response = await fetch('https://api.managewise.top/auth/register', {
+                const response = await fetch('https://route.managewise.top/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

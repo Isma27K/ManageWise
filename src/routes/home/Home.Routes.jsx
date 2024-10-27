@@ -32,7 +32,7 @@ const Home = () => {
         // Fetch user data first
         const fetchUserData = async () => {
             try {
-                const response = await fetch('https://api.managewise.top/api/data/DUdata', {
+                const response = await fetch('https://route.managewise.top/api/data/DUdata', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -62,7 +62,7 @@ const Home = () => {
         // Fetch all users data in the background
         const fetchAllUsersInBackground = async () => {
             try {
-                const response = await fetch('https://api.managewise.top/api/data/AllUserData', {
+                const response = await fetch('https://route.managewise.top/api/data/AllUserData', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

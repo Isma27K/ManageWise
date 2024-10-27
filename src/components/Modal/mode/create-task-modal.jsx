@@ -20,7 +20,7 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
 
     const fetchPools = async () => {
         try {
-            const response = await fetch('https://api.managewise.top/api/data/DDdata', {
+            const response = await fetch('https://route.managewise.top/api/data/DDdata', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -89,8 +89,8 @@ const CreateTaskModal = ({ pool, maxTaskNameLength, onCancel, isSelfTask }) => {
 
         try {
             const apiUrl = isSelfTask 
-                ? 'https://api.managewise.top/api/task/createSelfTask'  // Placeholder URL for self-tasks
-                : 'https://api.managewise.top/api/task/createTask';     // Existing URL for pool tasks
+                ? 'https://route.managewise.top/api/task/createSelfTask'  // Placeholder URL for self-tasks
+                : 'https://route.managewise.top/api/task/createTask';     // Existing URL for pool tasks
 
             const response = await fetch(apiUrl, {
                 method: 'POST',

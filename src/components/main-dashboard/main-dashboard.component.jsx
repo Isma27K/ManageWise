@@ -41,7 +41,7 @@ const MainDashboard = () => {
   const fetchPools = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://api.managewise.top/api/data/DDdata', {
+      const response = await fetch('https://route.managewise.top/api/data/DDdata', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

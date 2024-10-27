@@ -48,7 +48,7 @@ const EditPoolInfo = ({ pools, users }) => {
                 ...values,
                 userIds: selectedPoolUsers, // Include the selected users
             };
-            const response = await fetch('https://api.managewise.top/update/pool', {
+            const response = await fetch('https://route.managewise.top/update/pool', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

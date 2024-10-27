@@ -77,7 +77,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
         }
 
         try {
-            const apiUrl = 'https://api.managewise.top/api/task/updateProgress';
+            const apiUrl = 'https://route.managewise.top/api/task/updateProgress';
             
             const response = await fetch(apiUrl, {
                 method: 'POST',

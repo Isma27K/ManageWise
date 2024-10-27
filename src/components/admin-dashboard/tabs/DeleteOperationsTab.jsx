@@ -25,7 +25,7 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
 
   const handleDeletePool = async (values) => {
     try {
-      const response = await fetch('https://api.managewise.top/api/admin/DeletePool', {
+      const response = await fetch('https://route.managewise.top/api/admin/DeletePool', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -70,7 +70,7 @@ const DeleteOperationsTab = ({ users, pools, setUsers }) => {
       const user = users.find(u => u.uid === deleteUserId || u.id === deleteUserId);
       if (user) {
         try {
-          const response = await fetch('https://api.managewise.top/api/admin/DeleteUser', {
+          const response = await fetch('https://route.managewise.top/api/admin/DeleteUser', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,

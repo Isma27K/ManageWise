@@ -30,7 +30,7 @@ const ReportMain = () => {
     useEffect(() => {
         const fetchInitialReportData = async () => {
             try {
-                const response = await fetch('https://api.managewise.top/api/report/report', {
+                const response = await fetch('https://route.managewise.top/api/report/report', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -56,7 +56,7 @@ const ReportMain = () => {
         try {
             setDataError(null);
             setSelectLoading(true);
-            const response = await fetch('https://api.managewise.top/api/report/report', {
+            const response = await fetch('https://route.managewise.top/api/report/report', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

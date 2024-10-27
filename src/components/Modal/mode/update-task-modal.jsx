@@ -47,7 +47,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        const apiUrl = 'https://api.managewise.top/api/task/updateProgress';
+        const apiUrl = 'https://route.managewise.top/api/task/updateProgress';
 
         onUpdateClick({ 
             ...taskData, 
@@ -70,7 +70,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             contributor: selectedContributors
         };
 
-        const apiUrl = 'https://api.managewise.top/api/task/saveUpdateTask'; // tok untuk pool task
+        const apiUrl = 'https://route.managewise.top/api/task/saveUpdateTask'; // tok untuk pool task
         const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
 
 
@@ -127,7 +127,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         try {
             const fileName = attachment.name || attachment.link.split('/').pop();
             const isPDF = fileName.toLowerCase().endsWith('.pdf');
-            const url = `https://api.managewise.top/${attachment.link}`; // Remove encodeURIComponent
+            const url = `https://route.managewise.top/${attachment.link}`; // Remove encodeURIComponent
 
             const response = await fetch(url, {
                 headers: {
@@ -209,7 +209,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
     const fetchPools = async () => {
         try {
-            const response = await fetch('https://api.managewise.top/api/data/DDdata', {
+            const response = await fetch('https://route.managewise.top/api/data/DDdata', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -235,7 +235,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     const handleArchiveTask = async () => {
         try {
             const poolIdToUse = isSelfTask ? task.originalPoolId : (pool && pool._id);
-            const response = await fetch('https://api.managewise.top/api/archive/archiveTask', {
+            const response = await fetch('https://route.managewise.top/api/archive/archiveTask', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

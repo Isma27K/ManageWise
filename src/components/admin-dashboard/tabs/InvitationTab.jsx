@@ -31,7 +31,7 @@ const InvitationTab = () => {
   const handleGenerateInvitation = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const response = await fetch('https://api.managewise.top/api/admin/generate', {
+    const response = await fetch('https://route.managewise.top/api/admin/generate', {
       method: 'POST',
       headers: 
       {'Authorization': `Bearer ${token}`,

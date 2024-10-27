@@ -23,7 +23,7 @@ const PoolManagementTab = ({ users }) => {
   const onFinish = async (values) => {
     try {
       setIsLoading(true);
-      const response = await fetch('https://api.managewise.top/api/admin/CreatePool', {
+      const response = await fetch('https://route.managewise.top/api/admin/CreatePool', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,

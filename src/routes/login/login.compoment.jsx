@@ -27,7 +27,7 @@ const Login = () => {
 
         try {
             let username = email;
-            const response = await fetch('https://api.managewise.top/auth/login', {
+            const response = await fetch('https://route.managewise.top/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
