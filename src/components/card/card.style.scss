@@ -596,9 +596,18 @@
 
 .pool-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  // Change from auto-fill to auto-fit and set the minmax value to make exactly 3 cards per row
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   padding: 16px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 
   .pool-card {
     border-radius: 8px;
@@ -679,4 +688,5 @@
 }
 
 // Keep other existing styles for modal, etc.
+
 
