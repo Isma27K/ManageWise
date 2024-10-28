@@ -11,9 +11,9 @@ const { RangePicker } = DatePicker;
 const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }) => {
     const { allUsers, user, pools, setPools } = useContext(UserContext);
     const [form] = Form.useForm();
-    const [taskName, setTaskName] = useState('');
+    const [taskName, setTaskName] = useState(''); //
     const [taskDescription, setTaskDescription] = useState('');
-    const [dueDate, setDueDate] = useState(null);
+    const [dueDate, setDueDate] = useState(null); //
     const [selectedSubmitters, setSelectedSubmitters] = useState(pool?.userIds || []);
     const [fileList, setFileList] = useState([]);
     const token = localStorage.getItem('jwtToken');
@@ -75,6 +75,17 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
             setPools(updatedPools);
 
             message.success('Task created successfully');
+            
+            // Clear the form and reset states
+            form.resetFields();
+            setTaskName('');
+            setTaskDescription('');
+            setDueDate(null);
+            setSelectedSubmitters([]);
+            setFileList([]);
+            setSelectedPool(null);
+            setSelectedPoolUsers([]);
+            
             onCancel();
         } catch (error) {
             console.error('Error creating task:', error);
