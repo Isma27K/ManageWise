@@ -76,18 +76,26 @@ const Archive = () => {
 
   const filteredPools = useMemo(() => {
     return pools
-      .map(pool => ({
-        ...pool,
-        tasks: pool.tasks.filter(task =>
-          task.isArchived === true &&
-          (task.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
-          task.description.toLowerCase().includes(globalSearchTerm.toLowerCase()))
-        )
-      }))
-      .filter(pool =>
-        pool.tasks.length > 0 &&
-        (pool.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
-        pool.tasks.length > 0)
+      .map(pool => {
+        // Check if pool name matches search term
+        const poolMatch = pool.name.toLowerCase().includes(globalSearchTerm.toLowerCase());
+        
+        // Filter archived tasks that match search term
+        const filteredTasks = pool.tasks.filter(task =>
+          task.isArchived === true && (
+            task.name.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
+            task.description.toLowerCase().includes(globalSearchTerm.toLowerCase())
+          )
+        );
+
+        // Return pool with either all tasks (if pool name matches) or filtered tasks
+        return poolMatch 
+          ? { ...pool, tasks: pool.tasks.filter(task => task.isArchived === true) }
+          : { ...pool, tasks: filteredTasks };
+      })
+      .filter(pool => 
+        // Only keep pools that have archived tasks
+        pool.tasks.length > 0
       );
   }, [pools, globalSearchTerm]);
 
