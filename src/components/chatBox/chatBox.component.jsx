@@ -1,0 +1,251 @@
+import React, { useState, useEffect } from 'react';
+import { Button, Input, Card, Select, Tooltip, message, Popconfirm } from 'antd';
+import { SendOutlined, CloseOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import './chatBox.style.scss';
+
+const ChatBox = ({ onClose, visible }) => {
+  const [inputMessage, setInputMessage] = useState('');
+  const [conversations, setConversations] = useState([]);
+  const [currentConversationId, setCurrentConversationId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const token = localStorage.getItem('jwtToken');
+  const [textAreaHeight, setTextAreaHeight] = useState(32); // Default height
+
+  // Modified useEffect to ensure we start with a new conversation
+  useEffect(() => {
+    const loadConversations = async () => {
+      await fetchConversations();
+      // Explicitly set to null after fetching to ensure we start with a new conversation
+      setCurrentConversationId(null);
+    };
+    loadConversations();
+  }, []);
+
+  const fetchConversations = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/conversations', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (data.conversations) {
+        setConversations(data.conversations);
+        // Remove this line to prevent auto-selecting the first conversation
+        // if (data.conversations.length > 0 && !currentConversationId) {
+        //   setCurrentConversationId(data.conversations[0]._id);
+        // }
+      }
+    } catch (error) {
+      message.error('Failed to load conversations');
+    }
+  };
+
+  const deleteConversation = async (conversationId) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/conversation', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ conversationId })
+      });
+
+      if (response.ok) {
+        message.success('Conversation deleted successfully');
+        setConversations(prev => prev.filter(conv => conv._id !== conversationId));
+        if (currentConversationId === conversationId) {
+          const remainingConversations = conversations.filter(conv => conv._id !== conversationId);
+          setCurrentConversationId(remainingConversations[0]?._id || null);
+        }
+      } else {
+        throw new Error('Failed to delete conversation');
+      }
+    } catch (error) {
+      message.error(error.message || 'Failed to delete conversation');
+    }
+  };
+
+  const startNewConversation = () => {
+    setCurrentConversationId(null);
+  };
+
+  const getCurrentConversation = () => {
+    return conversations.find(conv => conv._id === currentConversationId);
+  };
+
+  const sendMessageToBackend = async (userMessage) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          conversationId: currentConversationId,
+          newConversation: !currentConversationId
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      if (!currentConversationId) {
+        setCurrentConversationId(data.conversationId);
+        fetchConversations(); // Refresh conversations to get the new one
+      } else {
+        // Update the current conversation in the list
+        setConversations(prev => prev.map(conv => {
+          if (conv._id === currentConversationId) {
+            return {
+              ...conv,
+              history: [...(conv.history || []), 
+                { role: 'user', parts: [{ text: userMessage }] },
+                { role: 'model', parts: [{ text: data.message.candidates[0].content.parts[0].text }] }
+              ],
+              lastUpdated: new Date()
+            };
+          }
+          return conv;
+        }));
+      }
+
+      return data.message.candidates[0].content.parts[0].text;
+    } catch (error) {
+      message.error(error.message || 'Failed to send message');
+      return 'Sorry, there was an error processing your request.';
+    }
+  };
+
+  const handleSend = async () => {
+    if (inputMessage.trim()) {
+      setInputMessage('');
+      setIsLoading(true);
+      await sendMessageToBackend(inputMessage.trim());
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleTextAreaResize = ({ target: textarea }) => {
+    const minHeight = 32; // Minimum height in pixels
+    const maxHeight = 150; // Maximum height in pixels
+    
+    // Reset height to auto to get the proper scrollHeight
+    textarea.style.height = 'auto';
+    
+    // Calculate new height
+    const newHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
+    setTextAreaHeight(newHeight);
+  };
+
+  if (!visible) return null;
+
+  const currentConversation = getCurrentConversation();
+
+  return (
+    <div className="chat-box">
+      <Card 
+        className="chat-card"
+        title={
+          <div className="chat-header">
+            <Select
+              value={currentConversationId}
+              onChange={(value) => {
+                console.log('Selected conversation:', value);
+                setCurrentConversationId(value);
+              }}
+              style={{ width: '200px' }}
+              placeholder="Select conversation"
+              dropdownStyle={{ zIndex: 10001 }}
+              onClick={(e) => e.stopPropagation()}
+              options={conversations.map(conv => ({
+                value: conv._id,
+                label: new Date(conv.createdAt).toLocaleString()
+              }))}
+            />
+            <Tooltip title="New Conversation">
+              <Button
+                type="text"
+                icon={<PlusOutlined />}
+                onClick={startNewConversation}
+              />
+            </Tooltip>
+            {currentConversationId && (
+              <Popconfirm
+                title="Delete this conversation?"
+                onConfirm={() => deleteConversation(currentConversationId)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Tooltip title="Delete Conversation">
+                  <Button
+                    type="text"
+                    icon={<DeleteOutlined />}
+                    danger
+                  />
+                </Tooltip>
+              </Popconfirm>
+            )}
+          </div>
+        }
+        extra={
+          <Button 
+            type="text" 
+            icon={<CloseOutlined />} 
+            onClick={onClose}
+          />
+        }
+      >
+        <div className="chat-messages">
+          {currentConversation?.history?.map((msg, index) => (
+            <div 
+              key={index} 
+              className={`message ${msg.role === 'user' ? 'user' : 'ai'}`}
+            >
+              {msg.parts[0].text}
+            </div>
+          ))}
+          {isLoading && (
+            <div className="message ai loading">
+              Thinking...
+            </div>
+          )}
+        </div>
+        <div className="chat-input">
+          <Input.TextArea
+            value={inputMessage}
+            onChange={(e) => {
+              setInputMessage(e.target.value);
+              handleTextAreaResize(e);
+            }}
+            onKeyPress={handleKeyPress}
+            placeholder="Type your message..."
+            style={{ height: textAreaHeight }}
+            disabled={isLoading}
+          />
+          <Button 
+            type="primary" 
+            icon={<SendOutlined />} 
+            onClick={handleSend}
+            loading={isLoading}
+          />
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default ChatBox;

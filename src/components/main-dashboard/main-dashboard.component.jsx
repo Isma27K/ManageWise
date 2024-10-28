@@ -6,9 +6,10 @@ import CustomCard from '../card/card.component.jsx';
 import CustomCreate from '../custom-create/custom-create.jsx';
 import './main-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, MessageOutlined, FontSizeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import loadingAnimation from '../../asset/gif/loading.json';
+import ChatBox from '../chatBox/chatBox.component';
 
 const { Content } = Layout;
 
@@ -20,6 +21,7 @@ const MainDashboard = () => {
   const [error, setError] = useState(null);
   const token = localStorage.getItem('jwtToken');
   const navigate = useNavigate();
+  const [isChatVisible, setIsChatVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,6 +76,14 @@ const MainDashboard = () => {
   const handleCreatePool = () => {
     message.success('Create Pool');
     // You can add logic here to open a modal for creating a new pool
+  };
+
+  const handleOpenGeminiChatBot = () => {
+    setIsChatVisible(true);
+  };
+
+  const handleCloseChatBot = () => {
+    setIsChatVisible(false);
   };
 
   // Filter tasks associated with the user from all pools
@@ -175,6 +185,19 @@ const MainDashboard = () => {
         )}
 
         <FloatButton 
+          icon={<MessageOutlined />} 
+          tooltip="Gemini ChatBot" 
+          onClick={handleOpenGeminiChatBot}
+          style={{
+            position: 'fixed',
+            right: 40,
+            bottom: buttonPosition + 50,
+            transition: 'bottom 0.3s',
+            zIndex: 1000,
+          }}
+        />
+
+        <FloatButton 
           icon={<PlusOutlined />} 
           tooltip="Create Task" 
           onClick={handleOpenModal}
@@ -192,6 +215,11 @@ const MainDashboard = () => {
           maxTaskNameLength={40}
           onCancel={handleCloseModal}
           visible={isModalVisible}
+        />
+
+        <ChatBox 
+          visible={isChatVisible}
+          onClose={handleCloseChatBot}
         />
       </Content>
     </Layout>
