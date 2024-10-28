@@ -493,7 +493,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                         value={taskDescription}
                         onChange={handleDescriptionChange}
                         style={{ marginBottom: '20px' }}
-                        //disabled={!isEditable}
+                        disabled={true}
                     />
 
                     <div style={{ marginBottom: '20px' }}>

@@ -443,3 +443,38 @@
       font-size: 18px;
     }
 }
+
+.my-tasks-card {
+  .ant-card-head {
+    background-color: #C93C20 !important;
+    
+    .ant-card-head-title {
+      color: white !important;
+      
+      span {
+        color: white !important;
+      }
+    }
+  }
+}
+
+.card-container {
+  .card-item {
+    .my-tasks-card.custom-card {
+      .ant-card-head {
+        background-color: #C93C20 !important;
+        border-bottom: none;
+        border-radius: 12px 12px 0 0;
+        padding: 0px 20px;
+        
+        .ant-card-head-title {
+          color: white !important;
+          
+          span {
+            color: white !important;
+          }
+        }
+      }
+    }
+  }
+}

@@ -50,7 +50,7 @@ const MainCard = ({ pools, maxTaskNameLength = 40, isSelfTask }) => {
 				{pools.map((pool, index) => (
 					<div key={index} className="card-item" ref={cardRef}>
 						<Card
-							className="custom-card"
+							className={`custom-card ${pool.name.toLowerCase() === 'my tasks' ? 'my-tasks-card' : ''}`}
 							title={
 								<Tooltip title={pool.name.length > truncateLength ? pool.name : ''} mouseEnterDelay={0.4}>
 									<span>{truncateText(pool.name.toUpperCase(), truncateLength)}</span>
