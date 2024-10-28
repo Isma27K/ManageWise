@@ -478,3 +478,28 @@
     }
   }
 }
+
+.task-list-item {
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+}
+
+.task-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    
+    .ant-tag {
+        margin-left: 8px;
+        min-width: 60px;
+        text-align: center;
+    }
+}
+
+.scrollable-content {
+    .ant-list-item {
+        padding: 8px 12px;
+    }
+}
