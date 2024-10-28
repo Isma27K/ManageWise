@@ -21,6 +21,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     const [attachments, setAttachments] = useState([]);
     const [isChanged, setIsChanged] = useState(false);
     const [downloadingFile, setDownloadingFile] = useState(false);
+    const [downloadProgress, setDownloadProgress] = useState({});
     const token = localStorage.getItem('jwtToken');
 
 
@@ -125,31 +126,42 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     };
 
     const handleDownload = async (attachment) => {
+        const fileName = attachment.name || attachment.link.split('/').pop();
         try {
             setDownloadingFile(true);
-            const fileName = attachment.name || attachment.link.split('/').pop();
             const isPDF = fileName.toLowerCase().endsWith('.pdf');
-            const url = `https://route.managewise.top/${attachment.link}`; // Remove encodeURIComponent
+            const url = `https://route.managewise.top/${attachment.link}`;
 
-            const response = await fetch(url, {
+            // Set initial progress for this file
+            setDownloadProgress(prev => ({
+                ...prev,
+                [fileName]: 0
+            }));
+
+            const response = await axios({
+                url,
+                method: 'GET',
+                responseType: 'blob',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
+                onDownloadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / progressEvent.total
+                    );
+                    setDownloadProgress(prev => ({
+                        ...prev,
+                        [fileName]: percentCompleted
+                    }));
+                },
             });
 
-            if (!response.ok) {
-                setDownloadingFile(false);
-                throw new Error('Failed to fetch file');
-            }
-
-            const blob = await response.blob();
+            const blob = new Blob([response.data]);
 
             if (isPDF) {
-                // For PDFs, open in a new tab
                 const objectUrl = URL.createObjectURL(blob);
                 window.open(objectUrl, '_blank');
             } else {
-                // For other file types, trigger download
                 const downloadUrl = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = downloadUrl;
@@ -158,7 +170,6 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 link.click();
                 link.remove();
                 window.URL.revokeObjectURL(downloadUrl);
-                setDownloadingFile(false);
             }
         } catch (error) {
             console.error('Error handling file:', error);
@@ -168,6 +179,12 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             });
         } finally {
             setDownloadingFile(false);
+            // Clear progress for this file
+            setDownloadProgress(prev => {
+                const newProgress = { ...prev };
+                delete newProgress[fileName];
+                return newProgress;
+            });
         }
     };
 
@@ -181,17 +198,28 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 {attachments.map((item, index) => {
                     const isPDF = item.name.toLowerCase().endsWith('.pdf');
                     return (
-                        <Button 
+                        <List.Item
                             key={index}
-                            type="link"
-                            icon={isPDF ? <FileTextOutlined /> : <DownloadOutlined />}
-                            onClick={() => handleDownload(item)}
-                            style={{ padding: '0', marginRight: '8px' }}
-                            loading={downloadingFile}
-                            disabled={downloadingFile}
+                            actions={[
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    {downloadProgress[item.name] !== undefined && (
+                                        <Text type="secondary">{`${downloadProgress[item.name]}%`}</Text>
+                                    )}
+                                    <Button 
+                                        icon={<DownloadOutlined />} 
+                                        onClick={() => handleDownload(item)}
+                                        loading={downloadingFile}
+                                        disabled={downloadingFile}
+                                    >
+                                        Download
+                                    </Button>
+                                </div>
+                            ]}
                         >
-                            {item.name || `Attachment ${index + 1}`}
-                        </Button>
+                            <List.Item.Meta
+                                title={item.name}
+                            />
+                        </List.Item>
                     );
                 })}
             </div>
@@ -375,19 +403,23 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                                 renderItem={(item) => (
                                     <List.Item
                                         actions={[
-                                            <Button 
-                                                icon={<DownloadOutlined />} 
-                                                onClick={() => handleDownload(item)}
-                                                loading={downloadingFile}
-                                                disabled={downloadingFile}
-                                            >
-                                                Download
-                                            </Button>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                {downloadProgress[item.name] !== undefined && (
+                                                    <Text type="secondary">{`${downloadProgress[item.name]}%`}</Text>
+                                                )}
+                                                <Button 
+                                                    icon={<DownloadOutlined />} 
+                                                    onClick={() => handleDownload(item)}
+                                                    loading={downloadingFile}
+                                                    disabled={downloadingFile}
+                                                >
+                                                    Download
+                                                </Button>
+                                            </div>
                                         ]}
                                     >
                                         <List.Item.Meta
                                             title={item.name}
-                                            //description={`Size: ${item.size} bytes`}
                                         />
                                     </List.Item>
                                 )}
