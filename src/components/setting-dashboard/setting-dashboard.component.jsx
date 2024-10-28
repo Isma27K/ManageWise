@@ -292,7 +292,7 @@ const SettingDashboard = () => {
     const handleRemoveApiKey = async () => {
         try {
             setIsApiLoading(true);
-            const response = await fetch('https://route.managewise.top/update/remove-api-key', {
+            const response = await fetch('http://localhost:5000/api/v1/deleteKeyword', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
