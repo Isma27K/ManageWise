@@ -12,6 +12,8 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
     const [description, setDescription] = useState('');
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    // Add new state to track if content size is valid
+    const [isContentValid, setIsContentValid] = useState(false);
 
     const token = localStorage.getItem('jwtToken');
 
@@ -21,12 +23,43 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
         if (task) {
             setTitle('');
             setDescription('');
+            setIsContentValid(false);
         }
     }, [task]);
 
+    // Add new constant for max size
+    const MAX_TOTAL_SIZE_BYTES = 819200; // 0.8MB in bytes
+
+    // Add function to check content size
+    const getContentSizeInBytes = (text) => {
+        return new Blob([text]).size;
+    };
+
+    // Modify the content validation function
+    const validateContent = (titleText, descriptionText) => {
+        const totalSize = getContentSizeInBytes(titleText) + getContentSizeInBytes(descriptionText);
+        const hasContent = titleText !== "" || descriptionText !== "" || file !== null;
+        const isSizeValid = totalSize <= MAX_TOTAL_SIZE_BYTES;
+        setIsContentValid(hasContent && isSizeValid);
+        return isSizeValid;
+    };
+
     const handleTitleChange = (e) => {
-        if (e.target.value.length <= maxTaskNameLength) {
-            setTitle(e.target.value);
+        const newTitle = e.target.value;
+        const titleSize = getContentSizeInBytes(newTitle);
+        const descriptionSize = getContentSizeInBytes(description);
+        
+        if (titleSize + descriptionSize > MAX_TOTAL_SIZE_BYTES) {
+            notification.warning({
+                message: 'Size Limit Exceeded',
+                description: 'The combined size of title and description cannot exceed 0.8MB',
+            });
+            return;
+        }
+
+        if (newTitle.length <= maxTaskNameLength) {
+            setTitle(newTitle);
+            validateContent(newTitle, description);
         }
     };
 
@@ -34,9 +67,27 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
         if (info.fileList.length > 0) {
             const file = info.fileList[info.fileList.length - 1];
             setFile(file.originFileObj);
+            validateContent(title, description);
         } else {
             setFile(null);
+            validateContent(title, description);
         }
+    };
+
+    const handleDescriptionChange = (newDescription) => {
+        const titleSize = getContentSizeInBytes(title);
+        const descriptionSize = getContentSizeInBytes(newDescription);
+        
+        if (titleSize + descriptionSize > MAX_TOTAL_SIZE_BYTES) {
+            notification.warning({
+                message: 'Size Limit Exceeded',
+                description: 'The combined size of title and description cannot exceed 0.8MB',
+            });
+            return;
+        }
+
+        setDescription(newDescription);
+        validateContent(title, newDescription);
     };
 
     const handleUpdate = async () => {
@@ -46,6 +97,17 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
             notification.error({
                 message: 'Error',
                 description: 'At least one field must be filled or a file must be uploaded',
+            });
+            setLoading(false);
+            return;
+        }
+
+        // Add size check before submitting
+        const totalSize = getContentSizeInBytes(title) + getContentSizeInBytes(description);
+        if (totalSize > MAX_TOTAL_SIZE_BYTES) {
+            notification.error({
+                message: 'Error',
+                description: 'The combined size of title and description exceeds 0.8MB. Please reduce the content.',
             });
             setLoading(false);
             return;
@@ -176,7 +238,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
                                 <ReactQuill
                                     theme="snow"
                                     value={description}
-                                    onChange={setDescription}
+                                    onChange={handleDescriptionChange}
                                     modules={modules}
                                     style={{ height: '300px' }}
                                 />
@@ -190,7 +252,7 @@ const UpdateTask = ({ visible, onCancel, taskName, task, isEditable, maxTaskName
                     type="primary" 
                     onClick={handleUpdate}
                     loading={loading}
-                    disabled={loading}
+                    disabled={loading || !isContentValid}
                 >
                     {loading ? 'Updating...' : 'Update'}
                 </Button>
