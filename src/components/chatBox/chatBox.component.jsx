@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Card, Select, Tooltip, message, Popconfirm } from 'antd';
 import { SendOutlined, CloseOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import ReactMarkdown from 'react-markdown';
 import './chatBox.style.scss';
 
 const ChatBox = ({ onClose, visible }) => {
@@ -77,6 +78,31 @@ const ChatBox = ({ onClose, visible }) => {
 
   const sendMessageToBackend = async (userMessage) => {
     try {
+      // Immediately update the conversations UI with user's message
+      if (currentConversationId) {
+        setConversations(prev => prev.map(conv => {
+          if (conv._id === currentConversationId) {
+            return {
+              ...conv,
+              history: [...(conv.history || []), 
+                { role: 'user', parts: [{ text: userMessage }] }
+              ]
+            };
+          }
+          return conv;
+        }));
+      } else {
+        // For new conversation, create a temporary conversation
+        const tempConv = {
+          _id: 'temp',
+          history: [{ role: 'user', parts: [{ text: userMessage }] }],
+          createdAt: new Date()
+        };
+        setConversations(prev => [...prev, tempConv]);
+        setCurrentConversationId('temp');
+      }
+
+      // Send the message to backend
       const response = await fetch('http://localhost:5000/api/v1/chat', {
         method: 'POST',
         headers: {
@@ -96,18 +122,19 @@ const ChatBox = ({ onClose, visible }) => {
         throw new Error(data.error);
       }
 
-      if (!currentConversationId) {
+      const aiResponse = data.message.candidates[0].content.parts[0].text;
+
+      if (!currentConversationId || currentConversationId === 'temp') {
         setCurrentConversationId(data.conversationId);
         fetchConversations(); // Refresh conversations to get the new one
       } else {
-        // Update the current conversation in the list
+        // Update the current conversation in the list with AI response
         setConversations(prev => prev.map(conv => {
           if (conv._id === currentConversationId) {
             return {
               ...conv,
               history: [...(conv.history || []), 
-                { role: 'user', parts: [{ text: userMessage }] },
-                { role: 'model', parts: [{ text: data.message.candidates[0].content.parts[0].text }] }
+                { role: 'model', parts: [{ text: aiResponse }] }
               ],
               lastUpdated: new Date()
             };
@@ -116,7 +143,7 @@ const ChatBox = ({ onClose, visible }) => {
         }));
       }
 
-      return data.message.candidates[0].content.parts[0].text;
+      return aiResponse;
     } catch (error) {
       message.error(error.message || 'Failed to send message');
       return 'Sorry, there was an error processing your request.';
@@ -125,9 +152,10 @@ const ChatBox = ({ onClose, visible }) => {
 
   const handleSend = async () => {
     if (inputMessage.trim()) {
+      const messageToSend = inputMessage.trim();
       setInputMessage('');
       setIsLoading(true);
-      await sendMessageToBackend(inputMessage.trim());
+      await sendMessageToBackend(messageToSend);
       setIsLoading(false);
     }
   };
@@ -151,9 +179,33 @@ const ChatBox = ({ onClose, visible }) => {
     setTextAreaHeight(newHeight);
   };
 
+  // Add this ref for the messages container
+  const messagesEndRef = React.useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Add useEffect to scroll on new messages or loading state change
+  useEffect(() => {
+    scrollToBottom();
+  }, [conversations, isLoading]);
+
   if (!visible) return null;
 
   const currentConversation = getCurrentConversation();
+
+  const renderMessage = (msg) => {
+    if (msg.role === 'user') {
+      return <div className="message-text">{msg.parts[0].text}</div>;
+    }
+    
+    return (
+      <div className="message-text">
+        <ReactMarkdown>{msg.parts[0].text}</ReactMarkdown>
+      </div>
+    );
+  };
 
   return (
     <div className="chat-box">
@@ -215,7 +267,7 @@ const ChatBox = ({ onClose, visible }) => {
               key={index} 
               className={`message ${msg.role === 'user' ? 'user' : 'ai'}`}
             >
-              {msg.parts[0].text}
+              {renderMessage(msg)}
             </div>
           ))}
           {isLoading && (
@@ -223,6 +275,8 @@ const ChatBox = ({ onClose, visible }) => {
               Thinking...
             </div>
           )}
+          {/* Add this div as the last element */}
+          <div ref={messagesEndRef} />
         </div>
         <div className="chat-input">
           <Input.TextArea

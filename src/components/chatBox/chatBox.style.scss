@@ -33,6 +33,7 @@
       display: flex;
       flex-direction: column;
       padding: 12px;
+      overflow: hidden; // Prevent body overflow
     }
   }
 
@@ -51,6 +52,19 @@
     overflow-y: auto;
     margin-bottom: 12px;
     padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100% - 60px); // Account for input area
+    scroll-behavior: smooth; // Smooth scrolling
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
 
     .message {
       margin-bottom: 8px;
@@ -62,12 +76,85 @@
       &.user {
         background-color: #e6f7ff;
         margin-left: auto;
+        .message-text {
+          white-space: pre-wrap;
+        }
       }
 
       &.ai {
         background-color: #f5f5f5;
         margin-right: auto;
         white-space: pre-wrap;
+
+        // Markdown styles
+        .message-text {
+          // Remove default margins
+          > *:first-child {
+            margin-top: 0;
+          }
+          
+          > *:last-child {
+            margin-bottom: 0;
+          }
+
+          p {
+            margin: 0.5em 0;
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          // Headers with reduced margins
+          h1, h2, h3, h4, h5, h6 {
+            margin: 0.5em 0;
+            line-height: 1.2;
+          }
+
+          // Code blocks with reduced margins
+          pre {
+            background-color: #f0f0f0;
+            padding: 0.5em;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 0.5em 0;
+          }
+
+          // Lists with reduced spacing
+          ul, ol {
+            margin: 0.5em 0;
+            padding-left: 1.5em;
+            
+            li {
+              margin: 0.2em 0;
+            }
+          }
+
+          // Tables with reduced margins
+          table {
+            border-collapse: collapse;
+            margin: 0.5em 0;
+            
+            th, td {
+              border: 1px solid #d9d9d9;
+              padding: 0.3em 0.5em;
+            }
+          }
+
+          // Blockquotes with reduced margins
+          blockquote {
+            margin: 0.5em 0;
+            padding-left: 0.8em;
+            border-left: 4px solid #d9d9d9;
+            color: #666;
+          }
+
+          // Images with reduced margins
+          img {
+            max-width: 100%;
+            height: auto;
+            margin: 0.5em 0;
+          }
+        }
       }
 
       &.loading {
@@ -80,6 +167,9 @@
   .chat-input {
     display: flex;
     gap: 8px;
+    min-height: 32px;
+    max-height: 150px;
+    margin-top: auto; // Push to bottom
     
     .ant-input-textarea {
       flex: 1;
@@ -87,9 +177,19 @@
       textarea {
         resize: none;
         overflow-y: auto;
-        min-height: 32px;
-        max-height: 150px;
-        transition: height 0.1s ease-in-out;
+        min-height: 32px !important;
+        max-height: 150px !important;
+        padding: 4px 8px;
+        line-height: 1.5;
+
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.2);
+          border-radius: 3px;
+        }
       }
     }
   }
