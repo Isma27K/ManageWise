@@ -12,6 +12,9 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
 
+// Add this outside the component to handle downloads globally
+const activeDownloads = new Map();
+
 const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpdateClick, handleUpdateSave, pool, isSelfTask }) => {
     const { allUsers = [], user, setPools } = useContext(UserContext); // Add default empty array
     const [taskName, setTaskName] = useState('');
@@ -127,28 +130,40 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
     const handleDownload = async (attachment) => {
         const fileName = attachment.name || attachment.link.split('/').pop();
+        
+        // Check if this file is already being downloaded
+        if (activeDownloads.has(fileName)) {
+            notification.info({
+                message: 'Download in Progress',
+                description: 'This file is already being downloaded.',
+            });
+            return;
+        }
+
         try {
             setDownloadingFile(true);
             const isPDF = fileName.toLowerCase().endsWith('.pdf');
             const url = `https://route.managewise.top/${attachment.link}`;
 
-            // Set initial progress for this file
-            setDownloadProgress(prev => ({
-                ...prev,
-                [fileName]: 0
-            }));
+            const controller = new AbortController();
+            activeDownloads.set(fileName, controller);
 
-            const response = await axios({
+            const downloadPromise = axios({
                 url,
                 method: 'GET',
                 responseType: 'blob',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
+                signal: controller.signal,
                 onDownloadProgress: (progressEvent) => {
                     const percentCompleted = Math.round(
                         (progressEvent.loaded * 100) / progressEvent.total
                     );
+                    const progressElement = document.getElementById(`download-progress-${fileName}`);
+                    if (progressElement) {
+                        progressElement.textContent = `${percentCompleted}%`;
+                    }
                     setDownloadProgress(prev => ({
                         ...prev,
                         [fileName]: percentCompleted
@@ -156,30 +171,57 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 },
             });
 
-            const blob = new Blob([response.data]);
+            const response = await downloadPromise;
+            const blob = new Blob([response.data], {
+                type: isPDF ? 'application/pdf' : 'application/octet-stream'
+            });
+            const blobUrl = window.URL.createObjectURL(blob);
 
             if (isPDF) {
-                const objectUrl = URL.createObjectURL(blob);
-                window.open(objectUrl, '_blank');
+                // For PDFs, open in new tab using blob URL
+                const pdfWindow = window.open();
+                if (pdfWindow) {
+                    pdfWindow.location.href = blobUrl;
+                    // Clean up blob URL after the new window has loaded
+                    pdfWindow.onload = () => {
+                        window.URL.revokeObjectURL(blobUrl);
+                    };
+                } else {
+                    // If popup was blocked, fallback to current window
+                    window.location.href = blobUrl;
+                    setTimeout(() => {
+                        window.URL.revokeObjectURL(blobUrl);
+                    }, 1000);
+                }
             } else {
-                const downloadUrl = window.URL.createObjectURL(blob);
+                // For other files, trigger download
                 const link = document.createElement('a');
-                link.href = downloadUrl;
+                link.href = blobUrl;
                 link.setAttribute('download', fileName);
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
-                window.URL.revokeObjectURL(downloadUrl);
+                window.URL.revokeObjectURL(blobUrl);
             }
-        } catch (error) {
-            console.error('Error handling file:', error);
-            notification.error({
-                message: 'File Operation Failed',
-                description: 'There was an error processing the file. Please try again.',
+
+            notification.success({
+                message: 'Download Complete',
+                description: `${fileName} has been downloaded successfully.`,
             });
+
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                console.log('Download cancelled');
+            } else {
+                console.error('Error handling file:', error);
+                notification.error({
+                    message: 'File Operation Failed',
+                    description: 'There was an error processing the file. Please try again.',
+                });
+            }
         } finally {
+            activeDownloads.delete(fileName);
             setDownloadingFile(false);
-            // Clear progress for this file
             setDownloadProgress(prev => {
                 const newProgress = { ...prev };
                 delete newProgress[fileName];
@@ -188,40 +230,90 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
         }
     };
 
-    const renderAttachments = (attachments) => {
+    // Update the List.Item rendering to include a persistent progress indicator
+    const renderAttachmentItem = (item) => (
+        <List.Item
+            actions={[
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span id={`download-progress-${item.name}`}>
+                        {downloadProgress[item.name] !== undefined ? 
+                            `${downloadProgress[item.name]}%` : ''}
+                    </span>
+                    <Button 
+                        icon={<DownloadOutlined />} 
+                        onClick={() => handleDownload(item)}
+                        loading={downloadingFile && downloadProgress[item.name] !== undefined}
+                        disabled={activeDownloads.has(item.name)}
+                    >
+                        Download
+                    </Button>
+                </div>
+            ]}
+        >
+            <List.Item.Meta
+                title={item.name}
+            />
+        </List.Item>
+    );
+
+    // Update the attachments list rendering
+    const renderAttachments = (attachments, isProgressAttachment = false) => {
         if (!attachments || attachments.length === 0) {
             return null;
         }
 
+        if (isProgressAttachment) {
+            return (
+                <div style={{ marginTop: '4px' }}>
+                    {attachments.map((item, index) => {
+                        const isPDF = item.name.toLowerCase().endsWith('.pdf');
+                        return (
+                            <div 
+                                key={index} 
+                                style={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center',
+                                    marginBottom: '4px'
+                                }}
+                            >
+                                <Button
+                                    type="link"
+                                    icon={isPDF ? <FileTextOutlined style={{ color: '#1890ff' }} /> : <DownloadOutlined style={{ color: '#1890ff' }} />}
+                                    onClick={() => handleDownload(item)}
+                                    style={{ 
+                                        padding: '0',
+                                        height: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: '#1890ff'
+                                    }}
+                                    loading={downloadingFile && downloadProgress[item.name] !== undefined}
+                                    disabled={activeDownloads.has(item.name)}
+                                >
+                                    <span style={{ marginLeft: '4px' }}>
+                                        {item.name}
+                                    </span>
+                                </Button>
+                                {downloadProgress[item.name] !== undefined && (
+                                    <span style={{ marginLeft: '8px', fontSize: '12px', color: '#8c8c8c' }}>
+                                        {downloadProgress[item.name]}%
+                                    </span>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        }
+
+        // Original list rendering for main attachments
         return (
             <div style={{ marginTop: '8px' }}>
-                {attachments.map((item, index) => {
-                    const isPDF = item.name.toLowerCase().endsWith('.pdf');
-                    return (
-                        <List.Item
-                            key={index}
-                            actions={[
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    {downloadProgress[item.name] !== undefined && (
-                                        <Text type="secondary">{`${downloadProgress[item.name]}%`}</Text>
-                                    )}
-                                    <Button 
-                                        icon={<DownloadOutlined />} 
-                                        onClick={() => handleDownload(item)}
-                                        loading={downloadingFile}
-                                        disabled={downloadingFile}
-                                    >
-                                        Download
-                                    </Button>
-                                </div>
-                            ]}
-                        >
-                            <List.Item.Meta
-                                title={item.name}
-                            />
-                        </List.Item>
-                    );
-                })}
+                <List
+                    size="small"
+                    dataSource={attachments}
+                    renderItem={renderAttachmentItem}
+                />
             </div>
         );
     };
@@ -312,14 +404,12 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     const renderProgressItem = (item) => {
         const user = getUser(item.CID);
 
-        // Function to strip HTML tags and get first 20 words, adding spaces after tags
         const getPlainTextExcerpt = (html, wordCount = 20) => {
             const textWithSpaces = html.replace(/<\/?\w+[^>]*>/g, tag => tag + ' ');
             const plainText = textWithSpaces.replace(/<[^>]+>/g, '');
             return plainText.split(/\s+/).slice(0, wordCount).join(' ').trim();
         };
 
-        // Use description as title if detail is empty
         const title = item.detail || getPlainTextExcerpt(item.description);
 
         return (
@@ -360,14 +450,26 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                     )}
                     {item.linkAttachment && item.linkAttachment.length > 0 && (
                         <div>
-                            <Text strong>Attachments:</Text>
-                            {renderAttachments(item.linkAttachment)}
+                            <Text strong style={{ display: 'block', marginBottom: '4px' }}>
+                                Attachments:
+                            </Text>
+                            {renderAttachments(item.linkAttachment, true)}
                         </div>
                     )}
                 </Panel>
             </Collapse>
         );
     };
+
+    // Add cleanup effect for when modal closes
+    useEffect(() => {
+        return () => {
+            // Cleanup function - runs when component unmounts
+            // Don't cancel ongoing downloads when modal closes
+            setDownloadingFile(false);
+            setDownloadProgress({});
+        };
+    }, []);
 
     return (
         <div style={{ display: 'flex', height: '70vh', maxHeight: '600px' }}>
@@ -404,14 +506,15 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                                     <List.Item
                                         actions={[
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                {downloadProgress[item.name] !== undefined && (
-                                                    <Text type="secondary">{`${downloadProgress[item.name]}%`}</Text>
-                                                )}
+                                                <span id={`download-progress-${item.name}`}>
+                                                    {downloadProgress[item.name] !== undefined ? 
+                                                        `${downloadProgress[item.name]}%` : ''}
+                                                </span>
                                                 <Button 
                                                     icon={<DownloadOutlined />} 
                                                     onClick={() => handleDownload(item)}
-                                                    loading={downloadingFile}
-                                                    disabled={downloadingFile}
+                                                    loading={downloadingFile && downloadProgress[item.name] !== undefined}
+                                                    disabled={activeDownloads.has(item.name)}
                                                 >
                                                     Download
                                                 </Button>
