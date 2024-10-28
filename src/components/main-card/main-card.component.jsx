@@ -41,11 +41,18 @@ const MainCard = ({ pools, maxTaskNameLength = 40, isSelfTask }) => {
 	};
 
 	const getPriorityLevel = (dueDate) => {
-		if (!dueDate || !dueDate[0]) return { level: 'normal', color: 'default', priority: 4 };
+		if (!dueDate || !dueDate[1]) return { level: 'normal', color: 'default', priority: 4 };
 		
+		// Create date objects
 		const today = new Date();
-		const taskDate = new Date(dueDate[0]);
-		const diffDays = Math.ceil((taskDate - today) / (1000 * 60 * 60 * 24));
+		today.setHours(0, 0, 0, 0); // Reset time part to start of day
+		
+		const taskDate = new Date(dueDate[1]);
+		taskDate.setHours(0, 0, 0, 0); // Reset time part to start of day
+
+		// Calculate difference in days
+		const diffTime = taskDate.getTime() - today.getTime();
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
 		if (diffDays < 0) {
 			return { level: 'Overdue', color: 'error', priority: 0 };
@@ -72,8 +79,8 @@ const MainCard = ({ pools, maxTaskNameLength = 40, isSelfTask }) => {
 			}
 			
 			// If same priority, sort by due date
-			const dateA = a.dueDate ? new Date(a.dueDate[0]) : new Date('9999-12-31');
-			const dateB = b.dueDate ? new Date(b.dueDate[0]) : new Date('9999-12-31');
+			const dateA = a.dueDate ? new Date(a.dueDate[1]) : new Date('9999-12-31');
+			const dateB = b.dueDate ? new Date(b.dueDate[1]) : new Date('9999-12-31');
 			return dateA - dateB;
 		});
 	};
@@ -113,7 +120,7 @@ const MainCard = ({ pools, maxTaskNameLength = 40, isSelfTask }) => {
 														<>
 															{isTruncated && <div>{taskName}</div>}
 															{task.dueDate && (
-																<div>Due: {new Date(task.dueDate[0]).toLocaleDateString()}</div>
+																<div>Due: {new Date(task.dueDate[1]).toLocaleDateString()}</div>
 															)}
 														</>
 													} 
