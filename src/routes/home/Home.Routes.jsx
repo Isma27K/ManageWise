@@ -8,7 +8,7 @@ import Lottie from "lottie-react";
 import loadingAnimation from '../../asset/gif/loading.json'; // Make sure this JSON file exists
 
 const Home = () => {
-    const { user, setUser, setAllUsers } = useContext(UserContext);
+    const { user, setUser, setAllUsers, setIsLoadingAllUsers } = useContext(UserContext);
     const navigate = useNavigate();
     const [isLoadingUser, setIsLoadingUser] = useState(true);
     const token = localStorage.getItem('jwtToken');
@@ -78,7 +78,8 @@ const Home = () => {
                 }
             } catch (error) {
                 console.warn('Error fetching all users data:', error);
-                // Don't show error notification for background fetch
+            } finally {
+                setIsLoadingAllUsers(false);
             }
         };
 

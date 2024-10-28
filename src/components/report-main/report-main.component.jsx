@@ -21,7 +21,7 @@ const ReportMain = () => {
     const [reportData, setReportData] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectLoading, setSelectLoading] = useState(false);
-    const { user, allUsers } = useContext(UserContext);
+    const { user = {}, allUsers = [] } = useContext(UserContext); // Add default empty array for allUsers
     const token = localStorage.getItem('jwtToken');
     const [dataError, setDataError] = useState(null);
     const [initialDataFetched, setInitialDataFetched] = useState(false);
@@ -181,7 +181,7 @@ const ReportMain = () => {
                         </Button>
                     </div>
                 </div>
-                {user.admin && (
+                {user?.admin && allUsers?.length > 0 && (  // Add null check for user.admin and allUsers
                     <div className="admin-select-container">
                         <Tooltip title="Admin User Selection" placement="right">
                             <CrownOutlined className="admin-icon" />
@@ -201,16 +201,16 @@ const ReportMain = () => {
                         >
                             {allUsers.map(user => (
                                 <Option
-                                    key={user.uid || user.id}
-                                    value={user.uid || user.id}
-                                    label={user.name ? user.name.toUpperCase() : 'NO NAME'}
-                                    email={user.email}
+                                    key={user?.uid || user?.id}
+                                    value={user?.uid || user?.id}
+                                    label={user?.name ? user.name.toUpperCase() : 'NO NAME'}
+                                    email={user?.email}
                                 >
                                     <div className="user-option">
-                                        <Avatar icon={<UserOutlined />} src={user.avatar} />
+                                        <Avatar icon={<UserOutlined />} src={user?.avatar} />
                                         <div className="user-info">
-                                            <div className="user-name">{user.name ? user.name.toUpperCase() : 'NO NAME'}</div>
-                                            <div className="user-email">{user.email || 'No email'}</div>
+                                            <div className="user-name">{user?.name ? user.name.toUpperCase() : 'NO NAME'}</div>
+                                            <div className="user-email">{user?.email || 'No email'}</div>
                                         </div>
                                     </div>
                                 </Option>

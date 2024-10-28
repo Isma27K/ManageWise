@@ -17,7 +17,7 @@ import Report from '../../routes/report/report.jsx';
 const { Sider, Content } = Layout;
 
 const Dashboard = () => {
-  const { user, setGlobalSearchTerm } = useContext(UserContext);
+  const { user, setGlobalSearchTerm, isLoadingAllUsers } = useContext(UserContext);
   const [content, setContent] = useState(<MainDashboard />);
   const [selectedKey, setSelectedKey] = useState('1');
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -77,7 +77,14 @@ const Dashboard = () => {
               <Menu.Item key="5" icon={<FieldTimeOutlined />}>Archive</Menu.Item>
               <Menu.Item key="3" icon={<AuditOutlined />}>Report</Menu.Item>
               {isAdmin && (
-                <Menu.Item key="4" icon={<SafetyOutlined />}>Admin</Menu.Item>
+                <Menu.Item 
+                  key="4" 
+                  icon={<SafetyOutlined />} 
+                  disabled={isLoadingAllUsers}
+                  title={isLoadingAllUsers ? "Loading user data..." : "Admin"}
+                >
+                  Admin
+                </Menu.Item>
               )}
               <Menu.Item key="2" icon={<SettingOutlined />}>Settings</Menu.Item>
             </Menu.ItemGroup>

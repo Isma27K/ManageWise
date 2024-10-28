@@ -11,6 +11,7 @@ export const UserProvider = ({ children }) => {
   const [other, setOther] = useState(null);
   const [pools, setPools] = useState([]); // Initialize as an empty array
   const [globalSearchTerm, setGlobalSearchTerm] = useState('');
+  const [isLoadingAllUsers, setIsLoadingAllUsers] = useState(true); // Add this line
 
   // Add a console.log here to check the user data
   //console.log('UserContext user:', user);
@@ -27,7 +28,9 @@ export const UserProvider = ({ children }) => {
       pools, 
       setPools, // Ensure setPools is available
       globalSearchTerm,
-      setGlobalSearchTerm
+      setGlobalSearchTerm,
+      isLoadingAllUsers,     // Add this line
+      setIsLoadingAllUsers   // Add this line
     }}>
       {children}
     </UserContext.Provider>
