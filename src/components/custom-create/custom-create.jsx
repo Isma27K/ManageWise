@@ -130,6 +130,12 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
         setLoading(false);
     };
 
+    // Add this new function for filtering pools
+    const filterPools = (input, option) => {
+        const poolName = option.children.toLowerCase();
+        return poolName.indexOf(input.toLowerCase()) >= 0;
+    };
+
     return (
         <Modal
             visible={visible}
@@ -147,6 +153,9 @@ const CustomCreate = ({ pool, maxTaskNameLength, onCancel, isSelfTask, visible }
                         placeholder="Select a pool"
                         onChange={handlePoolSelect}
                         style={{ width: '100%' }}
+                        showSearch
+                        filterOption={filterPools}
+                        optionFilterProp="children"
                     >
                         {pools.map(pool => (
                             <Option key={pool._id} value={pool._id}>{pool.name}</Option>
