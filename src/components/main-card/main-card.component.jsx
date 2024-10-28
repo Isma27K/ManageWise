@@ -120,7 +120,11 @@ const MainCard = ({ pools, maxTaskNameLength = 40, isSelfTask }) => {
 														<>
 															{isTruncated && <div>{taskName}</div>}
 															{task.dueDate && (
-																<div>Due: {new Date(task.dueDate[1]).toLocaleDateString()}</div>
+																<div>Due: {new Date(task.dueDate[1]).toLocaleDateString('en-GB', {
+																	day: 'numeric',
+																	month: 'long',
+																	year: 'numeric'
+																})}</div>
 															)}
 														</>
 													} 

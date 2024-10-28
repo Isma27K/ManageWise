@@ -689,4 +689,46 @@
 
 // Keep other existing styles for modal, etc.
 
+.task-item {
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    .task-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 4px 0;
+        
+        .ant-tag {
+            margin-left: 8px !important;
+            width: 80px !important; // Added !important
+            min-width: 80px !important; // Added !important
+            text-align: center !important;
+            flex-shrink: 0 !important; // Added !important
+        }
+
+        span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 8px;
+        }
+    }
+}
+
+.pool-card {
+    .ant-list-item {
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: #f9f9f9;
+        }
+    }
+}
+
 
