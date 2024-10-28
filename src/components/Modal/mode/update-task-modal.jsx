@@ -20,6 +20,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
     const [selectedContributors, setSelectedContributors] = useState([]);
     const [attachments, setAttachments] = useState([]);
     const [isChanged, setIsChanged] = useState(false);
+    const [downloadingFile, setDownloadingFile] = useState(false);
     const token = localStorage.getItem('jwtToken');
 
 
@@ -125,6 +126,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
 
     const handleDownload = async (attachment) => {
         try {
+            setDownloadingFile(true);
             const fileName = attachment.name || attachment.link.split('/').pop();
             const isPDF = fileName.toLowerCase().endsWith('.pdf');
             const url = `https://route.managewise.top/${attachment.link}`; // Remove encodeURIComponent
@@ -136,6 +138,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
             });
 
             if (!response.ok) {
+                setDownloadingFile(false);
                 throw new Error('Failed to fetch file');
             }
 
@@ -155,6 +158,7 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 link.click();
                 link.remove();
                 window.URL.revokeObjectURL(downloadUrl);
+                setDownloadingFile(false);
             }
         } catch (error) {
             console.error('Error handling file:', error);
@@ -162,6 +166,8 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                 message: 'File Operation Failed',
                 description: 'There was an error processing the file. Please try again.',
             });
+        } finally {
+            setDownloadingFile(false);
         }
     };
 
@@ -181,6 +187,8 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                             icon={isPDF ? <FileTextOutlined /> : <DownloadOutlined />}
                             onClick={() => handleDownload(item)}
                             style={{ padding: '0', marginRight: '8px' }}
+                            loading={downloadingFile}
+                            disabled={downloadingFile}
                         >
                             {item.name || `Attachment ${index + 1}`}
                         </Button>
@@ -370,6 +378,8 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                                             <Button 
                                                 icon={<DownloadOutlined />} 
                                                 onClick={() => handleDownload(item)}
+                                                loading={downloadingFile}
+                                                disabled={downloadingFile}
                                             >
                                                 Download
                                             </Button>
