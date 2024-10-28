@@ -87,4 +87,138 @@
             margin-top: 10px;
         }
     }
+
+    .api-settings-section {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        margin-bottom: 24px;
+
+        .api-key-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            
+            .anticon {
+                color: #666;
+            }
+
+            .ant-tag {
+                margin: 0 0 0 8px;
+                border-radius: 4px;
+            }
+        }
+
+        .api-key-display {
+            .api-key-status {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: #f9f9f9;
+                padding: 12px 16px;
+                border-radius: 8px;
+                border: 1px solid #f0f0f0;
+
+                .api-key-mask {
+                    display: flex;
+                    gap: 4px;
+                    align-items: center;
+
+                    .dot {
+                        width: 8px;
+                        height: 8px;
+                        background: #666;
+                        border-radius: 50%;
+                    }
+                }
+            }
+
+            .api-key-empty {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+
+                .ant-typography {
+                    color: #999;
+                }
+            }
+        }
+
+        .api-key-edit {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .ant-input-password {
+                max-width: 100%;
+            }
+
+            .api-key-actions {
+                display: flex;
+                gap: 8px;
+            }
+
+            .api-key-hint {
+                font-size: 12px;
+                color: #999;
+            }
+        }
+
+        .ant-form-item {
+            margin-bottom: 0;
+        }
+
+        .ant-btn-link {
+            padding: 0;
+            height: auto;
+        }
+    }
+}
+
+.settings-section {
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 24px;
+
+    .setting-item {
+        padding: 16px 0;
+        
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: #000;
+            font-weight: 500;
+
+            .anticon {
+                color: #666;
+            }
+        }
+
+        .setting-content {
+            .setting-display {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .setting-edit {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                .ant-input-password {
+                    max-width: 100%;
+                }
+
+                .setting-actions {
+                    display: flex;
+                    gap: 8px;
+                }
+            }
+        }
+    }
 }

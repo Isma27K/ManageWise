@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { UserOutlined, EditOutlined, SaveOutlined, UploadOutlined, LockOutlined, MailOutlined, IdcardOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form, Input, Checkbox, Upload, notification, Modal, Card, Typography, Tag } from 'antd';
+import { UserOutlined, EditOutlined, SaveOutlined, UploadOutlined, LockOutlined, MailOutlined, IdcardOutlined, CloseOutlined, DeleteOutlined, EyeInvisibleOutlined, EyeTwoTone, ApiOutlined } from '@ant-design/icons';
+import { Avatar, Button, Form, Input, Upload, notification, Modal, Card, Typography, Tag } from 'antd';
 import './setting-dashboard.style.scss';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -15,10 +15,10 @@ const SettingDashboard = () => {
         avatarUrl: user.avatar,
         avatarBase64: null,
     });
-    const [settings, setSettings] = useState({
-        notifications: false,
-    });
     const [isEditing, setIsEditing] = useState(false);
+    const [isApiLoading, setIsApiLoading] = useState(false);
+    const [isEditingApi, setIsEditingApi] = useState(false);
+    const [tempApiKey, setTempApiKey] = useState('');
 
     const token = localStorage.getItem('jwtToken');
 
@@ -49,14 +49,6 @@ const SettingDashboard = () => {
             }));
         };
         reader.readAsDataURL(file);
-    };
-
-    const handleSettingsChange = (e) => {
-        const { name, checked } = e.target;
-        setSettings({
-            ...settings,
-            [name]: checked
-        });
     };
 
     const handleEditClick = () => {
@@ -225,6 +217,122 @@ const SettingDashboard = () => {
         });
     };
 
+    const handleEditApiClick = () => {
+        setIsEditingApi(true);
+        setTempApiKey('');
+    };
+
+    const handleCancelApiEdit = () => {
+        setIsEditingApi(false);
+        setTempApiKey('');
+        form.setFieldsValue({ geminiApiKey: '' });
+    };
+
+    const handleApiKeyChange = (e) => {
+        setTempApiKey(e.target.value);
+    };
+
+    // ============================================================   api key ==================================================
+    const handleSubmitApiKey = async () => {
+        if (!tempApiKey.trim()) {
+            notification.error({
+                message: 'Invalid API Key',
+                description: 'Please enter a valid API key.',
+                placement: 'topRight',
+            });
+            return;
+        }
+
+        try {
+            setIsApiLoading(true);
+            const response = await fetch('http://localhost:5000/api/v1/addKeyword', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    apiKey: tempApiKey,
+                    uid: user._id 
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update API key');
+            }
+
+            const result = await response.json();
+            
+            setUser({
+                ...user,
+                hasApi: true
+            });
+
+            setIsEditingApi(false);
+            setTempApiKey('');
+            form.setFieldsValue({ geminiApiKey: '' });
+
+            notification.success({
+                message: 'API Key Updated',
+                description: 'Your Gemini API key has been successfully saved.',
+                placement: 'topRight',
+            });
+        } catch (error) {
+            console.error('Error saving API key:', error);
+            notification.error({
+                message: 'Failed to Save API Key',
+                description: 'There was an error saving the API key. Please try again.',
+                placement: 'topRight',
+            });
+        } finally {
+            setIsApiLoading(false);
+        }
+    };
+
+    const handleRemoveApiKey = async () => {
+        try {
+            setIsApiLoading(true);
+            const response = await fetch('https://route.managewise.top/update/remove-api-key', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uid: user._id }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to remove API key');
+            }
+
+            // Update the user context
+            setUser({
+                ...user,
+                hasApi: false
+            });
+
+            // Reset the form field
+            form.setFieldsValue({ geminiApiKey: '' });
+
+            notification.success({
+                message: 'API Key Removed',
+                description: 'Your Gemini API key has been successfully removed.',
+                placement: 'topRight',
+            });
+        } catch (error) {
+            console.error('Error removing API key:', error);
+            notification.error({
+                message: 'Failed to Remove API Key',
+                description: 'There was an error removing the API key. Please try again.',
+                placement: 'topRight',
+            });
+        } finally {
+            setIsApiLoading(false);
+        }
+    };
+
+    // ===================================================================================================================
+
     return (
         <div className="setting-dashboard">
             <Card className="profile-card">
@@ -242,7 +350,9 @@ const SettingDashboard = () => {
             <Form 
                 form={form}
                 layout="vertical"
-                initialValues={{ name: profile.name }}
+                initialValues={{ 
+                    name: profile.name
+                }}
                 onValuesChange={(_, allValues) => handleProfileChange(allValues)}
                 className="profile-form"
             >
@@ -312,9 +422,59 @@ const SettingDashboard = () => {
 
                 <Title level={3}>Settings</Title>
                 <div className="settings-section">
-                    <Form.Item valuePropName="checked">
-                        <Checkbox onChange={handleSettingsChange}>Notifications</Checkbox>
-                    </Form.Item>
+                    <div className="setting-item">
+                        <div className="setting-label">
+                            <ApiOutlined /> Google Gemini API Key
+                        </div>
+                        <div className="setting-content">
+                            {!isEditingApi ? (
+                                <div className="setting-display">
+                                    <Text type="secondary">
+                                        {user.hasApi ? "API key configured" : "No API key configured"}
+                                    </Text>
+                                    <Button
+                                        type="primary"
+                                        onClick={handleEditApiClick}
+                                    >
+                                        {user.hasApi ? 'Change Key' : 'Add API Key'}
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="setting-edit">
+                                    <Input.Password
+                                        placeholder="Enter your Gemini API key"
+                                        onChange={handleApiKeyChange}
+                                        value={tempApiKey}
+                                        disabled={isApiLoading}
+                                    />
+                                    <div className="setting-actions">
+                                        <Button
+                                            type="primary"
+                                            onClick={handleSubmitApiKey}
+                                            loading={isApiLoading}
+                                        >
+                                            Save
+                                        </Button>
+                                        <Button
+                                            onClick={handleCancelApiEdit}
+                                            disabled={isApiLoading}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        {user.hasApi && (
+                                            <Button
+                                                danger
+                                                onClick={handleRemoveApiKey}
+                                                loading={isApiLoading}
+                                            >
+                                                Remove
+                                            </Button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 <Title level={3}>Security</Title>
