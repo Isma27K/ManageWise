@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { notification } from 'antd';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import './login.style.scss';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    //const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     // clear local storage first
@@ -15,7 +16,6 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        //setError('');
         setIsLoading(true);
         const openNotification = (type, message, description) => {
             notification[type]({
@@ -43,17 +43,14 @@ const Login = () => {
                     // Redirect to the dashboard or home page
                     navigate('/dashboard');
                 } else {
-                    //setError('Login successful, but no token received');
                     openNotification('error', 'Login successful, but no token received', 'Please try again');
                 }
             } else {
                 const errorData = await response.json();
-                //setError(errorData.message || 'Login failed');
                 openNotification('error', 'Username or password is incorrect', errorData.message);
             }
         } catch (error) {
             console.error('Error during login:', error);
-            //setError('Network error. Please try again.');
             openNotification('error', 'Network error. Please try again.', error);
         }
         finally {
@@ -79,15 +76,23 @@ const Login = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        disabled={isLoading}
-                    />
+                    <div className="password-input-container">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            id="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            disabled={isLoading}
+                        />
+                        <span 
+                            className="password-toggle"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                        </span>
+                    </div>
                 </div>
                 <button type="submit" className="login-button" disabled={isLoading}>
                     {isLoading ? 'Loading...' : 'Login'}

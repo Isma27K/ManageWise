@@ -64,3 +64,24 @@
         }
     }
 }
+
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+        width: 100%;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        color: #666;
+        
+        &:hover {
+            color: #333;
+        }
+    }
+}
