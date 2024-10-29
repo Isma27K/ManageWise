@@ -61,7 +61,7 @@ const Nav = () => {
             <nav className="nav">
                 <div className="nav-search">
                     <Input 
-                        placeholder="What You Looking For..." 
+                        placeholder="Pool and Task Search....." 
                         value={globalSearchTerm}
                         onChange={handleSearch}
                     />
