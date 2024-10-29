@@ -24,7 +24,7 @@ const ChatBox = ({ onClose, visible }) => {
 
   const fetchConversations = async () => {
     try {
-      const response = await fetch('https://routes.managewise.top/api/v1/conversations', {
+      const response = await fetch('https://route.managewise.top/api/v1/conversations', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -47,7 +47,7 @@ const ChatBox = ({ onClose, visible }) => {
       // Disable resize observer temporarily
       setIsLoading(true); // This will prevent textarea resize events
 
-      const response = await fetch('https://routes.managewise.top/api/v1/conversation', {
+      const response = await fetch('https://route.managewise.top/api/v1/conversation', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ const ChatBox = ({ onClose, visible }) => {
       }
 
       // Send the message to backend
-      const response = await fetch('https://routes.managewise.top/api/v1/chat', {
+      const response = await fetch('https://route.managewise.top/api/v1/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

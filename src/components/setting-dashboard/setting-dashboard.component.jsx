@@ -245,7 +245,7 @@ const SettingDashboard = () => {
 
         try {
             setIsApiLoading(true);
-            const response = await fetch('http://localhost:5000/api/v1/addKeyword', {
+            const response = await fetch('https://route.managewise.top/api/v1/addKeyword', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -292,7 +292,7 @@ const SettingDashboard = () => {
     const handleRemoveApiKey = async () => {
         try {
             setIsApiLoading(true);
-            const response = await fetch('http://localhost:5000/api/v1/deleteKeyword', {
+            const response = await fetch('https://route.managewise.top/api/v1/deleteKeyword', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
