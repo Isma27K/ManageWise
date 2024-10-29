@@ -483,6 +483,11 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                             onChange={handleTaskNameChange}
                             disabled={!isEditable}
                             maxLength={maxTaskNameLength}
+                            style={{
+                                backgroundColor: '#fff',
+                                color: 'rgba(0, 0, 0, 0.88)',
+                                cursor: 'default'
+                            }}
                         />
                         <Text type="secondary">
                             {taskName.length}/{maxTaskNameLength}
@@ -492,7 +497,13 @@ const UpdateTaskModal = ({ task, isEditable, maxTaskNameLength, onCancel, onUpda
                         placeholder="Task Description"
                         value={taskDescription}
                         onChange={handleDescriptionChange}
-                        style={{ marginBottom: '20px' }}
+                        style={{ 
+                            marginBottom: '20px',
+                            backgroundColor: '#fff',
+                            color: 'rgba(0, 0, 0, 0.88)',
+                            cursor: 'default',
+                            minHeight: '100px'
+                        }}
                         disabled={true}
                     />
 
