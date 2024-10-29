@@ -203,6 +203,25 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+
+                .api-status {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+
+                    .api-hint {
+                        font-size: 12px;
+                        
+                        a {
+                            color: #1890ff;
+                            text-decoration: underline;
+                            
+                            &:hover {
+                                color: #40a9ff;
+                            }
+                        }
+                    }
+                }
             }
 
             .setting-edit {

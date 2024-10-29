@@ -429,9 +429,21 @@ const SettingDashboard = () => {
                         <div className="setting-content">
                             {!isEditingApi ? (
                                 <div className="setting-display">
-                                    <Text type="secondary">
-                                        {user.hasApi ? "API key configured" : "No API key configured"}
-                                    </Text>
+                                    <div className="api-status">
+                                        <Text type="secondary">
+                                            {user.hasApi ? "API key configured" : "No API key configured"}
+                                        </Text>
+                                        <Text type="secondary" className="api-hint">
+                                            Get your API key from{' '}
+                                            <a 
+                                                href="https://aistudio.google.com/apikey" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                            >
+                                                Google AI Studio
+                                            </a>
+                                        </Text>
+                                    </div>
                                     <Button
                                         type="primary"
                                         onClick={handleEditApiClick}
