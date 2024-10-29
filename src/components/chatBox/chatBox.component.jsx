@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Input, Card, Select, Tooltip, message, Popconfirm } from 'antd';
 import { SendOutlined, CloseOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
@@ -24,7 +24,7 @@ const ChatBox = ({ onClose, visible }) => {
 
   const fetchConversations = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/conversations', {
+      const response = await fetch('https://routes.managewise.top/api/v1/conversations', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -44,7 +44,10 @@ const ChatBox = ({ onClose, visible }) => {
 
   const deleteConversation = async (conversationId) => {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/conversation', {
+      // Disable resize observer temporarily
+      setIsLoading(true); // This will prevent textarea resize events
+
+      const response = await fetch('https://routes.managewise.top/api/v1/conversation', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -54,17 +57,25 @@ const ChatBox = ({ onClose, visible }) => {
       });
 
       if (response.ok) {
-        message.success('Conversation deleted successfully');
-        setConversations(prev => prev.filter(conv => conv._id !== conversationId));
-        if (currentConversationId === conversationId) {
-          const remainingConversations = conversations.filter(conv => conv._id !== conversationId);
-          setCurrentConversationId(remainingConversations[0]?._id || null);
-        }
+        // Update state in the next tick to avoid resize observer conflicts
+        setTimeout(() => {
+          setConversations(prev => prev.filter(conv => conv._id !== conversationId));
+          if (currentConversationId === conversationId) {
+            const remainingConversations = conversations.filter(conv => conv._id !== conversationId);
+            setCurrentConversationId(remainingConversations[0]?._id || null);
+          }
+          message.success('Conversation deleted successfully');
+        }, 0);
       } else {
         throw new Error('Failed to delete conversation');
       }
     } catch (error) {
       message.error(error.message || 'Failed to delete conversation');
+    } finally {
+      // Re-enable resize observer
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 100);
     }
   };
 
@@ -103,7 +114,7 @@ const ChatBox = ({ onClose, visible }) => {
       }
 
       // Send the message to backend
-      const response = await fetch('http://localhost:5000/api/v1/chat', {
+      const response = await fetch('https://routes.managewise.top/api/v1/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -167,17 +178,34 @@ const ChatBox = ({ onClose, visible }) => {
     }
   };
 
-  const handleTextAreaResize = ({ target: textarea }) => {
-    const minHeight = 32; // Minimum height in pixels
-    const maxHeight = 150; // Maximum height in pixels
-    
-    // Reset height to auto to get the proper scrollHeight
-    textarea.style.height = 'auto';
-    
-    // Calculate new height
-    const newHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
-    setTextAreaHeight(newHeight);
+  // Add debounce function
+  const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
   };
+
+  // Debounced resize handler
+  const handleTextAreaResize = useCallback(
+    debounce(({ target: textarea }) => {
+      const minHeight = 32;
+      const maxHeight = 150;
+      
+      // Reset height to auto to get the proper scrollHeight
+      textarea.style.height = 'auto';
+      
+      // Calculate new height
+      const newHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
+      setTextAreaHeight(newHeight);
+    }, 100), // 100ms debounce delay
+    []
+  );
 
   // Add this ref for the messages container
   const messagesEndRef = React.useRef(null);
@@ -289,6 +317,7 @@ const ChatBox = ({ onClose, visible }) => {
             placeholder="Type your message..."
             style={{ height: textAreaHeight }}
             disabled={isLoading}
+            autoSize={{ minRows: 1, maxRows: 6 }} // Add this line
           />
           <Button 
             type="primary" 
